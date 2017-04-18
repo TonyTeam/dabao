@@ -1,20 +1,199 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_0" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HomePageVC">
             <connections>
+                <outlet property="coinTitleLabel" destination="4i3-vu-WGe" id="Rgx-Pm-xPd"/>
+                <outlet property="coinValueLabel" destination="8aA-lF-qQu" id="gd3-BK-Pie"/>
+                <outlet property="scanButton" destination="c0M-Za-HhB" id="ZGx-bH-6M0"/>
+                <outlet property="unitLabel" destination="8vF-18-BcD" id="g9E-3R-ppv"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_home_up.png" translatesAutoresizingMaskIntoConstraints="NO" id="UHx-y6-4Tz">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="358"/>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_home_down.png" translatesAutoresizingMaskIntoConstraints="NO" id="cTg-HA-y5T">
+                    <rect key="frame" x="0.0" y="499" width="320" height="70"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="70" id="dHR-BV-4jg"/>
+                    </constraints>
+                </imageView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AHq-oT-wEM">
+                    <rect key="frame" x="247" y="459" width="57" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="57" id="Jox-MZ-STV"/>
+                        <constraint firstAttribute="height" constant="30" id="XH4-di-oN4"/>
+                        <constraint firstAttribute="height" constant="30" id="kAy-dI-Vwa"/>
+                        <constraint firstAttribute="width" constant="57" id="z8T-Yg-EIK"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <state key="normal" title="D幣儲值">
+                        <color key="titleColor" red="0.21960784310000001" green="0.52156862749999999" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="kAy-dI-Vwa"/>
+                            <exclude reference="z8T-Yg-EIK"/>
+                        </mask>
+                    </variation>
+                    <connections>
+                        <action selector="coinStoreButtonClick:" destination="-1" eventType="touchUpInside" id="RvQ-t0-M2C"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BPc-pU-kf3">
+                    <rect key="frame" x="180" y="459" width="57" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="N99-Yn-hdb"/>
+                        <constraint firstAttribute="height" constant="30" id="TI6-Xa-hrc"/>
+                        <constraint firstAttribute="width" constant="57" id="ov0-jA-Rms"/>
+                        <constraint firstAttribute="width" constant="57" id="ueF-Au-VlI"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <state key="normal" title="D幣明細">
+                        <color key="titleColor" red="0.21960784310000001" green="0.52156862749999999" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
+                    </state>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="N99-Yn-hdb"/>
+                            <exclude reference="ueF-Au-VlI"/>
+                        </mask>
+                    </variation>
+                    <connections>
+                        <action selector="scanCoinDetailButtonClick:" destination="-1" eventType="touchUpInside" id="vuZ-pN-iJl"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="餘額" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4i3-vu-WGe">
+                    <rect key="frame" x="16" y="459" width="31" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="O16-gd-yqS"/>
+                        <constraint firstAttribute="width" constant="31" id="cNh-zI-DCC"/>
+                        <constraint firstAttribute="width" constant="35" id="dWw-64-jOZ"/>
+                        <constraint firstAttribute="height" constant="30" id="raG-rS-7ss"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.2196078431372549" green="0.52156862745098043" blue="0.99607843137254903" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="O16-gd-yqS"/>
+                            <exclude reference="dWw-64-jOZ"/>
+                        </mask>
+                    </variation>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8aA-lF-qQu">
+                    <rect key="frame" x="49" y="459" width="9.5" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="IBs-fW-IPS"/>
+                        <constraint firstAttribute="height" constant="30" id="RQJ-Dr-2JM"/>
+                        <constraint firstAttribute="width" constant="9.5" id="ufs-Qu-aKf"/>
+                        <constraint firstAttribute="width" constant="19" id="w9Y-6y-yGv"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" red="1" green="0.25098039220000001" blue="0.33725490200000002" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="IBs-fW-IPS"/>
+                            <exclude reference="w9Y-6y-yGv"/>
+                        </mask>
+                    </variation>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="D幣" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8vF-18-BcD">
+                    <rect key="frame" x="82" y="459" width="62" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="62" id="UkH-h0-q79"/>
+                        <constraint firstAttribute="width" constant="42" id="oCt-5z-OaE"/>
+                        <constraint firstAttribute="height" constant="30" id="pEF-c2-dmd"/>
+                        <constraint firstAttribute="height" constant="30" id="qNo-u1-Lj1"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" red="0.21960784310000001" green="0.52156862749999999" blue="0.99607843139999996" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="oCt-5z-OaE"/>
+                            <exclude reference="qNo-u1-Lj1"/>
+                        </mask>
+                    </variation>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c0M-Za-HhB">
+                    <rect key="frame" x="35" y="40" width="250" height="250"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="250" id="bSc-Ct-hOs"/>
+                        <constraint firstAttribute="height" constant="250" id="sNg-Qx-bCJ"/>
+                    </constraints>
+                    <state key="normal" image="icon_home_scan_code.png"/>
+                    <connections>
+                        <action selector="scanButtonClick:" destination="-1" eventType="touchUpInside" id="RJo-8X-Rsk"/>
+                    </connections>
+                </button>
+            </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="8aA-lF-qQu" firstAttribute="top" secondItem="UHx-y6-4Tz" secondAttribute="bottom" constant="72" id="0de-PL-2C8"/>
+                <constraint firstAttribute="trailing" secondItem="AHq-oT-wEM" secondAttribute="trailing" constant="16" id="530-QR-X0g"/>
+                <constraint firstAttribute="trailing" secondItem="AHq-oT-wEM" secondAttribute="trailing" constant="16" id="58x-7G-4yV"/>
+                <constraint firstItem="4i3-vu-WGe" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="7kp-Qi-Dks"/>
+                <constraint firstAttribute="trailing" secondItem="UHx-y6-4Tz" secondAttribute="trailing" id="7qy-xV-dmF"/>
+                <constraint firstItem="c0M-Za-HhB" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="8Ih-5h-g3U"/>
+                <constraint firstItem="cTg-HA-y5T" firstAttribute="top" secondItem="AHq-oT-wEM" secondAttribute="bottom" constant="10" id="8Os-FR-ezY"/>
+                <constraint firstItem="cTg-HA-y5T" firstAttribute="top" secondItem="8aA-lF-qQu" secondAttribute="bottom" constant="10" id="8yP-ip-dy6"/>
+                <constraint firstItem="AHq-oT-wEM" firstAttribute="leading" secondItem="BPc-pU-kf3" secondAttribute="trailing" constant="10" id="BWH-sg-TUy"/>
+                <constraint firstItem="8vF-18-BcD" firstAttribute="top" secondItem="UHx-y6-4Tz" secondAttribute="bottom" constant="72" id="DLB-mD-7w2"/>
+                <constraint firstItem="8aA-lF-qQu" firstAttribute="leading" secondItem="4i3-vu-WGe" secondAttribute="trailing" constant="8" id="EDn-eG-SXE"/>
+                <constraint firstItem="cTg-HA-y5T" firstAttribute="top" secondItem="AHq-oT-wEM" secondAttribute="bottom" constant="8" id="G7S-fi-nMy"/>
+                <constraint firstItem="cTg-HA-y5T" firstAttribute="top" secondItem="BPc-pU-kf3" secondAttribute="bottom" constant="8" id="HhG-6b-3sG"/>
+                <constraint firstItem="4i3-vu-WGe" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="16" id="MSS-Ak-0cy"/>
+                <constraint firstItem="8vF-18-BcD" firstAttribute="leading" secondItem="8aA-lF-qQu" secondAttribute="trailing" constant="23.5" id="QiG-iR-qu4"/>
+                <constraint firstItem="4i3-vu-WGe" firstAttribute="top" secondItem="UHx-y6-4Tz" secondAttribute="bottom" constant="72" id="RnK-0i-f37"/>
+                <constraint firstItem="UHx-y6-4Tz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="VZe-E7-bPt"/>
+                <constraint firstAttribute="trailing" secondItem="cTg-HA-y5T" secondAttribute="trailing" id="X7U-06-DHT"/>
+                <constraint firstItem="UHx-y6-4Tz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="aY6-a8-tD4"/>
+                <constraint firstAttribute="bottom" secondItem="cTg-HA-y5T" secondAttribute="bottom" constant="-1" id="brY-Hg-cC9"/>
+                <constraint firstItem="AHq-oT-wEM" firstAttribute="leading" secondItem="BPc-pU-kf3" secondAttribute="trailing" constant="10" id="cRG-YB-hhI"/>
+                <constraint firstItem="8vF-18-BcD" firstAttribute="leading" secondItem="8aA-lF-qQu" secondAttribute="trailing" constant="4" id="dvQ-eN-czl"/>
+                <constraint firstItem="cTg-HA-y5T" firstAttribute="top" secondItem="8vF-18-BcD" secondAttribute="bottom" constant="10" id="gNf-kp-Wr6"/>
+                <constraint firstItem="8aA-lF-qQu" firstAttribute="leading" secondItem="4i3-vu-WGe" secondAttribute="trailing" constant="2" id="hAP-Rs-zry"/>
+                <constraint firstItem="cTg-HA-y5T" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="opp-OV-3Vc"/>
+                <constraint firstItem="cTg-HA-y5T" firstAttribute="top" secondItem="4i3-vu-WGe" secondAttribute="bottom" constant="10" id="qoJ-1R-bX1"/>
+                <constraint firstItem="cTg-HA-y5T" firstAttribute="top" secondItem="UHx-y6-4Tz" secondAttribute="bottom" constant="141" id="vs5-Zb-S4e"/>
+                <constraint firstItem="c0M-Za-HhB" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="40" id="wAM-tN-eLB"/>
+                <constraint firstItem="cTg-HA-y5T" firstAttribute="top" secondItem="BPc-pU-kf3" secondAttribute="bottom" constant="10" id="xub-E0-vkS"/>
+            </constraints>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="MSS-Ak-0cy"/>
+                    <exclude reference="RnK-0i-f37"/>
+                    <exclude reference="0de-PL-2C8"/>
+                    <exclude reference="EDn-eG-SXE"/>
+                    <exclude reference="DLB-mD-7w2"/>
+                    <exclude reference="dvQ-eN-czl"/>
+                    <exclude reference="G7S-fi-nMy"/>
+                    <exclude reference="HhG-6b-3sG"/>
+                    <exclude reference="58x-7G-4yV"/>
+                    <exclude reference="BWH-sg-TUy"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="24.5" y="51.5"/>
         </view>
     </objects>
+    <resources>
+        <image name="bg_home_down.png" width="500" height="141"/>
+        <image name="bg_home_up.png" width="500" height="639"/>
+        <image name="icon_home_scan_code.png" width="361" height="345"/>
+    </resources>
 </document>

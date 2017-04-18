@@ -70,10 +70,13 @@
     
     if (![[[self.navigationController viewControllers] firstObject] isEqual:self]) {
         UIButton *backImage = [[UIButton alloc] init];
-        [backImage setBackgroundImage:[UIImage imageNamed:@"navigationBar_back_icon"] forState:UIControlStateNormal];
+        UIImage *backIcon = [UIImage imageNamed:@"navigationBar_back_icon"];
+        [backImage setBackgroundImage:backIcon forState:UIControlStateNormal];
         [backImage addTarget:self action:@selector(backItemClick:) forControlEvents:UIControlEventTouchUpInside];
         
-        backImage.frame = CGRectMake(0, 0, 25, 25);
+        CGFloat buttonH = 25;
+        CGFloat buttonW = backIcon.size.width * buttonH / backIcon.size.height;
+        backImage.frame = CGRectMake(0, 0, buttonW, buttonH);
         UIBarButtonItem *backItem = [[UIBarButtonItem alloc] initWithCustomView:backImage];
         backItem.target = self;
         self.navigationItem.leftBarButtonItem = backItem;
