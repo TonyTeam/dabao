@@ -46,6 +46,12 @@
 		EA38EA1D1EA30C5D00971B7A /* View+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EA38EA0F1EA30C5D00971B7A /* View+MASAdditions.m */; };
 		EA38EA1E1EA30C5D00971B7A /* ViewController+MASAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EA38EA121EA30C5D00971B7A /* ViewController+MASAdditions.m */; };
 		EA38EA1F1EA30C5D00971B7A /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = EA38EA131EA30C5D00971B7A /* README.md */; };
+		EA6C2E7D1EA85560005C015B /* HeDCoinStoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EA6C2E7C1EA85560005C015B /* HeDCoinStoreCell.m */; };
+		EA6C2E7F1EA8A63C005C015B /* icon_bank_note.png in Resources */ = {isa = PBXBuildFile; fileRef = EA6C2E7E1EA8A63C005C015B /* icon_bank_note.png */; };
+		EA6C2E831EA8A647005C015B /* icon_close.png in Resources */ = {isa = PBXBuildFile; fileRef = EA6C2E801EA8A647005C015B /* icon_close.png */; };
+		EA6C2E841EA8A647005C015B /* icon_confirm.png in Resources */ = {isa = PBXBuildFile; fileRef = EA6C2E811EA8A647005C015B /* icon_confirm.png */; };
+		EA6C2E851EA8A647005C015B /* icon_container.png in Resources */ = {isa = PBXBuildFile; fileRef = EA6C2E821EA8A647005C015B /* icon_container.png */; };
+		EA6C2E871EA8B0A2005C015B /* icon_unconfirm.png in Resources */ = {isa = PBXBuildFile; fileRef = EA6C2E861EA8B0A2005C015B /* icon_unconfirm.png */; };
 		EAC2C9051D4AF0E600E282A8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC2C9041D4AF0E600E282A8 /* main.m */; };
 		EAC2C9081D4AF0E600E282A8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC2C9071D4AF0E600E282A8 /* AppDelegate.m */; };
 		EAC2C90B1D4AF0E600E282A8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC2C90A1D4AF0E600E282A8 /* ViewController.m */; };
@@ -570,6 +576,13 @@
 		EA38EA111EA30C5D00971B7A /* ViewController+MASAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ViewController+MASAdditions.h"; sourceTree = "<group>"; };
 		EA38EA121EA30C5D00971B7A /* ViewController+MASAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ViewController+MASAdditions.m"; sourceTree = "<group>"; };
 		EA38EA131EA30C5D00971B7A /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		EA6C2E7B1EA85560005C015B /* HeDCoinStoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeDCoinStoreCell.h; sourceTree = "<group>"; };
+		EA6C2E7C1EA85560005C015B /* HeDCoinStoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeDCoinStoreCell.m; sourceTree = "<group>"; };
+		EA6C2E7E1EA8A63C005C015B /* icon_bank_note.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_bank_note.png; sourceTree = "<group>"; };
+		EA6C2E801EA8A647005C015B /* icon_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_close.png; sourceTree = "<group>"; };
+		EA6C2E811EA8A647005C015B /* icon_confirm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_confirm.png; sourceTree = "<group>"; };
+		EA6C2E821EA8A647005C015B /* icon_container.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_container.png; sourceTree = "<group>"; };
+		EA6C2E861EA8B0A2005C015B /* icon_unconfirm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_unconfirm.png; sourceTree = "<group>"; };
 		EAC2C9001D4AF0E600E282A8 /* 大寶.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "大寶.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAC2C9041D4AF0E600E282A8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		EAC2C9061D4AF0E600E282A8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -1468,6 +1481,7 @@
 		EA27B4341EA3AAC50065D6DD /* View */ = {
 			isa = PBXGroup;
 			children = (
+				EA6C2E7A1EA85553005C015B /* Coin */,
 				EA27B4351EA3AADD0065D6DD /* Base */,
 			);
 			path = View;
@@ -1545,6 +1559,11 @@
 		EA38E9CE1EA1E26B00971B7A /* Custom */ = {
 			isa = PBXGroup;
 			children = (
+				EA6C2E861EA8B0A2005C015B /* icon_unconfirm.png */,
+				EA6C2E801EA8A647005C015B /* icon_close.png */,
+				EA6C2E811EA8A647005C015B /* icon_confirm.png */,
+				EA6C2E821EA8A647005C015B /* icon_container.png */,
+				EA6C2E7E1EA8A63C005C015B /* icon_bank_note.png */,
 				EA38E9F51EA20B5D00971B7A /* navigationBar_back_icon.png */,
 				EA38E9E81EA1FF3900971B7A /* icon_explain.png */,
 				EA38E9E61EA1FD9A00971B7A /* icon_home_scan_code.png */,
@@ -1628,6 +1647,15 @@
 				EA38EA121EA30C5D00971B7A /* ViewController+MASAdditions.m */,
 			);
 			path = Masonry;
+			sourceTree = "<group>";
+		};
+		EA6C2E7A1EA85553005C015B /* Coin */ = {
+			isa = PBXGroup;
+			children = (
+				EA6C2E7B1EA85560005C015B /* HeDCoinStoreCell.h */,
+				EA6C2E7C1EA85560005C015B /* HeDCoinStoreCell.m */,
+			);
+			path = Coin;
 			sourceTree = "<group>";
 		};
 		EAC2C8F71D4AF0E600E282A8 = {
@@ -3480,12 +3508,16 @@
 				EAC2CDF01D4AF5D800E282A8 /* btn_021.press@2x.png in Resources */,
 				EAC2C9131D4AF0E600E282A8 /* LaunchScreen.storyboard in Resources */,
 				EAC2CEB31D4AF5EE00E282A8 /* zbar-samples.png in Resources */,
+				EA6C2E851EA8A647005C015B /* icon_container.png in Resources */,
+				EA6C2E841EA8A647005C015B /* icon_confirm.png in Resources */,
 				EAC2CEA81D4AF5EE00E282A8 /* WeiboSDK.bundle in Resources */,
 				EAC2CD231D4AF5D800E282A8 /* IQKeyboardManager.bundle in Resources */,
 				EA38E9D11EA1E27B00971B7A /* tabbar_normal_background.png in Resources */,
 				EA38EA141EA30C5D00971B7A /* LICENSE in Resources */,
 				EAC2CCFD1D4AF5D800E282A8 /* fail@3x.png in Resources */,
+				EA6C2E831EA8A647005C015B /* icon_close.png in Resources */,
 				EAC2CDEE1D4AF5D800E282A8 /* btn_020@2x.png in Resources */,
+				EA6C2E871EA8B0A2005C015B /* icon_unconfirm.png in Resources */,
 				EAC2CD5D1D4AF5D800E282A8 /* LICENSE in Resources */,
 				EAC2CDE61D4AF5D800E282A8 /* LICENSE.txt in Resources */,
 				EAC2CD151D4AF5D800E282A8 /* grayArrow.png in Resources */,
@@ -3493,6 +3525,7 @@
 				EAC2CD001D4AF5D800E282A8 /* success@2x.png in Resources */,
 				EAC2CD121D4AF5D800E282A8 /* blueArrow@2x.png in Resources */,
 				EAC2C9101D4AF0E600E282A8 /* Assets.xcassets in Resources */,
+				EA6C2E7F1EA8A63C005C015B /* icon_bank_note.png in Resources */,
 				EAC2CE0E1D4AF5D800E282A8 /* LICENSE in Resources */,
 				EAC2C9CA1D4AF5CC00E282A8 /* HeTabBarVC.xib in Resources */,
 				EAC2CD061D4AF5D800E282A8 /* down_dark.png in Resources */,
@@ -3602,6 +3635,7 @@
 				EAC2CCC91D4AF5D800E282A8 /* ASIDataCompressor.m in Sources */,
 				EAC2CCD91D4AF5D800E282A8 /* UIBarButtonItem+Lite.m in Sources */,
 				EAC2CE0D1D4AF5D800E282A8 /* VRGCalendarView.m in Sources */,
+				EA6C2E7D1EA85560005C015B /* HeDCoinStoreCell.m in Sources */,
 				EAC2CD411D4AF5D800E282A8 /* MJRefreshFooter.m in Sources */,
 				EAC2CD391D4AF5D800E282A8 /* MJPhotoProgressView.m in Sources */,
 				EAC2CCC71D4AF5D800E282A8 /* ALAssetsLibrary+CustomPhotoAlbum.m in Sources */,
