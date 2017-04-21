@@ -57,7 +57,7 @@
     homepageVC = [[HomePageVC alloc] init];
     CustomNavigationController *homePageNav = [[CustomNavigationController alloc] initWithRootViewController:homepageVC];
     
-    orderVC = [[HeOrderVC alloc] init];
+    orderVC = [[HeOrderRecordVC alloc] init];
     CustomNavigationController *orderNav = [[CustomNavigationController alloc]
                                             initWithRootViewController:orderVC];
     

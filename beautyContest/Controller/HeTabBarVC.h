@@ -12,10 +12,11 @@
 #import "HeOrderVC.h"
 #import "HeUserVC.h"
 #import "HeFeedBackVC.h"
+#import "HeOrderRecordVC.h"
 
 @interface HeTabBarVC : RDVTabBarController<UIAlertViewDelegate>
 @property(strong,nonatomic)HomePageVC *homepageVC;
-@property(strong,nonatomic)HeOrderVC *orderVC;
+@property(strong,nonatomic)HeOrderRecordVC *orderVC;
 @property(strong,nonatomic)HeUserVC *userVC;
 @property(strong,nonatomic)HeFeedBackVC *feedbackVC;
 
