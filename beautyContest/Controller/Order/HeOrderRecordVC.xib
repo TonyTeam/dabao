@@ -1,12 +1,18 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HeOrderRecordVC">
             <connections>
+                <outlet property="segmentControl" destination="xTx-Iy-dyc" id="27M-ap-Owx"/>
+                <outlet property="tableview" destination="kIf-6K-FqD" id="bXd-as-Oho"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -14,7 +20,66 @@
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="A3U-Bg-1oD">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="90"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_main_order.png" translatesAutoresizingMaskIntoConstraints="NO" id="dBb-C8-mbV">
+                            <rect key="frame" x="0.0" y="0.0" width="375" height="70"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="70" id="gLy-0Q-FGy"/>
+                            </constraints>
+                        </imageView>
+                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="xTx-Iy-dyc">
+                            <rect key="frame" x="30" y="65" width="315" height="29"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="28" id="aio-nf-iXu"/>
+                            </constraints>
+                            <segments>
+                                <segment title="掃碼訂單"/>
+                                <segment title="D幣訂單"/>
+                            </segments>
+                            <color key="tintColor" red="0.21960784310000001" green="0.52156862749999999" blue="0.99607843139999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="segmentChange:" destination="-1" eventType="valueChanged" id="zb8-hs-iRg"/>
+                            </connections>
+                        </segmentedControl>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="dBb-C8-mbV" secondAttribute="trailing" id="1Sk-au-1TX"/>
+                        <constraint firstAttribute="trailing" secondItem="xTx-Iy-dyc" secondAttribute="trailing" constant="30" id="LXg-H9-3UK"/>
+                        <constraint firstAttribute="bottom" secondItem="xTx-Iy-dyc" secondAttribute="bottom" constant="-3" id="Yes-pL-NEx"/>
+                        <constraint firstItem="dBb-C8-mbV" firstAttribute="leading" secondItem="A3U-Bg-1oD" secondAttribute="leading" id="f1E-8h-P0G"/>
+                        <constraint firstItem="xTx-Iy-dyc" firstAttribute="leading" secondItem="A3U-Bg-1oD" secondAttribute="leading" constant="30" id="jBz-lA-IyP"/>
+                        <constraint firstAttribute="height" constant="90" id="lzp-Da-dpY"/>
+                        <constraint firstItem="dBb-C8-mbV" firstAttribute="top" secondItem="A3U-Bg-1oD" secondAttribute="top" id="tml-sn-zCS"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="kIf-6K-FqD">
+                    <rect key="frame" x="0.0" y="98" width="375" height="569"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="aHZ-oh-n3P"/>
+                        <outlet property="delegate" destination="-1" id="yO7-Ld-6xK"/>
+                    </connections>
+                </tableView>
+            </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="A3U-Bg-1oD" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="NhO-Vf-HlQ"/>
+                <constraint firstAttribute="trailing" secondItem="A3U-Bg-1oD" secondAttribute="trailing" id="Vcg-Sc-L2r"/>
+                <constraint firstItem="A3U-Bg-1oD" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="ZmV-EZ-0js"/>
+                <constraint firstItem="kIf-6K-FqD" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="crF-kD-f1d"/>
+                <constraint firstAttribute="bottom" secondItem="kIf-6K-FqD" secondAttribute="bottom" id="hgi-HZ-UBg"/>
+                <constraint firstAttribute="trailing" secondItem="kIf-6K-FqD" secondAttribute="trailing" id="hhy-MJ-TXZ"/>
+                <constraint firstItem="kIf-6K-FqD" firstAttribute="top" secondItem="A3U-Bg-1oD" secondAttribute="bottom" constant="8" id="jzj-Kl-0JB"/>
+            </constraints>
+            <point key="canvasLocation" x="27.5" y="59.5"/>
         </view>
     </objects>
+    <resources>
+        <image name="bg_main_order.png" width="750" height="184"/>
+    </resources>
 </document>

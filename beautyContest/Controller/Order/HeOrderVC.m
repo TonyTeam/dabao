@@ -15,6 +15,7 @@
 @property(strong,nonatomic)IBOutlet UITableView *tableview;
 @property(strong,nonatomic)IBOutlet UILabel *dCoinValueLabel;
 @property(strong,nonatomic)NSArray *datasource;
+@property(strong,nonatomic)IBOutlet UILabel *titleLabel;
 
 @end
 
@@ -22,6 +23,7 @@
 @synthesize tableview;
 @synthesize dCoinValueLabel;
 @synthesize datasource;
+@synthesize titleLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -79,6 +81,9 @@
     footerview.backgroundColor = [UIColor colorWithWhite:247.0 / 255.0 alpha:1.0];
     tableview.tableFooterView = footerview;
     
+    titleLabel.layer.masksToBounds = YES;
+    titleLabel.layer.cornerRadius = 6.0;
+    
     CGFloat tipLabelX = 10;
     CGFloat tipLabelY = 10;
     CGFloat tipLabelW = SCREENWIDTH - 2 * tipLabelX;
@@ -90,6 +95,7 @@
     tipLabelH = contentsize.height;
     
     UILabel *tipLabel = [[UILabel alloc] initWithFrame:CGRectMake(tipLabelX, tipLabelY, tipLabelW, tipLabelH)];
+    tipLabel.numberOfLines = 0;
     tipLabel.backgroundColor = [UIColor clearColor];
     tipLabel.font = contentFont;
     tipLabel.textColor = [UIColor colorWithWhite:30 / 255.0 alpha:1.0];
@@ -152,20 +158,20 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *headerview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREENWIDTH, 20)];
-    headerview.backgroundColor = [UIColor colorWithWhite:237.0 / 255.0 alpha:1.0];
+    UIView *headerview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREENWIDTH, 30)];
+    headerview.backgroundColor = [UIColor colorWithWhite:247.0 / 255.0 alpha:1.0];
     
     CGFloat titleLabelX = 10;
     CGFloat titleLabelY = 0;
     CGFloat titleLabelW = SCREENWIDTH - 2 * titleLabelX;
     CGFloat titleLabelH = 30;
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH)];
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.font = [UIFont systemFontOfSize:12.0];
-    titleLabel.text = @"當前D幣儲值訂單詳情";
-    titleLabel.textColor = [UIColor blackColor];
-    [headerview addSubview:titleLabel];
+    UILabel *mytitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH)];
+    mytitleLabel.backgroundColor = [UIColor clearColor];
+    mytitleLabel.font = [UIFont systemFontOfSize:12.0];
+    mytitleLabel.text = @"當前D幣儲值訂單詳情";
+    mytitleLabel.textColor = [UIColor blackColor];
+    [headerview addSubview:mytitleLabel];
     
     return headerview;
 }

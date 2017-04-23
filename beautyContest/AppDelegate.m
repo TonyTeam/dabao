@@ -10,6 +10,7 @@
 #import "HeTabBarVC.h"
 #import <UMMobClick/MobClick.h>
 #import "HeLoginVC.h"
+#import "LoginAndRegisterController.h"
 
 @interface AppDelegate ()
 
@@ -173,7 +174,7 @@
         
     }
     else{
-        HeLoginVC *loginVC = [[HeLoginVC alloc] init];
+        LoginAndRegisterController *loginVC = [[LoginAndRegisterController alloc] init];
         CustomNavigationController *loginNav = [[CustomNavigationController alloc] initWithRootViewController:loginVC];
         self.viewController = loginNav;
     }

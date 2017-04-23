@@ -13,6 +13,8 @@
 #import "HeDCoinStoreVC.h"
 #import "HeDCoinDetailVC.h"
 #import "Masonry.h"
+#import "QRCodeGenerateVC.h"
+#import "QRCodeScanningVC.h"
 
 @interface HomePageVC ()
 {
@@ -54,12 +56,25 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [self initializaiton];
+    [self initView];
     if (SCREENHEIGH < 600) {
         adjustView = NO;
     }
     else{
-        [self initView];
+//        [self initView];
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:YES];
+    self.navigationController.navigationBarHidden = YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:YES];
+    self.navigationController.navigationBarHidden = NO;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -77,15 +92,15 @@
 
 - (void)viewDidLayoutSubviews
 {
-    NSLog(@"viewDidLayoutSubviews");
-    if (SCREENHEIGH < 600 && !adjustView) {
-        CGRect buttonFrame = scanButton.frame;
-        buttonFrame.size.width = 200;
-        buttonFrame.size.height = 191;
-        buttonFrame.origin.x = (SCREENWIDTH - buttonFrame.size.width) / 2.0;
-        scanButton.frame = buttonFrame;
-        [self initView];
-    }
+//    NSLog(@"viewDidLayoutSubviews");
+//    if (SCREENHEIGH < 600 && !adjustView) {
+//        CGRect buttonFrame = scanButton.frame;
+//        buttonFrame.size.width = 200;
+//        buttonFrame.size.height = 191;
+//        buttonFrame.origin.x = (SCREENWIDTH - buttonFrame.size.width) / 2.0;
+//        scanButton.frame = buttonFrame;
+//        [self initView];
+//    }
     
 }
 
@@ -175,13 +190,58 @@
     coinFrame.origin.x = CGRectGetMaxX(coinValueLabel.frame) + 2;
     unitLabel.frame = coinFrame;
     
+    
 }
 
 - (IBAction)scanButtonClick:(id)sender
 {
-    HeScanQRCodeVC *scanVC = [[HeScanQRCodeVC alloc] init];
-    scanVC.hidesBottomBarWhenPushed = YES;
-    [self.navigationController pushViewController:scanVC animated:YES];
+    // 1、 获取摄像设备
+    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    if (device) {
+        AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
+        if (status == AVAuthorizationStatusNotDetermined) {
+            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+                if (granted) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        QRCodeScanningVC *scanQRCodeVC = [[QRCodeScanningVC alloc] init];
+                        scanQRCodeVC.hidesBottomBarWhenPushed = YES;
+                        [self.navigationController pushViewController:scanQRCodeVC animated:YES];
+                    });
+                    
+                    SGQRCodeLog(@"当前线程 - - %@", [NSThread currentThread]);
+                    // 用户第一次同意了访问相机权限
+                    SGQRCodeLog(@"用户第一次同意了访问相机权限");
+                    
+                } else {
+                    
+                    // 用户第一次拒绝了访问相机权限
+                    SGQRCodeLog(@"用户第一次拒绝了访问相机权限");
+                }
+            }];
+        } else if (status == AVAuthorizationStatusAuthorized) { // 用户允许当前应用访问相机
+            QRCodeScanningVC *vc = [[QRCodeScanningVC alloc] init];
+            [self.navigationController pushViewController:vc animated:YES];
+        } else if (status == AVAuthorizationStatusDenied) { // 用户拒绝当前应用访问相机
+            UIAlertController *alertC = [UIAlertController alertControllerWithTitle:@"⚠️ 警告" message:@"請去-> [設置 - 隱私 - 相機 - 大寶] 打開訪問開關" preferredStyle:(UIAlertControllerStyleAlert)];
+            UIAlertAction *alertA = [UIAlertAction actionWithTitle:@"確定" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+                
+            }];
+            
+            [alertC addAction:alertA];
+            [self presentViewController:alertC animated:YES completion:nil];
+            
+        } else if (status == AVAuthorizationStatusRestricted) {
+            NSLog(@"因为系统原因, 无法访问相册");
+        }
+    } else {
+        UIAlertController *alertC = [UIAlertController alertControllerWithTitle:@"溫馨提示" message:@"未檢測到您的攝像頭" preferredStyle:(UIAlertControllerStyleAlert)];
+        UIAlertAction *alertA = [UIAlertAction actionWithTitle:@"確定" style:(UIAlertActionStyleDefault) handler:^(UIAlertAction * _Nonnull action) {
+            
+        }];
+        
+        [alertC addAction:alertA];
+        [self presentViewController:alertC animated:YES completion:nil];
+    }
 }
 
 - (IBAction)scanCoinDetailButtonClick:(id)sender
