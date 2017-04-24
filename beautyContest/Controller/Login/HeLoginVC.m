@@ -98,6 +98,8 @@
 - (IBAction)loginButtonClick:(id)sender
 {
     NSLog(@"loginButtonClick");
+    [[NSUserDefaults standardUserDefaults] setObject:@"123" forKey:USERACCOUNTKEY];
+    [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINCHANGE object:nil];
 }
 
 - (IBAction)faceBookLogin:(id)sender

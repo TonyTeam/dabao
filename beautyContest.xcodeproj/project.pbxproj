@@ -103,6 +103,15 @@
 		EA6C2E841EA8A647005C015B /* icon_confirm.png in Resources */ = {isa = PBXBuildFile; fileRef = EA6C2E811EA8A647005C015B /* icon_confirm.png */; };
 		EA6C2E851EA8A647005C015B /* icon_container.png in Resources */ = {isa = PBXBuildFile; fileRef = EA6C2E821EA8A647005C015B /* icon_container.png */; };
 		EA6C2E871EA8B0A2005C015B /* icon_unconfirm.png in Resources */ = {isa = PBXBuildFile; fileRef = EA6C2E861EA8B0A2005C015B /* icon_unconfirm.png */; };
+		EAB77D051EADAB0C00487992 /* HeBankCardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB77D041EADAB0C00487992 /* HeBankCardCell.m */; };
+		EAB77D091EADC6F800487992 /* HeAddBandCardVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB77D071EADC6F700487992 /* HeAddBandCardVC.m */; };
+		EAB77D0A1EADC6F800487992 /* HeAddBandCardVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = EAB77D081EADC6F700487992 /* HeAddBandCardVC.xib */; };
+		EAB77D0C1EADE03600487992 /* appIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = EAB77D0B1EADE03600487992 /* appIcon.png */; };
+		EAB77D101EADEA5D00487992 /* HeModifyPayPasswordVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB77D0E1EADEA5D00487992 /* HeModifyPayPasswordVC.m */; };
+		EAB77D111EADEA5D00487992 /* HeModifyPayPasswordVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = EAB77D0F1EADEA5D00487992 /* HeModifyPayPasswordVC.xib */; };
+		EAB77D151EADEAC600487992 /* HeNoticeDetailVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB77D131EADEAC600487992 /* HeNoticeDetailVC.m */; };
+		EAB77D161EADEAC600487992 /* HeNoticeDetailVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = EAB77D141EADEAC600487992 /* HeNoticeDetailVC.xib */; };
+		EAB77D1A1EADEE2700487992 /* HeNoticeCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB77D191EADEE2700487992 /* HeNoticeCell.m */; };
 		EAC2C9051D4AF0E600E282A8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC2C9041D4AF0E600E282A8 /* main.m */; };
 		EAC2C9081D4AF0E600E282A8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC2C9071D4AF0E600E282A8 /* AppDelegate.m */; };
 		EAC2C90B1D4AF0E600E282A8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EAC2C90A1D4AF0E600E282A8 /* ViewController.m */; };
@@ -713,6 +722,20 @@
 		EA6C2E811EA8A647005C015B /* icon_confirm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_confirm.png; sourceTree = "<group>"; };
 		EA6C2E821EA8A647005C015B /* icon_container.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_container.png; sourceTree = "<group>"; };
 		EA6C2E861EA8B0A2005C015B /* icon_unconfirm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_unconfirm.png; sourceTree = "<group>"; };
+		EAB77D031EADAB0C00487992 /* HeBankCardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeBankCardCell.h; sourceTree = "<group>"; };
+		EAB77D041EADAB0C00487992 /* HeBankCardCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeBankCardCell.m; sourceTree = "<group>"; };
+		EAB77D061EADC6F700487992 /* HeAddBandCardVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeAddBandCardVC.h; sourceTree = "<group>"; };
+		EAB77D071EADC6F700487992 /* HeAddBandCardVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeAddBandCardVC.m; sourceTree = "<group>"; };
+		EAB77D081EADC6F700487992 /* HeAddBandCardVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeAddBandCardVC.xib; sourceTree = "<group>"; };
+		EAB77D0B1EADE03600487992 /* appIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = appIcon.png; sourceTree = "<group>"; };
+		EAB77D0D1EADEA5D00487992 /* HeModifyPayPasswordVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeModifyPayPasswordVC.h; sourceTree = "<group>"; };
+		EAB77D0E1EADEA5D00487992 /* HeModifyPayPasswordVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeModifyPayPasswordVC.m; sourceTree = "<group>"; };
+		EAB77D0F1EADEA5D00487992 /* HeModifyPayPasswordVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeModifyPayPasswordVC.xib; sourceTree = "<group>"; };
+		EAB77D121EADEAC600487992 /* HeNoticeDetailVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeNoticeDetailVC.h; sourceTree = "<group>"; };
+		EAB77D131EADEAC600487992 /* HeNoticeDetailVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeNoticeDetailVC.m; sourceTree = "<group>"; };
+		EAB77D141EADEAC600487992 /* HeNoticeDetailVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeNoticeDetailVC.xib; sourceTree = "<group>"; };
+		EAB77D181EADEE2700487992 /* HeNoticeCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeNoticeCell.h; sourceTree = "<group>"; };
+		EAB77D191EADEE2700487992 /* HeNoticeCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeNoticeCell.m; sourceTree = "<group>"; };
 		EAC2C9001D4AF0E600E282A8 /* 大寶.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "大寶.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAC2C9041D4AF0E600E282A8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		EAC2C9061D4AF0E600E282A8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -1625,6 +1648,8 @@
 		EA27B4341EA3AAC50065D6DD /* View */ = {
 			isa = PBXGroup;
 			children = (
+				EAB77D171EADEE1500487992 /* Notice */,
+				EAB77D021EADAAFA00487992 /* Bank */,
 				EAEDE8EA1EAD08AF000681CE /* Order */,
 				EA6C2E7A1EA85553005C015B /* Coin */,
 				EA27B4351EA3AADD0065D6DD /* Base */,
@@ -1716,6 +1741,15 @@
 				EA3102C61EA9DA1F00F87B23 /* HeSetUpVC.h */,
 				EA3102C71EA9DA1F00F87B23 /* HeSetUpVC.m */,
 				EA3102C81EA9DA1F00F87B23 /* HeSetUpVC.xib */,
+				EAB77D061EADC6F700487992 /* HeAddBandCardVC.h */,
+				EAB77D071EADC6F700487992 /* HeAddBandCardVC.m */,
+				EAB77D081EADC6F700487992 /* HeAddBandCardVC.xib */,
+				EAB77D0D1EADEA5D00487992 /* HeModifyPayPasswordVC.h */,
+				EAB77D0E1EADEA5D00487992 /* HeModifyPayPasswordVC.m */,
+				EAB77D0F1EADEA5D00487992 /* HeModifyPayPasswordVC.xib */,
+				EAB77D121EADEAC600487992 /* HeNoticeDetailVC.h */,
+				EAB77D131EADEAC600487992 /* HeNoticeDetailVC.m */,
+				EAB77D141EADEAC600487992 /* HeNoticeDetailVC.xib */,
 			);
 			path = DaBao;
 			sourceTree = "<group>";
@@ -1757,6 +1791,7 @@
 		EA38E9CE1EA1E26B00971B7A /* Custom */ = {
 			isa = PBXGroup;
 			children = (
+				EAB77D0B1EADE03600487992 /* appIcon.png */,
 				EAEDE8E51EAC401A000681CE /* facebookLoginIcon.png */,
 				EAEDE8E31EAC2FC0000681CE /* icon_look.png */,
 				EA3102A91EA9AAB100F87B23 /* icon_unlook.png */,
@@ -1958,6 +1993,24 @@
 				EA6C2E7C1EA85560005C015B /* HeDCoinStoreCell.m */,
 			);
 			path = Coin;
+			sourceTree = "<group>";
+		};
+		EAB77D021EADAAFA00487992 /* Bank */ = {
+			isa = PBXGroup;
+			children = (
+				EAB77D031EADAB0C00487992 /* HeBankCardCell.h */,
+				EAB77D041EADAB0C00487992 /* HeBankCardCell.m */,
+			);
+			path = Bank;
+			sourceTree = "<group>";
+		};
+		EAB77D171EADEE1500487992 /* Notice */ = {
+			isa = PBXGroup;
+			children = (
+				EAB77D181EADEE2700487992 /* HeNoticeCell.h */,
+				EAB77D191EADEE2700487992 /* HeNoticeCell.m */,
+			);
+			path = Notice;
 			sourceTree = "<group>";
 		};
 		EAC2C8F71D4AF0E600E282A8 = {
@@ -3810,6 +3863,7 @@
 				EAC2CEA31D4AF5EE00E282A8 /* ShareSDKUI.bundle in Resources */,
 				EA38E9C71EA1DFF000971B7A /* HeUserVC.xib in Resources */,
 				EAC2CD6F1D4AF5D800E282A8 /* LICENSE.txt in Resources */,
+				EAB77D0C1EADE03600487992 /* appIcon.png in Resources */,
 				EAC2CE001D4AF5D800E282A8 /* FontAwesome.ttf in Resources */,
 				EAC2CDF01D4AF5D800E282A8 /* btn_021.press@2x.png in Resources */,
 				EAC2C9131D4AF0E600E282A8 /* LaunchScreen.storyboard in Resources */,
@@ -3853,12 +3907,14 @@
 				EAC2CD161D4AF5D800E282A8 /* grayArrow@2x.png in Resources */,
 				EAC2CDF11D4AF5D800E282A8 /* btn_021@2x.png in Resources */,
 				EA38E9D21EA1E27B00971B7A /* tabbar_normal_background@2x.png in Resources */,
+				EAB77D0A1EADC6F800487992 /* HeAddBandCardVC.xib in Resources */,
 				EA3102871EA9A7E300F87B23 /* bg_mian_mydabao.png in Resources */,
 				EAC2CEB11D4AF5EE00E282A8 /* zbar-help.html in Resources */,
 				EA38E9E91EA1FF3900971B7A /* icon_explain.png in Resources */,
 				EA3102AF1EA9AAF600F87B23 /* icon_good.png in Resources */,
 				EA3102BB1EA9D9EE00F87B23 /* HeNoticeVC.xib in Resources */,
 				EAC2CDD11D4AF5D800E282A8 /* sharemore_pic@3x.png in Resources */,
+				EAB77D111EADEA5D00487992 /* HeModifyPayPasswordVC.xib in Resources */,
 				EAC2CD621D4AF5D800E282A8 /* arrow_down1@2x.png in Resources */,
 				EAC2CDED1D4AF5D800E282A8 /* btn_020.press@2x.png in Resources */,
 				EAC2CD101D4AF5D800E282A8 /* blackArrow@2x.png in Resources */,
@@ -3899,6 +3955,7 @@
 				EAC2CCD21D4AF5D800E282A8 /* BrowserView.xib in Resources */,
 				EAC2CD601D4AF5D800E282A8 /* arrow_down.png in Resources */,
 				EA3102CA1EA9DA1F00F87B23 /* HeSetUpVC.xib in Resources */,
+				EAB77D161EADEAC600487992 /* HeNoticeDetailVC.xib in Resources */,
 				EA38E9DA1EA1E5CC00971B7A /* NavBarIOS7_white.png in Resources */,
 				EAC2CCFC1D4AF5D800E282A8 /* fail@2x.png in Resources */,
 				EA38E9CC1EA1E00000971B7A /* HeFeedBackVC.xib in Resources */,
@@ -4070,6 +4127,7 @@
 				EAC2CD811D4AF5D800E282A8 /* NSObject+RACSelectorSignal.m in Sources */,
 				EAC2CD791D4AF5D800E282A8 /* NSIndexSet+RACSequenceAdditions.m in Sources */,
 				EAC2CE041D4AF5D800E282A8 /* UIButton+Bootstrap.m in Sources */,
+				EAB77D151EADEAC600487992 /* HeNoticeDetailVC.m in Sources */,
 				EAC2CE1C1D4AF5E000E282A8 /* AES128Util.m in Sources */,
 				EAC2CDFC1D4AF5D800E282A8 /* TZPhotoPreviewCell.m in Sources */,
 				EAC2CDD81D4AF5D800E282A8 /* SDWebImageDownloaderOperation.m in Sources */,
@@ -4184,6 +4242,7 @@
 				EAC2C9051D4AF0E600E282A8 /* main.m in Sources */,
 				EAC2CDFB1D4AF5D800E282A8 /* TZPhotoPickerController.m in Sources */,
 				EAC2CDAD1D4AF5D800E282A8 /* RACSignalSequence.m in Sources */,
+				EAB77D1A1EADEE2700487992 /* HeNoticeCell.m in Sources */,
 				EAC2CDC51D4AF5D800E282A8 /* UIRefreshControl+RACCommandSupport.m in Sources */,
 				EAC2CEA01D4AF5EE00E282A8 /* split.c in Sources */,
 				EAC2CD8D1D4AF5D800E282A8 /* RACChannel.m in Sources */,
@@ -4240,7 +4299,9 @@
 				EAC2CD521D4AF5D800E282A8 /* MLExpressionManager.m in Sources */,
 				EAC2CDCF1D4AF5D800E282A8 /* SAMTextView.m in Sources */,
 				EAC2CDA51D4AF5D800E282A8 /* RACReturnSignal.m in Sources */,
+				EAB77D091EADC6F800487992 /* HeAddBandCardVC.m in Sources */,
 				EA38EA191EA30C5D00971B7A /* MASViewAttribute.m in Sources */,
+				EAB77D051EADAB0C00487992 /* HeBankCardCell.m in Sources */,
 				EAC2CDC21D4AF5D800E282A8 /* UIDatePicker+RACSignalSupport.m in Sources */,
 				EAC2CDE71D4AF5D800E282A8 /* README.md in Sources */,
 				EAEDE8ED1EAD08D2000681CE /* HeOrderCell.m in Sources */,
@@ -4269,6 +4330,7 @@
 				EAC2CDB11D4AF5D800E282A8 /* RACSubscriber.m in Sources */,
 				EA38EA1D1EA30C5D00971B7A /* View+MASAdditions.m in Sources */,
 				EAC2CDCE1D4AF5D800E282A8 /* README.md in Sources */,
+				EAB77D101EADEA5D00487992 /* HeModifyPayPasswordVC.m in Sources */,
 				EAC2CD091D4AF5D800E282A8 /* i2KEPCDatePickerView.m in Sources */,
 				EAC2CDD31D4AF5D800E282A8 /* NSData+ImageContentType.m in Sources */,
 				EAC2CCCE1D4AF5D800E282A8 /* ASIInputStream.m in Sources */,

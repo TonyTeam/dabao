@@ -1,20 +1,18 @@
 //
-//  HeSetUpVC.m
+//  HeNoticeDetailVC.m
 //  beautyContest
 //
-//  Created by Tony on 2017/4/21.
+//  Created by Tony on 2017/4/24.
 //  Copyright © 2017年 iMac. All rights reserved.
 //
 
-#import "HeSetUpVC.h"
+#import "HeNoticeDetailVC.h"
 
-@interface HeSetUpVC ()
-@property(strong,nonatomic)IBOutlet UIButton *logoutButton;
+@interface HeNoticeDetailVC ()
 
 @end
 
-@implementation HeSetUpVC
-@synthesize logoutButton;
+@implementation HeNoticeDetailVC
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -27,9 +25,9 @@
         label.textColor = APPDEFAULTTITLECOLOR;
         label.textAlignment = NSTextAlignmentCenter;
         self.navigationItem.titleView = label;
-        label.text = @"設置";
+        label.text = @"消息詳情";
         [label sizeToFit];
-        self.title = @"設置";
+        self.title = @"消息詳情";
         
     }
     return self;
@@ -50,16 +48,6 @@
 - (void)initView
 {
     [super initView];
-    logoutButton.layer.masksToBounds = YES;
-    logoutButton.layer.cornerRadius = 8.0;
-    [logoutButton setBackgroundImage:[Tool buttonImageFromColor:[UIColor colorWithRed:254.0 / 255.0 green:102.0 / 255.0 blue:102.0 / 255.0 alpha:1.0] withImageSize:logoutButton.frame.size] forState:UIControlStateNormal];
-}
-
-- (IBAction)logoutButtonClick:(id)sender
-{
-    NSLog(@"logoutButton");
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERACCOUNTKEY];
-    [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINCHANGE object:nil];
 }
 
 - (void)didReceiveMemoryWarning {

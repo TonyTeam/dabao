@@ -159,7 +159,7 @@
 
 - (void)loginStateChange:(NSNotification *)notification
 {
-    NSString *userAccount = [[NSUserDefaults standardUserDefaults] objectForKey:USERIDKEY];
+    NSString *userAccount = [[NSUserDefaults standardUserDefaults] objectForKey:USERACCOUNTKEY];
     BOOL haveLogin = (userAccount == nil) ? NO : YES;
     
     if (1) {//登陆成功加载主窗口控制器

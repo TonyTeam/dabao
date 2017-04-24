@@ -6,16 +6,15 @@
 //  Copyright © 2017年 iMac. All rights reserved.
 //
 
-#import "HeForGetPasswordVC.h"
+#import "HeModifyPayPasswordVC.h"
 #import "HeBaseTableViewCell.h"
 #import "UIButton+countDown.h"
 #import "MLLabel.h"
 #import "MLLabel+Size.h"
 
-@interface HeForGetPasswordVC ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
+@interface HeModifyPayPasswordVC ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
 @property(strong,nonatomic)IBOutlet UITableView *tableview;
 @property(strong,nonatomic)NSArray *datasource;
-@property(strong,nonatomic)UITextField *accountField;
 @property(strong,nonatomic)UITextField *verifyCodeField;
 @property(strong,nonatomic)UITextField *passwordField;
 @property(strong,nonatomic)UITextField *confirmPasswordField;
@@ -23,10 +22,9 @@
 
 @end
 
-@implementation HeForGetPasswordVC
+@implementation HeModifyPayPasswordVC
 @synthesize tableview;
 @synthesize datasource;
-@synthesize accountField;
 @synthesize verifyCodeField;
 @synthesize passwordField;
 @synthesize confirmPasswordField;
@@ -43,9 +41,9 @@
         label.textColor = APPDEFAULTTITLECOLOR;
         label.textAlignment = NSTextAlignmentCenter;
         self.navigationItem.titleView = label;
-        label.text = @"忘記密碼";
+        label.text = @"修改支付密碼";
         [label sizeToFit];
-        self.title = @"忘記密碼";
+        self.title = @"修改支付密碼";
         
     }
     return self;
@@ -58,28 +56,11 @@
     [self initView];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:YES];
-    if (_modifyType != 1) {
-        self.navigationController.navigationBarHidden = NO;
-    }
-    
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:YES];
-    if (_modifyType != 1) {
-        self.navigationController.navigationBarHidden = YES;
-    }
-    
-}
 
 - (void)initializaiton
 {
     [super initializaiton];
-    datasource = @[@"手機號",@"輸入驗證碼",@"密碼",@"確認密碼"];
+    datasource = @[@"輸入驗證碼",@"密碼",@"確認密碼"];
     
 }
 
@@ -92,17 +73,6 @@
     tableview.backgroundView = nil;
     tableview.backgroundColor = [UIColor colorWithWhite:237.0 / 255.0 alpha:1.0];
     
-    if (_modifyType == 1) {
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
-        label.backgroundColor = [UIColor clearColor];
-        label.font = APPDEFAULTTITLETEXTFONT;
-        label.textColor = APPDEFAULTTITLECOLOR;
-        label.textAlignment = NSTextAlignmentCenter;
-        self.navigationItem.titleView = label;
-        label.text = @"修改密碼";
-        [label sizeToFit];
-        self.title = @"修改密碼";
-    }
     
     UIView *footerview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREENWIDTH, 80)];
     tableview.tableFooterView = footerview;
@@ -117,10 +87,7 @@
     [confirmButton setBackgroundImage:[Tool buttonImageFromColor:[UIColor colorWithRed:254.0 / 255.0 green:102.0 / 255.0 blue:102.0 / 255.0 alpha:1.0] withImageSize:confirmButton.frame.size] forState:UIControlStateNormal];
     [footerview addSubview:confirmButton];
     
-    accountField = [[UITextField alloc] init];
-    accountField.delegate = self;
-    accountField.font = [UIFont systemFontOfSize:15.0];
-    accountField.placeholder = @"請輸入賬戶手機號";
+   
     
     verifyCodeField = [[UITextField alloc] init];
     verifyCodeField.delegate = self;
@@ -153,15 +120,8 @@
 {
     NSLog(@"getVerifyCode");
     [self cancelInputTap:nil];
-    NSString *userPhone = accountField.text;
-    if ((userPhone == nil || [userPhone isEqualToString:@""])) {
-        [self showHint:@"請輸入手機號"];
-        return;
-    }
-    if (![Tool isMobileNumber:userPhone]) {
-        [self showHint:@"請輸入正確手機號"];
-        return;
-    }
+    NSString *userPhone = @"";
+    
     
     [sender startWithTime:60 title:@"獲取驗證碼" countDownTitle:@"s" mainColor:[UIColor whiteColor] countColor:[UIColor whiteColor]];
 }
@@ -169,9 +129,6 @@
 //取消输入
 - (void)cancelInputTap:(UIButton *)sender
 {
-    if ([accountField isFirstResponder]) {
-        [accountField resignFirstResponder];
-    }
     if ([verifyCodeField isFirstResponder]) {
         [verifyCodeField resignFirstResponder];
     }
@@ -230,13 +187,8 @@
     CGSize titleszie = [MLLabel getViewSizeByString:datasource[row] maxWidth:(SCREENWIDTH - 20) / 2.0 font:[UIFont systemFontOfSize:15.0] lineHeight:1.2f lines:0];
     
     switch (row) {
+        
         case 0:
-        {
-            accountField.frame = CGRectMake(titleszie.width + 20, 0, (SCREENWIDTH - titleszie.width - 30), cellH);
-            [cell addSubview:accountField];
-            break;
-        }
-        case 1:
         {
             getCodeButon.frame = CGRectMake(SCREENWIDTH - 85, (cellH - 20) / 2.0, 70, 20);
             getCodeButon.layer.cornerRadius = 20.0 / 2.0;
@@ -247,14 +199,14 @@
             
             break;
         }
-        case 2:
+        case 1:
         {
             passwordField.frame = CGRectMake(titleszie.width + 20, 0, (SCREENWIDTH - titleszie.width - 30), cellH);
             [cell addSubview:passwordField];
             
             break;
         }
-        case 3:
+        case 2:
         {
             confirmPasswordField.frame = CGRectMake(titleszie.width + 20, 0, (SCREENWIDTH - titleszie.width - 30), cellH);
             [cell addSubview:confirmPasswordField];
@@ -294,13 +246,13 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

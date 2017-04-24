@@ -7,12 +7,18 @@
 //
 
 #import "HeNoticeVC.h"
+#import "HeNoticeDetailVC.h"
+#import "HeNoticeCell.h"
 
-@interface HeNoticeVC ()
+@interface HeNoticeVC ()<UITableViewDataSource,UITableViewDelegate>
+@property(strong,nonatomic)IBOutlet UITableView *tableview;
+@property(strong,nonatomic)NSMutableArray *datasource;
 
 @end
 
 @implementation HeNoticeVC
+@synthesize tableview;
+@synthesize datasource;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -43,11 +49,66 @@
 - (void)initializaiton
 {
     [super initializaiton];
+    datasource = [[NSMutableArray alloc] initWithCapacity:0];
 }
 
 - (void)initView
 {
     [super initView];
+    [Tool setExtraCellLineHidden:tableview];
+    tableview.separatorStyle = UITableViewCellSeparatorStyleNone;
+    tableview.backgroundView = nil;
+    tableview.backgroundColor = [UIColor colorWithWhite:237.0 / 255.0 alpha:1.0];
+}
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 10;
+}
+
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSInteger row = indexPath.row;
+    NSInteger section = indexPath.section;
+    CGSize cellsize = [tableView rectForRowAtIndexPath:indexPath].size;
+    CGFloat cellH = cellsize.height;
+    
+    static NSString *cellIndentifier = @"HeBankCardCell";
+    HeNoticeCell *cell  = [tableView cellForRowAtIndexPath:indexPath];
+    if (!cell) {
+        cell = [[HeNoticeCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIndentifier cellSize:cellsize];
+        
+    }
+    
+    
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleGray;
+    
+    return cell;
+    
+}
+
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 120;
+}
+
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    NSInteger row = indexPath.row;
+    NSInteger section = indexPath.section;
+    NSLog(@"section = %ld , row = %ld",section,row);
+    HeNoticeDetailVC *noticeDetailVC = [[HeNoticeDetailVC alloc] init];
+    noticeDetailVC.hidesBottomBarWhenPushed = YES;
+    [self.navigationController pushViewController:noticeDetailVC animated:YES];
 }
 
 - (void)didReceiveMemoryWarning {

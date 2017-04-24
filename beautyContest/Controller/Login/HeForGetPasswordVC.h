@@ -9,5 +9,6 @@
 #import "HeBaseViewController.h"
 
 @interface HeForGetPasswordVC : HeBaseViewController
+@property(assign,nonatomic)NSInteger modifyType; //0:忘記密碼 1:修改密碼
 
 @end

@@ -104,7 +104,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [datasource count];
+    return 10;
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -126,13 +126,6 @@
         
     }
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, (SCREENWIDTH - 20) / 2.0, cellH)];
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.font = [UIFont systemFontOfSize:15.0];
-    titleLabel.text = datasource[row];
-    titleLabel.textColor = [UIColor colorWithWhite:30.0 / 255.0 alpha:1.0];
-    [cell addSubview:titleLabel];
-    
     
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -144,7 +137,7 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 60;
+    return 100;
 }
 
 
