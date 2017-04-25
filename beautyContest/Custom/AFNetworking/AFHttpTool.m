@@ -12,9 +12,9 @@
 #import "AFHTTPRequestOperationManager.h"
 #import "ASIFormDataRequest.h"
 
-#define DEV_FAKE_SERVER @"http://huayoutong.com/mobile/" //Beijing SUN-QUAN  测试环境（北京）
-#define PRO_FAKE_SERVER @"http://huayoutong.com/mobile/" //Beijing Liu-Bei    线上环境（北京）、
-#define FAKE_SERVER @"http://huayoutong.com/mobile/"//@"http://119.254.110.241:80/" //Login 线下测试
+#define DEV_FAKE_SERVER @"https://api.dabao.com.tw/fe.v1" //Beijing SUN-QUAN  测试环境（北京）
+#define PRO_FAKE_SERVER @"https://api.dabao.com.tw/fe.v1" //Beijing Liu-Bei    线上环境（北京）、
+#define FAKE_SERVER @"https://api.dabao.com.tw/fe.v1"//@"http://119.254.110.241:80/" //Login 线下测试
 
 //#define ContentType @"text/plain"
 #define ContentType @"application/json"
@@ -82,17 +82,28 @@
     NSURL* baseURL = [NSURL URLWithString:FAKE_SERVER];
     //获得请求管理者
     AFHTTPRequestOperationManager* mgr = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:baseURL];
+    
 
 #ifdef ContentType
     mgr.responseSerializer.acceptableContentTypes = [NSSet setWithObject:ContentType];
 #endif
     mgr.requestSerializer.HTTPShouldHandleCookies = YES;
     
+//    // 2.设置非校验证书模式
+//    mgr.securityPolicy = [AFSecurityPolicy policyWithPinningMode:AFSSLPinningModeNone];
+//    mgr.securityPolicy.allowInvalidCertificates = YES;
+//    [mgr.securityPolicy setValidatesDomainName:NO];
+    
     NSString *cookieString = [[NSUserDefaults standardUserDefaults] objectForKey:@"UserCookies"];
 
     if(cookieString)
        [mgr.requestSerializer setValue: cookieString forHTTPHeaderField:@"Cookie"];
- 
+    
+    NSString *requestToken = [[NSUserDefaults standardUserDefaults] objectForKey:USERTOKENKEY];
+    if (requestToken) {
+        NSString *headerAuthorizationValue = [NSString stringWithFormat:@"%@%@",tokenPrefix,requestToken];
+        [mgr.requestSerializer setValue: headerAuthorizationValue forHTTPHeaderField:headerAuthorizationKey];
+    }
     switch (methodType) {
         case RequestMethodTypeGet:
         {

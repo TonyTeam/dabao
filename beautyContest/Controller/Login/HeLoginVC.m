@@ -98,8 +98,47 @@
 - (IBAction)loginButtonClick:(id)sender
 {
     NSLog(@"loginButtonClick");
-    [[NSUserDefaults standardUserDefaults] setObject:@"123" forKey:USERACCOUNTKEY];
-    [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINCHANGE object:nil];
+    [self cancelInputTap:nil];
+    NSString *account = accountField.text;
+    NSString *password = passwordField.text;
+    
+    if (account == nil || [account isEqualToString:@""]) {
+        [self showHint:@"請輸入登錄賬號"];
+        return;
+    }
+    if (password == nil || [password isEqualToString:@""]) {
+        [self showHint:@"請輸入登錄密碼"];
+        return;
+    }
+    if (![Tool isMobileNumber:account]) {
+        [self showHint:@"請輸入正確手機號"];
+        return;
+    }
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/user/login",BASEURL];
+    NSDictionary * params  = @{@"cellphone": account,@"password" : password,@"rememberMe":@"1"};
+    [self showHudInView:self.view hint:@"登錄中..."];
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
+        NSString *user_id = respondDict[@"user_id"];
+        NSString *token = respondDict[@"token"];
+        if ([user_id isMemberOfClass:[NSNull class]] || user_id == nil) {
+            user_id = @"";
+        }
+        if ([token isMemberOfClass:[NSNull class]] || token == nil) {
+            token = @"";
+        }
+        [[NSUserDefaults standardUserDefaults] setObject:user_id forKey:USERIDKEY];
+        [[NSUserDefaults standardUserDefaults] setObject:token forKey:USERTOKENKEY];
+        [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINCHANGE object:nil];
+        
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
+    
 }
 
 - (IBAction)faceBookLogin:(id)sender
@@ -120,6 +159,12 @@
         [textField resignFirstResponder];
     }
     return YES;
+}
+
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    NSMutableString *text = [[NSMutableString alloc] initWithString:textField.text];
+    [text replaceCharactersInRange:range withString:string];
+    return [text length] <= 10;
 }
 
 - (void)didReceiveMemoryWarning {

@@ -85,6 +85,10 @@
 
 #define RGB(r,g,b,a)  [UIColor colorWithRed:((r) / 255.0) green:((g) / 255.0) blue:((b) / 255.0) alpha:(a)]
 
+#define headerAuthorizationKey @"Authorization"
+#define requestTokenKey @"requestToken"
+//token的前缀
+#define tokenPrefix @"Bearer "
 //Link notificaiton点击label的某种链接的通知
 #define LinkNOTIFICATION @"LinkNotification"
 //Label的vaule的key
