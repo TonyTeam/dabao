@@ -99,8 +99,30 @@
         [self showHint:@"請輸入正確手機號"];
         return;
     }
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/user/signup-by-cellphone",BASEURL];
+    NSDictionary * params  = @{@"cellphone": userPhone,@"sendCaptcha":@"1"};
+    [self showHudInView:self.view hint:@"獲取中..."];
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
+        
+        id success = respondDict[@"success"];
+        if ([success isEqualToString:@"SUCCESS"]) {
+            [self showHint:@"驗證碼已發送，請注意查收"];
+            [sender startWithTime:60 title:@"獲取驗證碼" countDownTitle:@"s" mainColor:[UIColor whiteColor] countColor:[UIColor whiteColor]];
+        }
+        else{
+            [self showHint:@"發送驗證碼出錯"];
+        }
+        
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
     
-    [sender startWithTime:60 title:@"獲取驗證碼" countDownTitle:@"s" mainColor:[UIColor whiteColor] countColor:[UIColor whiteColor]];
+    
 }
 
 //取消输入
@@ -120,6 +142,54 @@
 - (IBAction)enrollButtonClick:(id)sender
 {
     NSLog(@"enrollButtonClick");
+    [self cancelInputTap:nil];
+    NSString *account = accountField.text;
+    NSString *code = codeField.text;
+    NSString *password = passwordField.text;
+    if ((account == nil || [account isEqualToString:@""])) {
+        [self showHint:@"請輸入手機號"];
+        return;
+    }
+    if (![Tool isMobileNumber:account]) {
+        [self showHint:@"請輸入正確手機號"];
+        return;
+    }
+    if ((code == nil || [code isEqualToString:@""])) {
+        [self showHint:@"請輸入手機驗證碼"];
+        return;
+    }
+    if ((password == nil || [password isEqualToString:@""])) {
+        [self showHint:@"請輸入註冊密碼"];
+        return;
+    }
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/user/signup-by-cellphone",BASEURL];
+    
+    NSDictionary * params  = @{@"cellphone": account,@"captcha":code,@"password":password,@"password_repeat":password,@"signup_referer":@"iOS ",@"device_id":[Tool getDeviceUUid]};
+    [self showHudInView:self.view hint:@"註冊中..."];
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
+        
+        NSString *user_id = respondDict[@"user_id"];
+        NSString *token = respondDict[@"token"];
+        if ([user_id isMemberOfClass:[NSNull class]] || user_id == nil || [user_id isEqualToString:@""]) {
+            user_id = @"";
+        }
+        if (![user_id isEqualToString:@""]) {
+            [self showHint:@"註冊成功"];
+            [self performSelector:@selector(backToLastView) withObject:nil afterDelay:0.3];
+            return;
+        }
+        else{
+            [self showHint:@"註冊失敗"];
+        }
+        
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
 }
 
 - (IBAction)scanDaBaoProtocol:(id)sender
@@ -133,6 +203,20 @@
         [textField resignFirstResponder];
     }
     return YES;
+}
+
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    if (textField.tag == 3) {
+        NSMutableString *text = [[NSMutableString alloc] initWithString:textField.text];
+        [text replaceCharactersInRange:range withString:string];
+        return [text length] <= taiWanPhoneMaxLength;
+    }
+    return YES;
+}
+
+- (void)backToLastView
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)didReceiveMemoryWarning {

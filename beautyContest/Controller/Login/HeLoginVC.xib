@@ -41,7 +41,7 @@
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="輸入手機號碼" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hW8-B7-J66">
+                <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="輸入手機號碼" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hW8-B7-J66">
                     <rect key="frame" x="90" y="0.0" width="269" height="50"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="50" id="VdK-9U-9Em"/>

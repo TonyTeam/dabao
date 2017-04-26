@@ -30,7 +30,6 @@
     [self getUserInfo];
     [self autoLogin];
     [self setupSubviews];
-    
 }
 
 //后台自动登录
@@ -47,8 +46,29 @@
 //获取用户的信息
 - (void)getUserInfo
 {
-   
-    
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/user/view",BASEURL];
+    NSDictionary * params  = nil;
+    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
+        NSString *user_id = respondDict[@"user_id"];
+        NSString *token = respondDict[@"token"];
+        if ([user_id isMemberOfClass:[NSNull class]] || user_id == nil) {
+            user_id = @"";
+        }
+        if ([token isMemberOfClass:[NSNull class]] || token == nil) {
+            token = @"";
+        }
+        [[NSUserDefaults standardUserDefaults] setObject:user_id forKey:USERIDKEY];
+        [[NSUserDefaults standardUserDefaults] setObject:token forKey:USERTOKENKEY];
+        [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINCHANGE object:nil];
+        
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
 }
 
 //设置根控制器的四个子控制器

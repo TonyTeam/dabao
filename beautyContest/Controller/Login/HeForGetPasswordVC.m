@@ -80,7 +80,9 @@
 {
     [super initializaiton];
     datasource = @[@"手機號",@"輸入驗證碼",@"密碼",@"確認密碼"];
-    
+    if (_modifyType == 1) {
+        datasource = @[@"輸入驗證碼",@"密碼",@"確認密碼"];
+    }
 }
 
 - (void)initView
@@ -121,6 +123,7 @@
     accountField.delegate = self;
     accountField.font = [UIFont systemFontOfSize:15.0];
     accountField.placeholder = @"請輸入賬戶手機號";
+    accountField.tag = 3;
     
     verifyCodeField = [[UITextField alloc] init];
     verifyCodeField.delegate = self;
@@ -154,16 +157,39 @@
     NSLog(@"getVerifyCode");
     [self cancelInputTap:nil];
     NSString *userPhone = accountField.text;
-    if ((userPhone == nil || [userPhone isEqualToString:@""])) {
-        [self showHint:@"請輸入手機號"];
-        return;
+    if (_modifyType != 1) {
+        
+        if ((userPhone == nil || [userPhone isEqualToString:@""])) {
+            [self showHint:@"請輸入手機號"];
+            return;
+        }
+        if (![Tool isMobileNumber:userPhone]) {
+            [self showHint:@"請輸入正確手機號"];
+            return;
+        }
     }
-    if (![Tool isMobileNumber:userPhone]) {
-        [self showHint:@"請輸入正確手機號"];
-        return;
-    }
-    
-    [sender startWithTime:60 title:@"獲取驗證碼" countDownTitle:@"s" mainColor:[UIColor whiteColor] countColor:[UIColor whiteColor]];
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/user/send-password-reset-captcha",BASEURL];
+    NSDictionary * params  = @{@"cellphone": userPhone};
+    [self showHudInView:self.view hint:@"獲取中..."];
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
+        
+        id success = respondDict[@"success"];
+        if ([success isEqualToString:@"SUCCESS"]) {
+            [self showHint:@"驗證碼已發送，請注意查收"];
+            [sender startWithTime:60 title:@"獲取驗證碼" countDownTitle:@"s" mainColor:[UIColor whiteColor] countColor:[UIColor whiteColor]];
+        }
+        else{
+            [self showHint:@"發送驗證碼出錯"];
+        }
+        
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
 }
 
 //取消输入
@@ -186,12 +212,130 @@
 - (void)confirmButtonClick:(UIButton *)button
 {
     NSLog(@"confirmButtonClick");
+    [self cancelInputTap:nil];
+    NSString *account = accountField.text;
+    NSString *code = verifyCodeField.text;
+    NSString *password = passwordField.text;
+    NSString *confirmPassword = confirmPasswordField.text;
+    
+    if (_modifyType != 1) {
+        if ((account == nil || [account isEqualToString:@""])) {
+            [self showHint:@"請輸入手機號"];
+            return;
+        }
+        if (![Tool isMobileNumber:account]) {
+            [self showHint:@"請輸入正確手機號"];
+            return;
+        }
+    }
+    
+    if ((code == nil || [code isEqualToString:@""])) {
+        [self showHint:@"請輸入手機驗證碼"];
+        return;
+    }
+    if ((password == nil || [password isEqualToString:@""])) {
+        [self showHint:@"請輸入密碼"];
+        return;
+    }
+    if ((confirmPassword == nil || [confirmPassword isEqualToString:@""])) {
+        [self showHint:@"請再次輸入密碼"];
+        return;
+    }
+    if (_modifyType != 1) {
+        if (![password isEqualToString:confirmPassword]) {
+            [self showHint:@"兩次輸入密碼不一致"];
+            return;
+        }
+        [self forgetPassword];
+    }
+    else{
+        [self modifyPassword];
+    }
+}
+
+//忘記密碼
+- (void)forgetPassword
+{
+    NSString *account = accountField.text;
+    NSString *code = verifyCodeField.text;
+    NSString *password = passwordField.text;
+
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/user/reset-password",BASEURL];
+    
+    NSDictionary * params  = @{@"cellphone": account,@"captcha":code,@"password":password};
+    [self showHudInView:self.view hint:@"重置密碼中..."];
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
+        id success = respondDict[@"success"];
+        if ([success isEqualToString:@"SUCCESS"]) {
+            [self showHint:@"密碼重置成功"];
+            [self performSelector:@selector(backToLastView) withObject:nil afterDelay:0.3];
+        }
+        else{
+            [self showHint:@"密碼重置出錯"];
+        }
+        
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
+}
+
+//修改密碼
+- (void)modifyPassword
+{
+    NSString *account = [[NSUserDefaults standardUserDefaults] objectForKey:USERACCOUNTKEY];
+    if (account == nil) {
+        account = @"";
+    }
+    NSString *code = verifyCodeField.text;
+    NSString *password = passwordField.text;
+    
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/user/reset-password",BASEURL];
+    
+    NSDictionary * params  = @{@"cellphone": account,@"captcha":code,@"password":password};
+    [self showHudInView:self.view hint:@"修改密碼中..."];
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
+        id success = respondDict[@"success"];
+        if ([success isEqualToString:@"SUCCESS"]) {
+            [self showHint:@"密碼重置成功"];
+            [self performSelector:@selector(backToLastView) withObject:nil afterDelay:0.3];
+        }
+        else{
+            [self showHint:@"密碼重置出錯"];
+        }
+        
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
+}
+
+- (void)backToLastView
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     if ([textField isFirstResponder]) {
         [textField resignFirstResponder];
+    }
+    return YES;
+}
+
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    if (textField.tag == 3) {
+        NSMutableString *text = [[NSMutableString alloc] initWithString:textField.text];
+        [text replaceCharactersInRange:range withString:string];
+        return [text length] <= taiWanPhoneMaxLength;
     }
     return YES;
 }

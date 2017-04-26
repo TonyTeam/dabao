@@ -162,9 +162,12 @@
 }
 
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
-    NSMutableString *text = [[NSMutableString alloc] initWithString:textField.text];
-    [text replaceCharactersInRange:range withString:string];
-    return [text length] <= 10;
+    if (textField.tag == 3) {
+        NSMutableString *text = [[NSMutableString alloc] initWithString:textField.text];
+        [text replaceCharactersInRange:range withString:string];
+        return [text length] <= taiWanPhoneMaxLength;
+    }
+    return YES;
 }
 
 - (void)didReceiveMemoryWarning {
