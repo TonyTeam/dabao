@@ -8,8 +8,14 @@
 
 #import "HeDCoinDetailVC.h"
 #import "HeDCoinStoreCell.h"
+#import "MJRefreshAutoNormalFooter.h"
+#import "MJRefreshNormalHeader.h"
 
 @interface HeDCoinDetailVC ()<UITableViewDelegate,UITableViewDataSource>
+{
+    NSInteger pageIndex;
+    NSInteger pageSize;
+}
 @property(strong,nonatomic)IBOutlet UITableView *tableview;
 @property(strong,nonatomic)NSMutableArray *datasource;
 
@@ -43,13 +49,15 @@
     // Do any additional setup after loading the view from its nib.
     [self initializaiton];
     [self initView];
+    [self loadIngot];
 }
 
 - (void)initializaiton
 {
     [super initializaiton];
     datasource = [[NSMutableArray alloc] initWithCapacity:0];
-    
+    pageSize = 50;
+    pageIndex = 1;
 }
 
 - (void)initView
@@ -57,11 +65,82 @@
     [super initView];
     [Tool setExtraCellLineHidden:tableview];
     tableview.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    self.tableview.header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        // 进入刷新状态后会自动调用这个block,刷新
+        pageIndex = 1;
+        [self.tableview.header performSelector:@selector(endRefreshing) withObject:nil afterDelay:0.5];
+        [self loadIngot];
+        
+    }];
+    
+    self.tableview.footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        self.tableview.footer.automaticallyHidden = YES;
+        self.tableview.footer.hidden = NO;
+        // 进入刷新状态后会自动调用这个block，加载更多
+        pageIndex++;
+        [self performSelector:@selector(endRefreshing) withObject:nil afterDelay:1.0];
+            
+    }];
+}
+
+- (void)endRefreshing
+{
+    [self.tableview.footer endRefreshing];
+    self.tableview.footer.hidden = YES;
+    self.tableview.footer = [MJRefreshAutoNormalFooter footerWithRefreshingBlock:^{
+        self.tableview.footer.automaticallyHidden = YES;
+        self.tableview.footer.hidden = NO;
+        // 进入刷新状态后会自动调用这个block，加载更多
+        [self performSelector:@selector(endRefreshing) withObject:nil afterDelay:1.0];
+        [self loadIngot];
+    }];
+    NSLog(@"endRefreshing");
+}
+
+- (void)loadIngot
+{
+    [self showHudInView:tableview hint:@"加載中..."];
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/order/index",BASEURL];
+    
+    NSString *page = [NSString stringWithFormat:@"%ld",pageIndex];
+    NSString *size = [NSString stringWithFormat:@"%ld",pageSize];
+    NSString *biz = @"ingot";
+    NSDictionary *params  = @{@"page":page,@"size":size,@"biz":biz};
+    
+    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        id orderArray = [respondString objectFromJSONString];
+        if ([orderArray isKindOfClass:[NSArray class]]) {
+            if (pageIndex == 1) {
+                [datasource removeAllObjects];
+                for (NSDictionary *dict in orderArray) {
+                    [datasource addObject:dict];
+                }
+            }
+            else{
+                for (NSDictionary *dict in orderArray) {
+                    [datasource addObject:dict];
+                }
+            }
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [tableview reloadData];
+            });
+        }
+        else{
+            [self showHint:@"暫無記錄"];
+        }
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5;
+    return [datasource count];
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -88,8 +167,42 @@
     } @finally {
         
     }
+    NSString *er = dict[@"er"];
+    if ([er isMemberOfClass:[NSNull class]] || er == nil) {
+        er = @"";
+    }
+    cell.exchangeRateLabel.text = [NSString stringWithFormat:@"當天匯率: %@",er];
     
+    id amountObj = dict[@"amount"];
+    if ([amountObj isMemberOfClass:[NSNull class]] || amountObj == nil) {
+        amountObj = @"";
+    }
+    cell.dcoinLabel.text = [NSString stringWithFormat:@"需支付台幣: %@",amountObj];
     
+    NSString *created_at = dict[@"created_at"];
+    if ([created_at isMemberOfClass:[NSNull class]]) {
+        created_at = @"";
+    }
+    cell.timeLabel.text = created_at;
+    
+    NSString *pay_status_name = dict[@"status_name"];
+    if ([pay_status_name isMemberOfClass:[NSNull class]]) {
+        pay_status_name = @"";
+    }
+    cell.statusLabel.text = pay_status_name;
+    
+    NSString *pay_status_style = dict[@"pay_status_style"];
+    if ([pay_status_style isMemberOfClass:[NSNull class]]) {
+        pay_status_style = @"";
+    }
+    if ([pay_status_style compare:@"success" options:NSCaseInsensitiveSearch] == NSOrderedSame) {
+        cell.statusLabel.textColor = [UIColor greenColor];
+    }
+    id biz_rmb = dict[@"biz_rmb"];
+    if ([biz_rmb isMemberOfClass:[NSNull class]]) {
+        biz_rmb = @"";
+    }
+    cell.coinLabel.text = [NSString stringWithFormat:@"+%@",biz_rmb];
     return cell;
     
 }

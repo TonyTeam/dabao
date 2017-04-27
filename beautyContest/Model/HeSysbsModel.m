@@ -18,6 +18,14 @@
         instance = [[self alloc] init];
         instance.user = [[User alloc] init];
         instance.albumArray = [[NSArray alloc] init];
+        
+        NSString *detailDictString = [[NSUserDefaults standardUserDefaults] objectForKey:USERDETAILDATAKEY];
+        
+        instance.userDetailDict = [[NSDictionary alloc] init];
+        if (detailDictString) {
+            NSDictionary *detailDict = [detailDictString objectFromJSONString];
+            instance.userDetailDict = [[NSDictionary alloc] initWithDictionary:detailDict];
+        }
     });
     return instance;
 }

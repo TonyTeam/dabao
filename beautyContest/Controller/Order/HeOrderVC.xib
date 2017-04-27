@@ -11,8 +11,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HeOrderVC">
             <connections>
+                <outlet property="dCoinTitleLabel" destination="AvS-Oa-daC" id="MTJ-8D-daL"/>
                 <outlet property="dCoinValueLabel" destination="LiD-Td-Enn" id="gbv-oY-Xh2"/>
                 <outlet property="tableview" destination="ooX-7c-VBE" id="7ec-ae-kiL"/>
+                <outlet property="titleLabel" destination="avb-21-Lo5" id="UWs-t8-Jjo"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>

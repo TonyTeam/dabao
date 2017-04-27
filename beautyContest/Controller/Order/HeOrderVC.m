@@ -14,6 +14,8 @@
 @interface HeOrderVC ()<UITableViewDelegate,UITableViewDataSource>
 @property(strong,nonatomic)IBOutlet UITableView *tableview;
 @property(strong,nonatomic)IBOutlet UILabel *dCoinValueLabel;
+@property(strong,nonatomic)IBOutlet UILabel *dCoinTitleLabel;
+
 @property(strong,nonatomic)NSArray *datasource;
 @property(strong,nonatomic)IBOutlet UILabel *titleLabel;
 
@@ -24,6 +26,8 @@
 @synthesize dCoinValueLabel;
 @synthesize datasource;
 @synthesize titleLabel;
+@synthesize orderDetailDict;
+@synthesize dCoinTitleLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -49,6 +53,7 @@
     // Do any additional setup after loading the view from its nib.
     [self initializaiton];
     [self initView];
+    [self loadOrderDetail];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -67,6 +72,9 @@
 {
     [super initializaiton];
     datasource = @[@"訂單狀態",@"訂單號",@"付款方式",@"收款賬號",@"付款金額",@"創建時間"];
+    if (_orderType == 0) {
+        datasource = @[@"訂單狀態",@"訂單號",@"創建時間"];
+    }
 }
 
 - (void)initView
@@ -95,18 +103,25 @@
     tipLabelH = contentsize.height;
     
     UILabel *tipLabel = [[UILabel alloc] initWithFrame:CGRectMake(tipLabelX, tipLabelY, tipLabelW, tipLabelH)];
+    tipLabel.text = contentString;
+    tipLabel.textAlignment = NSTextAlignmentCenter;
     tipLabel.numberOfLines = 0;
     tipLabel.backgroundColor = [UIColor clearColor];
     tipLabel.font = contentFont;
-    tipLabel.textColor = [UIColor colorWithWhite:30 / 255.0 alpha:1.0];
+    tipLabel.textColor = [UIColor colorWithWhite:30.0 / 255.0 alpha:1.0];
     [footerview addSubview:tipLabel];
+    if (_orderType == 0) {
+        tipLabel.hidden = YES;
+    }
     
     CGFloat backButtonX = 20;
-    CGFloat backButtonY = CGRectGetMaxY(tipLabel.frame) + 20;
+    CGFloat backButtonY = CGRectGetMaxY(tipLabel.frame) + 10;
     CGFloat backButtonW = SCREENWIDTH - 2 * backButtonX;
     CGFloat backButtonH = 40;
     
     UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(backButtonX, backButtonY, backButtonW, backButtonH)];
+    backButton.layer.masksToBounds = YES;
+    backButton.layer.cornerRadius = 8.0;
     [backButton setTitle:@"返回" forState:UIControlStateNormal];
     backButton.titleLabel.font = [UIFont systemFontOfSize:16.0];
     [backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -117,6 +132,46 @@
     
 }
 
+- (void)loadOrderDetail
+{
+    [self showHudInView:tableview hint:@"加載中..."];
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/order/view",BASEURL];
+    
+    NSString *oid = orderDetailDict[@"oid"];
+    NSDictionary *params  = @{@"oid":oid};
+    
+    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        id orderdict = [respondString objectFromJSONString];
+        if (orderdict) {
+            orderDetailDict = [[NSDictionary alloc] initWithDictionary:orderdict];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSString *biz_rmb = orderDetailDict[@"biz_rmb"];
+            if ([biz_rmb isMemberOfClass:[NSNull class]] || biz_rmb == nil) {
+                biz_rmb = @"";
+            }
+            dCoinValueLabel.text = [NSString stringWithFormat:@"%@ D幣",biz_rmb];
+            
+            NSString *ItemName = orderDetailDict[@"ItemName"];
+            if (_orderType == 0) {
+                ItemName = orderDetailDict[@"qr_brief"];
+            }
+            if ([ItemName isMemberOfClass:[NSNull class]] || ItemName == nil) {
+                ItemName = @"";
+            }
+            dCoinTitleLabel.text = ItemName;
+            
+            [tableview reloadData];
+        });
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
+}
+
 - (void)backButtonClick:(UIButton *)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -124,7 +179,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 5;
+    return [datasource count];
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -137,6 +192,8 @@
     NSInteger row = indexPath.row;
     NSInteger section = indexPath.section;
     CGSize cellsize = [tableView rectForRowAtIndexPath:indexPath].size;
+    CGFloat cellH = cellsize.height;
+    
     static NSString *cellIndentifier = @"HeDCoinStoreCell";
     HeBaseTableViewCell *cell  = [tableView cellForRowAtIndexPath:indexPath];
     if (!cell) {
@@ -144,7 +201,91 @@
         
     }
     
+    CGFloat titleLabelX = 10;
+    CGFloat titleLabelY = 0;
+    CGFloat titleLabelW = SCREENWIDTH - 2 * titleLabelX;
+    CGFloat titleLabelH = cellH;
+    UILabel *subtitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH)];
+    subtitleLabel.backgroundColor = [UIColor clearColor];
+    subtitleLabel.font = [UIFont systemFontOfSize:15.0];
+    subtitleLabel.text = datasource[row];
+    subtitleLabel.textColor = [UIColor colorWithWhite:30.0 / 255.0 alpha:1.0];
+    [cell addSubview:subtitleLabel];
     
+
+    UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH)];
+    contentLabel.backgroundColor = [UIColor clearColor];
+    contentLabel.font = [UIFont systemFontOfSize:14.0];
+    contentLabel.textAlignment = NSTextAlignmentRight;
+    contentLabel.textColor = [UIColor colorWithWhite:30.0 / 255.0 alpha:1.0];
+    [cell addSubview:contentLabel];
+    switch (row) {
+        case 0:
+        {
+            NSString *status_name = orderDetailDict[@"status_name"];
+            if ([status_name isMemberOfClass:[NSNull class]] || status_name == nil) {
+                status_name = @"";
+            }
+            contentLabel.text = status_name;
+            contentLabel.textColor = [UIColor redColor];
+            break;
+        }
+        case 1:{
+            NSString *oid = orderDetailDict[@"oid"];
+            if ([oid isMemberOfClass:[NSNull class]] || oid == nil) {
+                oid = @"";
+            }
+            contentLabel.text = oid;
+            break;
+        }
+        case 2:{
+            if (_orderType == 0) {
+                NSString *created_at = orderDetailDict[@"created_at"];
+                if ([created_at isMemberOfClass:[NSNull class]] || created_at == nil) {
+                    created_at = @"";
+                }
+                contentLabel.text = [NSString stringWithFormat:@"%@",created_at];
+            }
+            else{
+                NSString *oid = orderDetailDict[@"pm_payee_acct_no"];
+                if ([oid isMemberOfClass:[NSNull class]] || oid == nil) {
+                    oid = @"";
+                }
+                contentLabel.text = oid;
+            }
+            
+            break;
+        }
+        case 3:{
+            NSString *pm_payee_acct_no = orderDetailDict[@"pm_payee_acct_no"];
+            if ([pm_payee_acct_no isMemberOfClass:[NSNull class]] || pm_payee_acct_no == nil) {
+                pm_payee_acct_no = @"";
+            }
+            contentLabel.text = pm_payee_acct_no;
+            break;
+        }
+        case 4:{
+            NSString *pay_amount = orderDetailDict[@"pay_amount"];
+            if ([pay_amount isMemberOfClass:[NSNull class]] || pay_amount == nil) {
+                pay_amount = @"";
+            }
+            contentLabel.text = [NSString stringWithFormat:@"%@台幣",pay_amount];
+            break;
+        }
+        case 5:{
+            NSString *created_at = orderDetailDict[@"created_at"];
+            if ([created_at isMemberOfClass:[NSNull class]] || created_at == nil) {
+                created_at = @"";
+            }
+            contentLabel.text = [NSString stringWithFormat:@"%@",created_at];
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     return cell;
     
@@ -156,30 +297,6 @@
     return 50;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    UIView *headerview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREENWIDTH, 30)];
-    headerview.backgroundColor = [UIColor colorWithWhite:247.0 / 255.0 alpha:1.0];
-    
-    CGFloat titleLabelX = 10;
-    CGFloat titleLabelY = 0;
-    CGFloat titleLabelW = SCREENWIDTH - 2 * titleLabelX;
-    CGFloat titleLabelH = 30;
-    
-    UILabel *mytitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH)];
-    mytitleLabel.backgroundColor = [UIColor clearColor];
-    mytitleLabel.font = [UIFont systemFontOfSize:12.0];
-    mytitleLabel.text = @"當前D幣儲值訂單詳情";
-    mytitleLabel.textColor = [UIColor blackColor];
-    [headerview addSubview:mytitleLabel];
-    
-    return headerview;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 30;
-}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {

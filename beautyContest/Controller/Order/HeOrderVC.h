@@ -9,5 +9,7 @@
 #import "HeBaseViewController.h"
 
 @interface HeOrderVC : HeBaseViewController
+@property(strong,nonatomic)NSDictionary *orderDetailDict;
+@property(assign,nonatomic)NSInteger orderType;
 
 @end

@@ -24,6 +24,7 @@
 @property(strong,nonatomic)IBOutlet UILabel *coinTitleLabel;
 @property(strong,nonatomic)IBOutlet UILabel *coinValueLabel;
 @property(strong,nonatomic)IBOutlet UILabel *unitLabel;
+@property(strong,nonatomic)NSDictionary *userDetailDict;
 
 @end
 
@@ -32,6 +33,7 @@
 @synthesize coinTitleLabel;
 @synthesize coinValueLabel;
 @synthesize unitLabel;
+@synthesize userDetailDict;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -108,6 +110,8 @@
 {
     [super initializaiton];
     adjustView = NO;
+    userDetailDict = [[NSDictionary alloc] initWithDictionary:[HeSysbsModel getSysModel].userDetailDict];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDataUpdate:) name:USERDATAUPDATE_NOTIFICATION object:nil];
 }
 
 - (void)initView
@@ -178,7 +182,11 @@
 //        make.topMargin.mas_equalTo(CGRectGetMaxY(first_contentLabel.frame) + 2);
 //    }];
     
-    NSString *coinValue = @"1";
+    id ingots = userDetailDict[@"ingots"];
+    if ([ingots isMemberOfClass:[NSNull class]] || ingots == nil) {
+        ingots = @"";
+    }
+    NSString *coinValue = [NSString stringWithFormat:@"%@",ingots];
     CGSize coinsize = [MLLabel getViewSizeByString:coinValue maxWidth:maxWidth font:[UIFont systemFontOfSize:15.0] lineHeight:1.2 lines:0];
     
     coinValueLabel.text = coinValue;
@@ -191,6 +199,29 @@
     unitLabel.frame = coinFrame;
     
     
+}
+
+- (void)userDataUpdate:(NSNotification *)notification
+{
+    CGFloat maxWidth = SCREENWIDTH / 2.0;
+    
+    userDetailDict = [[NSDictionary alloc] initWithDictionary:[HeSysbsModel getSysModel].userDetailDict];
+    
+    id ingots = userDetailDict[@"ingots"];
+    if ([ingots isMemberOfClass:[NSNull class]] || ingots == nil) {
+        ingots = @"";
+    }
+    NSString *coinValue = [NSString stringWithFormat:@"%@",ingots];
+    CGSize coinsize = [MLLabel getViewSizeByString:coinValue maxWidth:maxWidth font:[UIFont systemFontOfSize:15.0] lineHeight:1.2 lines:0];
+    
+    coinValueLabel.text = coinValue;
+    CGRect coinFrame = coinValueLabel.frame;
+    coinFrame.size.width = coinsize.width;
+    coinValueLabel.frame = coinFrame;
+    
+    coinFrame = unitLabel.frame;
+    coinFrame.origin.x = CGRectGetMaxX(coinValueLabel.frame) + 2;
+    unitLabel.frame = coinFrame;
 }
 
 - (IBAction)scanButtonClick:(id)sender

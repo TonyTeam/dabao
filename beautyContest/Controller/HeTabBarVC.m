@@ -10,7 +10,6 @@
 #import "RDVTabBarItem.h"
 #import "RDVTabBar.h"
 #import "RDVTabBarController.h"
-
 #import "HeSysbsModel.h"
 
 @interface HeTabBarVC ()
@@ -51,19 +50,10 @@
     [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         [self hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        [[NSUserDefaults standardUserDefaults] setObject:respondString forKey:USERDETAILDATAKEY];
         NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
-        NSString *user_id = respondDict[@"user_id"];
-        NSString *token = respondDict[@"token"];
-        if ([user_id isMemberOfClass:[NSNull class]] || user_id == nil) {
-            user_id = @"";
-        }
-        if ([token isMemberOfClass:[NSNull class]] || token == nil) {
-            token = @"";
-        }
-        [[NSUserDefaults standardUserDefaults] setObject:user_id forKey:USERIDKEY];
-        [[NSUserDefaults standardUserDefaults] setObject:token forKey:USERTOKENKEY];
-        [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINCHANGE object:nil];
-        
+        [HeSysbsModel getSysModel].userDetailDict = [[NSDictionary alloc] initWithDictionary:respondDict];
+        [[NSNotificationCenter defaultCenter] postNotificationName:USERDATAUPDATE_NOTIFICATION object:nil];
         
     } failure:^(NSError* err){
         [self hideHud];

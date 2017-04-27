@@ -13,6 +13,8 @@
 @property(strong,nonatomic)User *user;//用户
 @property(strong,nonatomic)NSArray *albumArray;//当前用户相册的可操作权限
 
+@property(strong,nonatomic)NSDictionary *userDetailDict;
+
 + (HeSysbsModel *)getSysModel;
 
 @end

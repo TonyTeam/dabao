@@ -16,6 +16,8 @@
 @property(strong,nonatomic)NSArray *datasource;
 @property(strong,nonatomic)UITextField *storeCoinField;
 @property(assign,nonatomic)NSInteger selectBank; //1:郵局 2：玉山銀行 3:超商銀行
+@property(strong,nonatomic)UILabel *paytitleLabel;
+@property(strong,nonatomic)NSArray *bankArray;
 
 @end
 
@@ -24,6 +26,8 @@
 @synthesize datasource;
 @synthesize storeCoinField;
 @synthesize selectBank;
+@synthesize paytitleLabel;
+@synthesize bankArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -55,7 +59,7 @@
 {
     [super initializaiton];
     datasource = @[@[@"金額"],@[@"選擇儲值方式"],@[@"郵局",@"玉山商銀",@"超商付款"]];
-    selectBank = 0;
+    selectBank = 1;
 }
 
 - (void)initView
@@ -64,6 +68,7 @@
     [Tool setExtraCellLineHidden:tableview];
     
     storeCoinField = [[UITextField alloc] init];
+    storeCoinField.keyboardType = UIKeyboardTypeNumberPad;
     storeCoinField.delegate = self;
     storeCoinField.placeholder = @"請填寫儲值金額";
     storeCoinField.font = [UIFont systemFontOfSize:16.0];
@@ -95,6 +100,52 @@
 - (void)commitButtonClick:(UIButton *)sender
 {
     NSLog(@"commitButtonClick");
+    [self showHudInView:tableview hint:@"創建中..."];
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/order-ingot/create",BASEURL];
+    
+    
+    NSString *biz_rmb = @"ingot";
+    NSString *payment_method = @"20";
+    switch (selectBank) {
+        case 1:
+        {
+            //郵局
+            payment_method = @"20";
+            break;
+        }
+        case 2:
+        {
+            //玉山銀行
+            payment_method = @"19";
+            break;
+        }
+        case 3:
+        {
+            //超商支付
+            payment_method = @"CVS_CVS";
+            break;
+        }
+        default:
+            break;
+    }
+    NSDictionary *params  = @{@"biz_rmb":biz_rmb,@"payment_method":payment_method};
+    
+    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSDictionary *respondDict = [respondString objectFromJSONString];
+        
+        [self showHint:@"創建成功"];
+        [self performSelector:@selector(backToLastView) withObject:nil afterDelay:0.2];
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
+}
+
+- (void)backToLastView
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)selectButtonClick:(UIButton *)sender
@@ -110,6 +161,25 @@
     if ([textField isFirstResponder]) {
         [textField resignFirstResponder];
     }
+    return YES;
+}
+
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    
+    NSDictionary *dict = [HeSysbsModel getSysModel].userDetailDict;
+    id er = dict[@"er"];
+    
+    NSMutableString *text = [[NSMutableString alloc] initWithString:textField.text];
+    [text replaceCharactersInRange:range withString:string];
+    
+    CGFloat total = [text floatValue] * [er floatValue];
+    if ([text floatValue] > 0.9) {
+        paytitleLabel.text = [NSString stringWithFormat:@"需要支付: %.2f台幣",total];
+    }
+    else{
+        paytitleLabel.text = @"";
+    }
+
     return YES;
 }
 
@@ -234,7 +304,7 @@
                     UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, CGRectGetMaxY(titleLabel.frame), SCREENWIDTH - 20, cellH / 2.0)];
                     contentLabel.backgroundColor = [UIColor clearColor];
                     contentLabel.textColor = [UIColor grayColor];
-                    contentLabel.text = @"卡號后六位:***338";
+                    contentLabel.text = @"卡號后六位:***242";
                     contentLabel.font = [UIFont systemFontOfSize:16.0];
                     [cell addSubview:contentLabel];
                     
@@ -353,7 +423,7 @@
             return 0;
             break;
         case 1:
-            return 40;
+            return 30;
             break;
         case 2:
             return 50;
@@ -379,7 +449,9 @@
             
             headerview.frame = CGRectMake(0, 0, SCREENWIDTH, 40);
             
-            NSString *title = @"今日匯率: 4.783";
+            NSDictionary *dict = [HeSysbsModel getSysModel].userDetailDict;
+            id er = dict[@"er"];
+            NSString *title = [NSString stringWithFormat:@"今日匯率: %@",er];
             CGFloat titleLabelX = 10;
             CGFloat titleLabelY = 0;
             CGFloat titleLabelW = [MLLabel getViewSizeByString:title maxWidth:(SCREENWIDTH - 2 * titleLabelX) font:[UIFont systemFontOfSize:15.0] lineHeight:1.2f lines:0].width;
@@ -388,18 +460,30 @@
             UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH)];
             titleLabel.backgroundColor = [UIColor clearColor];
             titleLabel.textColor = [UIColor blackColor];
-            titleLabel.font = [UIFont systemFontOfSize:15.0];
-            titleLabel.text = @"今日匯率: 4.783";
+            titleLabel.font = [UIFont systemFontOfSize:13.0];
+            titleLabel.text = [NSString stringWithFormat:@"今日匯率: %@",er];
             [headerview addSubview:titleLabel];
             
             titleLabelX = CGRectGetMaxX(titleLabel.frame) + 15;
             titleLabelW = SCREENWIDTH - 10 - titleLabelX;
-            UILabel *titleLabel1 = [[UILabel alloc] initWithFrame:CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH)];
-            titleLabel1.font = [UIFont systemFontOfSize:15.0];
-            titleLabel1.backgroundColor = [UIColor clearColor];
-            titleLabel1.textColor = [UIColor colorWithRed:253.0 / 255.0 green:105.0 / 255.0 blue:102.0 / 255.0 alpha:1.0];
-            titleLabel1.text = @"需要支付: 0.00台幣";
-            [headerview addSubview:titleLabel1];
+            
+            if (!paytitleLabel) {
+                paytitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(titleLabelX, titleLabelY, titleLabelW, titleLabelH)];
+            }
+            
+            paytitleLabel.font = [UIFont systemFontOfSize:13.0];
+            paytitleLabel.backgroundColor = [UIColor clearColor];
+            paytitleLabel.textColor = [UIColor colorWithRed:253.0 / 255.0 green:105.0 / 255.0 blue:102.0 / 255.0 alpha:1.0];
+            
+            NSString *text = storeCoinField.text;
+            CGFloat total = [text floatValue] * [er floatValue];
+            if ([text floatValue] > 0.9) {
+                paytitleLabel.text = [NSString stringWithFormat:@"需要支付: %.2f台幣",total];
+            }
+            else{
+                paytitleLabel.text = @"";
+            }
+            [headerview addSubview:paytitleLabel];
             
             break;
         }

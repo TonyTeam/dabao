@@ -49,7 +49,7 @@
         statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(exchangeRateLabelX, exchangeRateLabelY, exchangeRateLabelW, exchangeRateLabelH)];
         statusLabel.textAlignment = NSTextAlignmentRight;
         statusLabel.backgroundColor = [UIColor clearColor];
-        statusLabel.textColor = [UIColor colorWithRed:253.0 / 255.0 green:105.0 / 255.0 blue:102.0 / 255.0 alpha:1.0];
+        statusLabel.textColor = DEFAULTREDCOLOR;
         statusLabel.font = smallFont;
         statusLabel.text = @"待處理";
         [self addSubview:statusLabel];
