@@ -13,8 +13,14 @@
 #import "FTPopOverMenu.h"
 #import "SAMTextView.h"
 #import "YLButton.h"
+#import "HeHistoryVC.h"
 
 @interface HeFeedBackVC ()<UITableViewDelegate,UITableViewDataSource,UITextViewDelegate>
+{
+    NSInteger firstSelectIndex;
+    NSInteger secondSelectIndex;
+    NSInteger thirdSelectIndex;
+}
 @property(strong,nonatomic)IBOutlet UITableView *tableview;
 @property(strong,nonatomic)NSMutableArray *datasource;
 @property(strong,nonatomic)IBOutlet UILabel *titleLabel;
@@ -52,6 +58,7 @@
     // Do any additional setup after loading the view from its nib.
     [self initializaiton];
     [self initView];
+    [self loadCommentData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -70,8 +77,14 @@
 {
     [super initializaiton];
     
-    NSArray *menuArray = @[@"由中华环保基金会、中国扶贫基金会主办",@"清华大学环境学院协办",@"一汽-大众出资的第二届“迈向生态文明  向环保先锋致敬”环保公益资助计划"];
-    datasource = [[NSMutableArray alloc] initWithArray:menuArray];
+    firstSelectIndex = 0;
+    secondSelectIndex = 0;
+    thirdSelectIndex = 0;
+    
+    datasource = [[NSMutableArray alloc] initWithCapacity:0];
+    
+    NSString *dataString = [[NSUserDefaults standardUserDefaults] objectForKey:FEEDBACKDATA];
+    [self sortDataWithString:dataString];
 }
 
 - (void)initView
@@ -156,15 +169,97 @@
     [footerview addSubview:feedBackButton];
 }
 
+- (void)loadCommentData
+{
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/comment/appeal-terms",BASEURL];
+    NSDictionary * params  = nil;
+    __weak HeFeedBackVC *weakSelf = self;
+    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        [[NSUserDefaults standardUserDefaults] setObject:respondString forKey:FEEDBACKDATA];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf sortDataWithString:respondString];
+            [tableview reloadData];
+        });
+        
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
+}
+
+- (void)sortDataWithString:(NSString *)string
+{
+    NSArray *topArray = [string objectFromJSONString];
+    if ([topArray count] == 0) {
+        return;
+    }
+    [datasource removeAllObjects];
+    for (NSInteger index = 0; index < [topArray count]; index++) {
+        NSDictionary *topDict = topArray[index];
+        
+        [datasource addObject:topDict];
+    }
+    
+    
+}
+
 - (void)feedBackButtClick:(UIButton *)button
 {
     NSLog(@"feedBackButtClick");
     if (button.tag == 1) {
         NSLog(@"歷史問題");
+        HeHistoryVC *historyVC = [[HeHistoryVC alloc] init];
+        historyVC.hidesBottomBarWhenPushed = YES;
+        [self.navigationController pushViewController:historyVC animated:YES];
     }
     else{
         NSLog(@"回報問題");
+        [self uploadFeedBack];
     }
+}
+
+- (void)uploadFeedBack
+{
+    NSDictionary *dict = datasource[firstSelectIndex];
+    
+    NSDictionary *thirdDict = nil;
+    @try {
+        thirdDict = dict[@"children"][secondSelectIndex][@"children"][thirdSelectIndex];
+    } @catch (NSException *exception) {
+        
+    } @finally {
+        
+    }
+    NSString *termId = thirdDict[@"term_id"];
+    if ([termId isMemberOfClass:[NSNull class]] || termId == nil) {
+        termId = @"";
+    }
+    NSString *content = textView.text;
+    if ([content isEqualToString:@""] || content == nil || [content isEqualToString:@"請輸入超過十個字以上的內容，我們會在查明後盡快修正，并協助您解決問題"]) {
+        [self showHint:@"請輸入反饋信息"];
+        return;
+    }
+    if ([content length] <= 10) {
+        [self showHint:@"請輸入超過十個字以上的內容"];
+        return;
+    }
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/comment/create",BASEURL];
+    NSDictionary * params  = @{@"termId":termId ,@"content":content};
+    __weak HeFeedBackVC *weakSelf = self;
+    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        
+        [weakSelf showHint:@"上報成功"];
+        
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
 }
 
 - (void)selectButtonClick:(UIButton *)button
@@ -172,12 +267,75 @@
     button.selected = YES;
     NSLog(@"selectButtonClick");
     
+    NSInteger tag = button.tag;
+    NSInteger section = 0;
+    if (tag < 10) {
+        section = 0;
+    }
+    else if (tag < 20){
+        section = 1;
+    }
+    else if (tag < 30){
+        section = 2;
+    }
+    
+    
+    NSMutableArray *selectArray = [[NSMutableArray alloc] initWithCapacity:0];
+    switch (section) {
+        case 0:
+        {
+            selectArray = [[NSMutableArray alloc] initWithArray:datasource];
+            break;
+        }
+        case 1:
+        {
+            id children = datasource[firstSelectIndex];
+            selectArray = [[NSMutableArray alloc] initWithArray:children[@"children"]];
+            break;
+        }
+        case 2:
+        {
+            id children = datasource[firstSelectIndex][@"children"][secondSelectIndex];
+            selectArray = [[NSMutableArray alloc] initWithArray:children[@"children"]];
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    NSMutableArray *titleArray = [[NSMutableArray alloc] initWithCapacity:0];
+    for (NSDictionary *dict in selectArray) {
+        NSString *name = dict[@"name"];
+        if ([name isMemberOfClass:[NSNull class]] || name == nil) {
+            name = @"";
+        }
+        [titleArray addObject:name];
+    }
+
     [FTPopOverMenu showForSender:button
-                        withMenu:datasource
+                        withMenu:titleArray
                   imageNameArray:nil
                        doneBlock:^(NSInteger selectedIndex) {
-                           NSString *buttonTitle = datasource[selectedIndex];
-                           [button setTitle:buttonTitle forState:UIControlStateNormal];
+                           switch (section) {
+                               case 0:
+                               {
+                                   firstSelectIndex = selectedIndex;
+                                   break;
+                               }
+                               case 1:
+                               {
+                                   secondSelectIndex = selectedIndex;
+                                   break;
+                               }
+                               case 2:
+                               {
+                                   thirdSelectIndex = selectedIndex;
+                                   break;
+                               }
+                               default:
+                                   break;
+                           }
                            button.selected = NO;
                            [tableview reloadData];
                            
@@ -203,7 +361,28 @@
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [datasource count];
+    if ([datasource count] == 0) {
+        return 0;
+    }
+    NSInteger section = 0;
+    NSDictionary *dict = nil;
+    @try {
+        dict = datasource[firstSelectIndex];
+    } @catch (NSException *exception) {
+        
+    } @finally {
+        
+    }
+    if (dict) {
+        section = 1;
+    }
+    id children = dict[@"children"];
+    while (children) {
+        section++;
+        dict = children[0];
+        children = dict[@"children"];
+    }
+    return section;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -220,7 +399,47 @@
         
     }
     
+    NSDictionary *dict = datasource[firstSelectIndex];
     
+    NSDictionary *secondDict = nil;
+    @try {
+        secondDict = dict[@"children"][secondSelectIndex];
+    } @catch (NSException *exception) {
+        
+    } @finally {
+        
+    }
+    
+    NSDictionary *thirdDict = nil;
+    @try {
+        thirdDict = dict[@"children"][secondSelectIndex][@"children"][thirdSelectIndex];
+    } @catch (NSException *exception) {
+        
+    } @finally {
+        
+    }
+    
+    NSDictionary *myDict = nil;
+    switch (section) {
+        case 0:
+        {
+            myDict = dict;
+            break;
+        }
+        case 1:
+        {
+            myDict = secondDict;
+            break;
+        }
+        case 2:
+        {
+            myDict = thirdDict;
+            break;
+        }
+            
+        default:
+            break;
+    }
     if (row == 0) {
         
         UIImage *buttonImage = [UIImage imageNamed:@"icon_pill_down"];
@@ -236,14 +455,21 @@
         CGFloat imageY = (cellH - imageH) / 2.0;
         
         UIFont *buttonFont = [UIFont systemFontOfSize:15.0];
-        NSString *buttonTitle = datasource[section];
+        
+        
+        NSString *buttonTitle = myDict[@"name"];
+        if ([buttonTitle isMemberOfClass:[NSNull class]] || buttonTitle == nil) {
+            buttonTitle = @"";
+        }
+        
+        
         CGFloat titleWidth = [MLLabel getViewSizeByString:buttonTitle maxWidth:imageX - 5 - 10 font:buttonFont lineHeight:1.2f lines:0].width;
         
         YLButton *selectButton = [[YLButton alloc] initWithFrame:CGRectMake(selectButtonX, selectButtonY, selectButtonW, selectButtonH)];
         [selectButton setTitle:buttonTitle forState:UIControlStateNormal];
         [selectButton addTarget:self action:@selector(selectButtonClick:) forControlEvents:UIControlEventTouchUpInside];
         [selectButton setTitleColor:[UIColor colorWithWhite:30.0 / 255.0 alpha:1.0] forState:UIControlStateNormal];
-        
+        selectButton.tag = section * 10 + row;
         [selectButton setImage:buttonImage forState:UIControlStateNormal];
         selectButton.titleLabel.font = buttonFont;
         [selectButton setImage:[UIImage imageNamed:@"icon_pull"] forState:UIControlStateSelected];
@@ -262,7 +488,11 @@
         CGFloat contentLabelW = SCREENWIDTH - 2 * contentLabelX;
         CGFloat contentLabelH = 0;
         
-        NSString *content = @"【别人家的食堂！不但有“鸟笼”式包间，还能点歌演唱】近日，位于郑州市的华北水利水电大学二区食堂二楼装修完毕，清新的鸟笼式装修风格引来众多高校大学生围观。除了鸟笼式造型的包间，在这个另类餐厅里还有一个小型舞台，同学们可以在舞台点歌、演唱。L秒拍视频 （中国青年报） ​​​​";
+        NSString *content = myDict[@"description"];
+        if ([content isMemberOfClass:[NSNull class]] || content == nil) {
+            content = @"";
+        }
+        
         UIFont *contentFont = [UIFont systemFontOfSize:14.0];
         CGFloat maxWidth = contentLabelW;
         
@@ -298,7 +528,52 @@
     CGFloat contentLabelW = SCREENWIDTH - 2 * contentLabelX;
     CGFloat contentLabelH = 0;
     
-    NSString *content = @"【别人家的食堂！不但有“鸟笼”式包间，还能点歌演唱】近日，位于郑州市的华北水利水电大学二区食堂二楼装修完毕，清新的鸟笼式装修风格引来众多高校大学生围观。除了鸟笼式造型的包间，在这个另类餐厅里还有一个小型舞台，同学们可以在舞台点歌、演唱。L秒拍视频 （中国青年报） ​​​​";
+    NSDictionary *dict = datasource[firstSelectIndex];
+    
+    NSDictionary *secondDict = nil;
+    @try {
+        secondDict = dict[@"children"][secondSelectIndex];
+    } @catch (NSException *exception) {
+        
+    } @finally {
+        
+    }
+    
+    NSDictionary *thirdDict = nil;
+    @try {
+        thirdDict = dict[@"children"][secondSelectIndex][@"children"][thirdSelectIndex];
+    } @catch (NSException *exception) {
+        
+    } @finally {
+        
+    }
+    
+    NSDictionary *myDict = nil;
+    switch (section) {
+        case 0:
+        {
+            myDict = dict;
+            break;
+        }
+        case 1:
+        {
+            myDict = secondDict;
+            break;
+        }
+        case 2:
+        {
+            myDict = thirdDict;
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    NSString *content = myDict[@"description"];
+    if ([content isMemberOfClass:[NSNull class]] || content == nil) {
+        content = @"";
+    }
     UIFont *contentFont = [UIFont systemFontOfSize:14.0];
     CGFloat maxWidth = contentLabelW;
     
@@ -315,6 +590,8 @@
     NSInteger row = indexPath.row;
     NSInteger section = indexPath.section;
     NSLog(@"section = %ld , row = %ld",section,row);
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {

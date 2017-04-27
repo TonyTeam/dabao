@@ -83,6 +83,23 @@
 {
     [super viewDidAppear:YES];
     adjustView = YES;
+    
+    CGFloat maxWidth = SCREENWIDTH / 2.0;
+    id ingots = userDetailDict[@"ingots"];
+    if ([ingots isMemberOfClass:[NSNull class]] || ingots == nil) {
+        ingots = @"";
+    }
+    NSString *coinValue = [NSString stringWithFormat:@"%@",ingots];
+    CGSize coinsize = [MLLabel getViewSizeByString:coinValue maxWidth:maxWidth font:[UIFont systemFontOfSize:15.0] lineHeight:1.2 lines:0];
+    
+    coinValueLabel.text = coinValue;
+    CGRect coinFrame = coinValueLabel.frame;
+    coinFrame.size.width = coinsize.width;
+    coinValueLabel.frame = coinFrame;
+    
+    coinFrame = unitLabel.frame;
+    coinFrame.origin.x = CGRectGetMaxX(coinValueLabel.frame) + 2;
+    unitLabel.frame = coinFrame;
 }
 
 - (void)viewWillLayoutSubviews

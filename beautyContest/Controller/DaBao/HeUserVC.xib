@@ -11,7 +11,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HeUserVC">
             <connections>
+                <outlet property="bankCardNumLabel" destination="eaH-ZD-4zO" id="wGg-9b-9CY"/>
                 <outlet property="bgView" destination="Jxh-5m-rzD" id="RrW-jM-jr2"/>
+                <outlet property="dcoinLabel" destination="sZW-OR-goR" id="vg9-ME-5U2"/>
                 <outlet property="facebookButton" destination="dWB-ah-Xbb" id="ZZL-ci-QCt"/>
                 <outlet property="nameLabel" destination="tIU-fp-JiP" id="pSf-aK-A2x"/>
                 <outlet property="nickLabel" destination="0YD-5D-jp6" id="2K8-7z-HNC"/>

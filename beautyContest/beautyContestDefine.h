@@ -82,6 +82,9 @@
 
 #define USERDETAILDATAKEY @"userDetailDataKey"
 
+//反馈分类数据
+#define FEEDBACKDATA @"feedbackDataKey"
+
 #define USERDATAUPDATE_NOTIFICATION @"userDataUpdateNotification"
 
 #define DEFAULTREDCOLOR ([UIColor colorWithRed:253.0 / 255.0 green:105.0 / 255.0 blue:102.0 / 255.0 alpha:1.0])

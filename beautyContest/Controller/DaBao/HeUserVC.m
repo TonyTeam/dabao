@@ -25,6 +25,10 @@
 @property(strong,nonatomic)IBOutlet UIImageView *userImage;
 @property(strong,nonatomic)IBOutlet UIView *bgView;
 @property(strong,nonatomic)IBOutlet UIButton *facebookButton;
+@property(strong,nonatomic)NSDictionary *userDetailDict;
+
+@property(strong,nonatomic)IBOutlet UILabel *dcoinLabel;
+@property(strong,nonatomic)IBOutlet UILabel *bankCardNumLabel;
 
 @end
 
@@ -37,6 +41,9 @@
 @synthesize userImage;
 @synthesize bgView;
 @synthesize facebookButton;
+@synthesize userDetailDict;
+@synthesize dcoinLabel;
+@synthesize bankCardNumLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -81,6 +88,7 @@
     [super initializaiton];
     datasource = @[@[@"消息通知",@"賬戶安全",@"關於大寶"],@[@"設置"]];
     icon_datasource = @[@[@"icon_notice",@"icon_security",@"icon_about"],@[@"icon_setup"]];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDataUpdate:) name:USERDATAUPDATE_NOTIFICATION object:nil];
 }
 
 - (void)initView
@@ -101,11 +109,81 @@
     
     bgView.layer.masksToBounds = YES;
     bgView.layer.cornerRadius = 6.0;
+    
+    userDetailDict = [[NSDictionary alloc] initWithDictionary:[HeSysbsModel getSysModel].userDetailDict];
+    
+    id ingots = userDetailDict[@"ingots"];
+    if ([ingots isMemberOfClass:[NSNull class]] || ingots == nil) {
+        ingots = @"";
+    }
+    dcoinLabel.text = [NSString stringWithFormat:@"￥%@",ingots];
+    NSInteger bankCarNum = [userDetailDict[@"bankAccountsQty"] integerValue];
+    bankCardNumLabel.text = [NSString stringWithFormat:@"%ld張銀行卡記錄",bankCarNum];
+    
+    NSString *name = userDetailDict[@"name"];
+    if ([name isMemberOfClass:[NSNull class]] || name == nil) {
+        name = @"";
+    }
+    nickLabel.text = name;
+    
+    id fb_userinfo = userDetailDict[@"fb_userinfo"];
+    if ([fb_userinfo isMemberOfClass:[NSNull class]]) {
+        fb_userinfo = [[NSDictionary alloc] init];
+    }
+    NSString *fb_name = fb_userinfo[@"name"];
+    if ([fb_name isMemberOfClass:[NSNull class]] || fb_name == nil) {
+        fb_name = @"";
+    }
+    nameLabel.text = fb_name;
+    
+    NSString *fb_avatar = fb_userinfo[@"avatar"];
+    if ([fb_avatar isMemberOfClass:[NSNull class]] || fb_avatar == nil) {
+        fb_avatar = @"";
+    }
+    [userImage sd_setImageWithURL:[NSURL URLWithString:fb_avatar] placeholderImage:[UIImage imageNamed:@"defalut_icon"]];
 }
 
 - (IBAction)relateFackBook:(id)sender
 {
     NSLog(@"relateFackBook");
+}
+
+- (void)userDataUpdate:(NSNotification *)notification
+{
+    userDetailDict = [[NSDictionary alloc] initWithDictionary:[HeSysbsModel getSysModel].userDetailDict];
+    
+    id ingots = userDetailDict[@"ingots"];
+    if ([ingots isMemberOfClass:[NSNull class]] || ingots == nil) {
+        ingots = @"";
+    }
+    
+    NSArray *bankAccounts = userDetailDict[@"bankAccounts"];
+    if ([bankAccounts isMemberOfClass:[NSNull class]]) {
+        bankAccounts = [NSArray array];
+    }
+    bankCardNumLabel.text = [NSString stringWithFormat:@"%ld張銀行卡記錄",[bankAccounts count]];
+    
+    NSString *name = userDetailDict[@"name"];
+    if ([name isMemberOfClass:[NSNull class]] || name == nil) {
+        name = @"";
+    }
+    nickLabel.text = name;
+    
+    id fb_userinfo = userDetailDict[@"fb_userinfo"];
+    if ([fb_userinfo isMemberOfClass:[NSNull class]]) {
+        fb_userinfo = [[NSDictionary alloc] init];
+    }
+    NSString *fb_name = fb_userinfo[@"name"];
+    if ([fb_name isMemberOfClass:[NSNull class]] || fb_name == nil) {
+        fb_name = @"";
+    }
+    nameLabel.text = fb_name;
+    
+    NSString *fb_avatar = fb_userinfo[@"avatar"];
+    if ([fb_avatar isMemberOfClass:[NSNull class]] || fb_avatar == nil) {
+        fb_avatar = @"";
+    }
+    [userImage sd_setImageWithURL:[NSURL URLWithString:fb_avatar] placeholderImage:[UIImage imageNamed:@"defalut_icon"]];
 }
 
 //D幣儲值
@@ -151,14 +229,6 @@
     HeBaseTableViewCell *cell  = [tableView cellForRowAtIndexPath:indexPath];
     if (!cell) {
         cell = [[HeBaseTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIndentifier cellSize:cellsize];
-        
-    }
-    NSDictionary *dict = nil;
-    @try {
-        dict = datasource[row];
-    } @catch (NSException *exception) {
-        
-    } @finally {
         
     }
     
