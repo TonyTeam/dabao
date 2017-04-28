@@ -13,12 +13,15 @@
 #import "MLLabel.h"
 #import "YLButton.h"
 
+#define ALERTTAG 200
+
 @interface HeAddBandCardVC ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
 @property(strong,nonatomic)IBOutlet UITableView *tableview;
 @property(strong,nonatomic)NSArray *datasource;
 @property(strong,nonatomic)YLButton *selectButton;
 @property(strong,nonatomic)UITextField *bankUserNameField;
 @property(strong,nonatomic)UITextField *bankAccountField;
+@property(strong,nonatomic)UIView *dismissView;
 
 @end
 
@@ -28,6 +31,7 @@
 @synthesize selectButton;
 @synthesize bankUserNameField;
 @synthesize bankAccountField;
+@synthesize dismissView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -68,6 +72,16 @@
     tableview.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableview.backgroundView = nil;
     tableview.backgroundColor = [UIColor colorWithWhite:237.0 / 255.0 alpha:1.0];
+    
+    dismissView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREENWIDTH, [UIScreen mainScreen].bounds.size.height)];
+    dismissView.backgroundColor = [UIColor blackColor];
+    dismissView.hidden = YES;
+    dismissView.alpha = 0.7;
+    [self.view addSubview:dismissView];
+    UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissViewGes:)];
+    tapGes.numberOfTapsRequired = 1;
+    tapGes.numberOfTouchesRequired = 1;
+    [dismissView addGestureRecognizer:tapGes];
     
     UIImage *buttonImage = [UIImage imageNamed:@"icon_pill_down"];
     
@@ -126,9 +140,34 @@
     [footerview addSubview:confirmButton];
 }
 
+- (void)dismissViewGes:(UITapGestureRecognizer *)ges
+{
+    
+    UIView *mydismissView = ges.view;
+    mydismissView.hidden = YES;
+    
+    UIView *alertview = [self.view viewWithTag:ALERTTAG];
+    
+    [alertview removeFromSuperview];
+}
+
 - (void)confirmButtonClick:(UIButton *)button
 {
     NSLog(@"confirmButtonClick");
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/account/send-bank-captcha",BASEURL];
+    
+    NSDictionary * params  = nil;
+    [self showHudInView:self.view hint:@"發送中..."];
+    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        [self showHint:@"驗證碼發送成功"];
+        [self performSelector:@selector(inputVerifyCode) withObject:nil afterDelay:0.2];
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
 }
 
 - (void)selectButtonClick:(UIButton *)button
@@ -151,6 +190,164 @@
                            NSLog(@"user canceled. do nothing.");
                            
                        }];
+}
+
+
+- (void)inputVerifyCode
+{
+    [self.view addSubview:dismissView];
+    dismissView.hidden = NO;
+ 
+    CGFloat viewX = 10;
+    CGFloat viewY = 50;
+    CGFloat viewW = SCREENWIDTH - 2 * viewX;
+    CGFloat viewH = 150;
+    UIView *shareAlert = [[UIView alloc] init];
+    shareAlert.frame = CGRectMake(viewX, viewY, viewW, viewH);
+    shareAlert.backgroundColor = [UIColor whiteColor];
+    shareAlert.layer.cornerRadius = 5.0;
+    shareAlert.layer.borderWidth = 0;
+    shareAlert.layer.masksToBounds = YES;
+    shareAlert.tag = ALERTTAG;
+    shareAlert.layer.borderColor = [UIColor clearColor].CGColor;
+    shareAlert.userInteractionEnabled = YES;
+    
+    CGFloat labelH = 40;
+    CGFloat labelY = 0;
+    
+    UIFont *shareFont = [UIFont systemFontOfSize:15.0];
+    
+    UILabel *messageTitleLabel = [[UILabel alloc] init];
+    messageTitleLabel.font = shareFont;
+    messageTitleLabel.textColor = [UIColor blackColor];
+    messageTitleLabel.textAlignment = NSTextAlignmentCenter;
+    messageTitleLabel.backgroundColor = [UIColor clearColor];
+    messageTitleLabel.text = @"支付密码";
+    messageTitleLabel.frame = CGRectMake(0, 0, viewW, labelH);
+    [shareAlert addSubview:messageTitleLabel];
+    
+    UIImageView *logoImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"login_logoImage"]];
+    logoImage.frame = CGRectMake(20, 5, 30, 30);
+    [shareAlert addSubview:logoImage];
+    
+    
+    labelY = labelY + labelH + 10;
+    UITextField *textview = [[UITextField alloc] init];
+    textview.tag = 10;
+    textview.secureTextEntry = YES;
+    textview.backgroundColor = [UIColor whiteColor];
+    textview.tintColor= [UIColor blueColor];
+    textview.placeholder = @"請輸入驗證碼";
+    textview.font = shareFont;
+    textview.delegate = self;
+    textview.frame = CGRectMake(10, labelY, shareAlert.frame.size.width - 20, labelH);
+    textview.layer.borderWidth = 1.0;
+    textview.layer.cornerRadius = 5.0;
+    textview.layer.masksToBounds = YES;
+    textview.layer.borderColor = [UIColor colorWithWhite:0xcc / 255.0 alpha:1.0].CGColor;
+    [shareAlert addSubview:textview];
+    
+    CGFloat buttonDis = 10;
+    CGFloat buttonW = (viewW - 3 * buttonDis) / 2.0;
+    CGFloat buttonH = 40;
+    CGFloat buttonY = labelY = labelY + labelH + 10;
+    CGFloat buttonX = 10;
+    
+    UIButton *shareButton = [[UIButton alloc] initWithFrame:CGRectMake(buttonX, buttonY, buttonW, buttonH)];
+    [shareButton setTitle:@"确定" forState:UIControlStateNormal];
+    [shareButton addTarget:self action:@selector(alertbuttonClick:) forControlEvents:UIControlEventTouchUpInside];
+    shareButton.tag = 1;
+    [shareButton.titleLabel setFont:shareFont];
+    //    [shareButton setBackgroundColor:APPDEFAULTORANGE];
+    //    [shareButton setBackgroundImage:[Tool buttonImageFromColor:APPDEFAULTORANGE withImageSize:shareButton.frame.size] forState:UIControlStateHighlighted];
+    [shareButton setTitleColor:APPDEFAULTORANGE forState:UIControlStateNormal];
+    [shareAlert addSubview:shareButton];
+    
+    UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(buttonX + buttonDis + buttonW, buttonY, buttonW, buttonH)];
+    [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+    [cancelButton addTarget:self action:@selector(alertbuttonClick:) forControlEvents:UIControlEventTouchUpInside];
+    cancelButton.tag = 0;
+    [cancelButton.titleLabel setFont:shareFont];
+    //    [cancelButton setBackgroundColor:APPDEFAULTORANGE];
+    //    [cancelButton setBackgroundImage:[Tool buttonImageFromColor:APPDEFAULTORANGE withImageSize:shareButton.frame.size] forState:UIControlStateHighlighted];
+    [cancelButton setTitleColor:APPDEFAULTORANGE forState:UIControlStateNormal];
+    [shareAlert addSubview:cancelButton];
+    
+    CAKeyframeAnimation *popAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+    popAnimation.duration = 0.4;
+    popAnimation.values = @[[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.01f, 0.01f, 1.0f)],
+                            [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.1f, 1.1f, 1.0f)],
+                            [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.9f, 0.9f, 1.0f)],
+                            [NSValue valueWithCATransform3D:CATransform3DIdentity]];
+    popAnimation.keyTimes = @[@0.2f, @0.5f, @0.75f, @1.0f];
+    popAnimation.timingFunctions = @[[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+                                     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+                                     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    [shareAlert.layer addAnimation:popAnimation forKey:nil];
+    [self.view addSubview:shareAlert];
+}
+
+- (void)alertbuttonClick:(UIButton *)button
+{
+    UIView *mydismissView = dismissView;
+    mydismissView.hidden = YES;
+    
+    UIView *alertview = [self.view viewWithTag:ALERTTAG];
+    
+    UIView *subview = [alertview viewWithTag:10];
+    if (button.tag == 0) {
+        [alertview removeFromSuperview];
+        return;
+    }
+    UITextField *textview = nil;
+    if ([subview isMemberOfClass:[UITextField class]]) {
+        textview = (UITextField *)subview;
+    }
+    textview.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    NSString *password = textview.text;
+    [alertview removeFromSuperview];
+    if (password == nil || [password isEqualToString:@""]) {
+        
+        [self showHint:@"請輸入驗證碼"];
+        return;
+    }
+    [self creatBankCardWithCode:password];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if ([textField isFirstResponder]) {
+        [textField resignFirstResponder];
+    }
+    return YES;
+}
+
+
+- (void)creatBankCardWithCode:(NSString *)code
+{
+    [self showHudInView:tableview hint:@"添加中..."];
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/account/create-bank",BASEURL];
+    
+    NSString *acct_bank = @"";
+    NSString *acct_name = @"";
+    NSString *acct_no  = @"";
+    NSString *captcha  = code;
+    NSDictionary *params  = @{@"acct_bank":acct_bank,@"acct_name":acct_name,@"acct_no":acct_no,@"captcha":captcha};
+    
+    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        [self performSelector:@selector(backToLastView) withObject:nil afterDelay:0.2];
+        [self showHint:@"添加成功"];
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
+}
+- (void)backToLastView
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

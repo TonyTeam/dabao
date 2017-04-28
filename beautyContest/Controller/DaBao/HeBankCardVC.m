@@ -13,11 +13,15 @@
 #import "MLLabel.h"
 #import "MLLabel+Size.h"
 #import "HeAddBandCardVC.h"
+#import "MJRefreshAutoNormalFooter.h"
+#import "MJRefreshNormalHeader.h"
 
 @interface HeBankCardVC ()<UITableViewDataSource,UITableViewDelegate>
 @property(strong,nonatomic)IBOutlet UITableView *tableview;
 @property(strong,nonatomic)IBOutlet UILabel *numLabel;
 @property(strong,nonatomic)IBOutlet YLButton *addButton;
+@property(strong,nonatomic)NSMutableArray *datasource;
+@property(strong,nonatomic)IBOutlet UILabel *bankCarNumLabel;
 
 @end
 
@@ -25,6 +29,8 @@
 @synthesize tableview;
 @synthesize numLabel;
 @synthesize addButton;
+@synthesize datasource;
+@synthesize bankCarNumLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -50,6 +56,7 @@
     // Do any additional setup after loading the view from its nib.
     [self initializaiton];
     [self initView];
+    [self loadBankCardData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -67,6 +74,7 @@
 - (void)initializaiton
 {
     [super initializaiton];
+    datasource = [[NSMutableArray alloc] initWithCapacity:0];
 }
 
 - (void)initView
@@ -96,10 +104,73 @@
     addButton.titleRect = CGRectMake(titleX, titleY, titleW, titleH);
     addButton.imageRect = CGRectMake(titleX + titleW + 10, (titleH - imageH) / 2.0, imageW, imageH);
     
+    NSDictionary *userDetailDict = [HeSysbsModel getSysModel].userDetailDict;
+    NSInteger bankCarNum = [userDetailDict[@"bankAccountsQty"] integerValue];
+    bankCarNumLabel.text = [NSString stringWithFormat:@"%ld",bankCarNum];
     
+    self.tableview.header = [MJRefreshNormalHeader headerWithRefreshingBlock:^{
+        // 进入刷新状态后会自动调用这个block,刷新
+        [self.tableview.header performSelector:@selector(endRefreshing) withObject:nil afterDelay:0.5];
+        [self loadBankCardData];
+        
+    }];
 }
 
-
+- (void)loadBankCardData
+{
+    [self showHudInView:tableview hint:@"加載中..."];
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/account/index",BASEURL];
+    
+    NSDictionary *params  = nil;
+    
+    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        id bankCardArray = [respondString objectFromJSONString];
+        if ([bankCardArray isMemberOfClass:[NSNull class]]) {
+            bankCardArray = [bankCardArray array];
+        }
+        [datasource removeAllObjects];
+        for (NSDictionary *dict in bankCardArray) {
+            [datasource addObject:dict];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [tableview reloadData];
+        });
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
+}
+//删除银行卡
+- (void)deleteCardWithNum:(NSString *)deleteCardNum
+{
+//    [self showHudInView:tableview hint:@"删除中..."];
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/account/delete",BASEURL];
+    
+    NSDictionary *params  = nil;
+    
+    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+//        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+//        id bankCardArray = [respondString objectFromJSONString];
+//        if ([bankCardArray isMemberOfClass:[NSNull class]]) {
+//            bankCardArray = [bankCardArray array];
+//        }
+//        [datasource removeAllObjects];
+//        for (NSDictionary *dict in bankCardArray) {
+//            [datasource addObject:dict];
+//        }
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [tableview reloadData];
+//        });
+        
+    } failure:^(NSError* err){
+//        [self hideHud];
+//        [self showHint:ERRORREQUESTTIP];
+    }];
+}
 
 - (IBAction)backItemClick:(id)sender
 {
@@ -121,7 +192,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 10;
+    return [datasource count];
 }
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -142,8 +213,25 @@
         cell = [[HeBankCardCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIndentifier cellSize:cellsize];
         
     }
+    NSDictionary *dict = nil;
+    @try {
+        dict = datasource[row];
+    } @catch (NSException *exception) {
+        
+    } @finally {
+        
+    }
+    NSString *acct_bank = dict[@"acct_bank"];
+    if ([acct_bank isMemberOfClass:[NSNull class]] || acct_bank == nil) {
+        acct_bank = @"";
+    }
+    cell.bankNameLabel.text = acct_bank;
     
-    
+    NSString *acct_no = dict[@"acct_no"];
+    if ([acct_no isMemberOfClass:[NSNull class]] || acct_no == nil) {
+        acct_no = @"";
+    }
+    cell.bankCardLabel.text = [NSString stringWithFormat:@"卡號末6位 : %@",acct_no];
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
@@ -164,6 +252,53 @@
     NSInteger row = indexPath.row;
     NSInteger section = indexPath.section;
     NSLog(@"section = %ld , row = %ld",section,row);
+    
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+
+{
+    
+    return TRUE;
+    
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+
+{
+    
+    return UITableViewCellEditingStyleDelete;
+    
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    NSInteger row = indexPath.row;
+    NSInteger section = indexPath.section;
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {//如果编辑样式为删除样式
+        
+        if (indexPath.row < [self.datasource count]) {
+            
+            NSDictionary *dict = nil;
+            @try {
+                dict = datasource[row];
+            } @catch (NSException *exception) {
+                
+            } @finally {
+                
+            }
+            NSString *acct_id = dict[@"acct_id"];
+            if ([acct_id isMemberOfClass:[NSNull class]] || acct_id == nil) {
+                acct_id = @"";
+            }
+            [datasource removeObjectAtIndex:row];
+            
+            [self deleteCardWithNum:acct_id];
+            [tableView reloadData];
+        }
+        
+    }
     
 }
 

@@ -120,7 +120,7 @@
     titleLabel.textColor = [UIColor colorWithWhite:30.0 / 255.0 alpha:1.0];
     [cell addSubview:titleLabel];
     
-    if (row == 1) {
+    if (row == 0) {
         UILabel *contentLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREENWIDTH - 160, 0, 150, cellH)];
         contentLabel.backgroundColor = [UIColor clearColor];
         contentLabel.font = [UIFont systemFontOfSize:15.0];

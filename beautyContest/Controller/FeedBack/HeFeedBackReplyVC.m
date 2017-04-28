@@ -1,20 +1,18 @@
 //
-//  HeSetUpVC.m
+//  HeFeedBackReplyVC.m
 //  beautyContest
 //
-//  Created by Tony on 2017/4/21.
+//  Created by Tony on 2017/4/28.
 //  Copyright © 2017年 iMac. All rights reserved.
 //
 
-#import "HeSetUpVC.h"
+#import "HeFeedBackReplyVC.h"
 
-@interface HeSetUpVC ()
-@property(strong,nonatomic)IBOutlet UIButton *logoutButton;
+@interface HeFeedBackReplyVC ()
 
 @end
 
-@implementation HeSetUpVC
-@synthesize logoutButton;
+@implementation HeFeedBackReplyVC
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -27,9 +25,9 @@
         label.textColor = APPDEFAULTTITLECOLOR;
         label.textAlignment = NSTextAlignmentCenter;
         self.navigationItem.titleView = label;
-        label.text = @"設置";
+        label.text = @"問題反饋";
         [label sizeToFit];
-        self.title = @"設置";
+        self.title = @"問題反饋";
         
     }
     return self;
@@ -50,21 +48,7 @@
 - (void)initView
 {
     [super initView];
-    logoutButton.layer.masksToBounds = YES;
-    logoutButton.layer.cornerRadius = 8.0;
-    [logoutButton setBackgroundImage:[Tool buttonImageFromColor:[UIColor colorWithRed:254.0 / 255.0 green:102.0 / 255.0 blue:102.0 / 255.0 alpha:1.0] withImageSize:logoutButton.frame.size] forState:UIControlStateNormal];
-}
-
-- (IBAction)logoutButtonClick:(id)sender
-{
-    NSLog(@"logoutButton");
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERACCOUNTKEY];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERTOKENKEY];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERIDKEY];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERPASSWORDKEY];
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERDETAILDATAKEY];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINCHANGE object:nil];
 }
 
 - (void)didReceiveMemoryWarning {

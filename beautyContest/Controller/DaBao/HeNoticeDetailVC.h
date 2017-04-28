@@ -9,5 +9,6 @@
 #import "HeBaseViewController.h"
 
 @interface HeNoticeDetailVC : HeBaseViewController
+@property(strong,nonatomic)NSDictionary *noticeDict;
 
 @end

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA20FC821EB2DC2000D52963 /* HeFeedBackReplyVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA20FC801EB2DC2000D52963 /* HeFeedBackReplyVC.m */; };
+		EA20FC831EB2DC2000D52963 /* HeFeedBackReplyVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA20FC811EB2DC2000D52963 /* HeFeedBackReplyVC.xib */; };
+		EA20FC871EB2DD4200D52963 /* HeHistoryFeedBackCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EA20FC861EB2DD4200D52963 /* HeHistoryFeedBackCell.m */; };
 		EA27B4391EA3AAEB0065D6DD /* HeBaseTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EA27B4371EA3AAEB0065D6DD /* HeBaseTableViewCell.m */; };
 		EA27B43A1EA3AAEB0065D6DD /* HeBaseTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA27B4381EA3AAEB0065D6DD /* HeBaseTableViewCell.xib */; };
 		EA3102871EA9A7E300F87B23 /* bg_mian_mydabao.png in Resources */ = {isa = PBXBuildFile; fileRef = EA3102861EA9A7E300F87B23 /* bg_mian_mydabao.png */; };
@@ -580,6 +583,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EA20FC7F1EB2DC2000D52963 /* HeFeedBackReplyVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeFeedBackReplyVC.h; sourceTree = "<group>"; };
+		EA20FC801EB2DC2000D52963 /* HeFeedBackReplyVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeFeedBackReplyVC.m; sourceTree = "<group>"; };
+		EA20FC811EB2DC2000D52963 /* HeFeedBackReplyVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeFeedBackReplyVC.xib; sourceTree = "<group>"; };
+		EA20FC851EB2DD4200D52963 /* HeHistoryFeedBackCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeHistoryFeedBackCell.h; sourceTree = "<group>"; };
+		EA20FC861EB2DD4200D52963 /* HeHistoryFeedBackCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeHistoryFeedBackCell.m; sourceTree = "<group>"; };
 		EA27B4361EA3AAEB0065D6DD /* HeBaseTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeBaseTableViewCell.h; sourceTree = "<group>"; };
 		EA27B4371EA3AAEB0065D6DD /* HeBaseTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeBaseTableViewCell.m; sourceTree = "<group>"; };
 		EA27B4381EA3AAEB0065D6DD /* HeBaseTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeBaseTableViewCell.xib; sourceTree = "<group>"; };
@@ -1645,9 +1653,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EA20FC841EB2DD2A00D52963 /* FeedBack */ = {
+			isa = PBXGroup;
+			children = (
+				EA20FC851EB2DD4200D52963 /* HeHistoryFeedBackCell.h */,
+				EA20FC861EB2DD4200D52963 /* HeHistoryFeedBackCell.m */,
+			);
+			path = FeedBack;
+			sourceTree = "<group>";
+		};
 		EA27B4341EA3AAC50065D6DD /* View */ = {
 			isa = PBXGroup;
 			children = (
+				EA20FC841EB2DD2A00D52963 /* FeedBack */,
 				EAB77D171EADEE1500487992 /* Notice */,
 				EAB77D021EADAAFA00487992 /* Bank */,
 				EAEDE8EA1EAD08AF000681CE /* Order */,
@@ -1716,6 +1734,9 @@
 				EA3E8F011EAB966C007DDD64 /* HeHistoryVC.h */,
 				EA3E8F021EAB966C007DDD64 /* HeHistoryVC.m */,
 				EA3E8F031EAB966C007DDD64 /* HeHistoryVC.xib */,
+				EA20FC7F1EB2DC2000D52963 /* HeFeedBackReplyVC.h */,
+				EA20FC801EB2DC2000D52963 /* HeFeedBackReplyVC.m */,
+				EA20FC811EB2DC2000D52963 /* HeFeedBackReplyVC.xib */,
 			);
 			path = FeedBack;
 			sourceTree = "<group>";
@@ -3839,6 +3860,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA20FC831EB2DC2000D52963 /* HeFeedBackReplyVC.xib in Resources */,
 				EA3102A61EA9AA8300F87B23 /* icon_search.png in Resources */,
 				EAEDE8D81EAC2103000681CE /* HeEnrollVC.xib in Resources */,
 				EAC2CDE91D4AF5D800E282A8 /* SVProgressHUD.bundle in Resources */,
@@ -4241,6 +4263,7 @@
 				EAC2CDD41D4AF5D800E282A8 /* SDImageCache.m in Sources */,
 				EAC2C9051D4AF0E600E282A8 /* main.m in Sources */,
 				EAC2CDFB1D4AF5D800E282A8 /* TZPhotoPickerController.m in Sources */,
+				EA20FC871EB2DD4200D52963 /* HeHistoryFeedBackCell.m in Sources */,
 				EAC2CDAD1D4AF5D800E282A8 /* RACSignalSequence.m in Sources */,
 				EAB77D1A1EADEE2700487992 /* HeNoticeCell.m in Sources */,
 				EAC2CDC51D4AF5D800E282A8 /* UIRefreshControl+RACCommandSupport.m in Sources */,
@@ -4312,6 +4335,7 @@
 				EAC2CD431D4AF5D800E282A8 /* MJRefreshAutoGifFooter.m in Sources */,
 				EAC2CDB31D4AF5D800E282A8 /* RACSubscriptionScheduler.m in Sources */,
 				EAC2CDA61D4AF5D800E282A8 /* RACScheduler.m in Sources */,
+				EA20FC821EB2DC2000D52963 /* HeFeedBackReplyVC.m in Sources */,
 				EAC2CD701D4AF5D800E282A8 /* ODRefreshControl.m in Sources */,
 				EAC2CD2A1D4AF5D800E282A8 /* UIView+Hierarchy.m in Sources */,
 				EA38E9EE1EA20A3C00971B7A /* HeDCoinDetailVC.m in Sources */,

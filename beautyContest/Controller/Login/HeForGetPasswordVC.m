@@ -168,6 +168,10 @@
             return;
         }
     }
+    else{
+        userPhone = [[NSUserDefaults standardUserDefaults] objectForKey:USERACCOUNTKEY];
+    }
+    
     NSString *requestUrl = [NSString stringWithFormat:@"%@/user/send-password-reset-captcha",BASEURL];
     NSDictionary * params  = @{@"cellphone": userPhone};
     [self showHudInView:self.view hint:@"獲取中..."];

@@ -120,10 +120,29 @@
 {
     NSLog(@"getVerifyCode");
     [self cancelInputTap:nil];
-    NSString *userPhone = @"";
+    NSString *userPhone = [[NSUserDefaults standardUserDefaults] objectForKey:USERACCOUNTKEY];
     
-    
-    [sender startWithTime:60 title:@"獲取驗證碼" countDownTitle:@"s" mainColor:[UIColor whiteColor] countColor:[UIColor whiteColor]];
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/user/send-pay-pwd-captcha",BASEURL];
+    [self showHudInView:self.view hint:@"獲取中..."];
+    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:nil success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
+        
+        id success = respondDict[@"success"];
+        if ([success isEqualToString:@"SUCCESS"]) {
+            [self showHint:@"驗證碼已發送，請注意查收"];
+            [sender startWithTime:60 title:@"獲取驗證碼" countDownTitle:@"s" mainColor:[UIColor whiteColor] countColor:[UIColor whiteColor]];
+        }
+        else{
+            [self showHint:@"發送驗證碼出錯"];
+        }
+        
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
 }
 
 //取消输入
@@ -143,6 +162,51 @@
 - (void)confirmButtonClick:(UIButton *)button
 {
     NSLog(@"confirmButtonClick");
+    [self cancelInputTap:nil];
+    NSString *verifyCode = verifyCodeField.text;
+    NSString *password = passwordField.text;
+    NSString *confirmPassword = confirmPasswordField.text;
+    if (verifyCode == nil || [verifyCode isEqualToString:@""]) {
+        [self showHint:@"請輸入驗證碼"];
+        return;
+    }
+    if (password == nil || [password isEqualToString:@""]) {
+        [self showHint:@"請輸入支付密碼"];
+        return;
+    }
+    if (confirmPassword == nil || [confirmPassword isEqualToString:@""]) {
+        [self showHint:@"請再次輸入支付密碼"];
+        return;
+    }
+    
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/user/set-pay-pwd",BASEURL];
+    
+    NSDictionary * params  = @{@"captcha":verifyCode,@"password":password};
+    [self showHudInView:self.view hint:@"支付密碼设置中..."];
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
+        id success = respondDict[@"success"];
+        if ([success isEqualToString:@"SUCCESS"]) {
+            [self showHint:@"支付密碼设置成功"];
+            [self performSelector:@selector(backToLastView) withObject:nil afterDelay:0.3];
+        }
+        else{
+            [self showHint:@"支付密碼设置出錯"];
+        }
+        
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
+    
+}
+
+- (void)backToLastView
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

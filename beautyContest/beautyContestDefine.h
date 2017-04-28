@@ -63,7 +63,12 @@
 //登录状态发生变化的通知
 #define KNOTIFICATION_LOGINCHANGE @"loginStateChange"
 
-#define UPDATEUSER_NOTIFICATION @"updateUser"
+//更新用戶資料通知
+#define UPDATEUSER_NOTIFICATION @"updateUserNotification"
+//獲取用戶資料統治者
+#define GETUSERDATA_NOTIFICATION @"getUserDataNotification"
+//更新用戶銀行卡通知
+#define UPDATEUSERBANK_NOTIFICATION @"updateUserBankNotification"
 
 #define RECEIVEBUDDYINVITE_NOTIFICATION @"receiveBuddyInvite"
 

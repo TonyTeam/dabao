@@ -26,15 +26,51 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    [self initialization];
     [self getUserInfo];
     [self autoLogin];
     [self setupSubviews];
 }
 
+- (void)initialization
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getUserInfo) name:GETUSERDATA_NOTIFICATION object:nil];
+}
+
 //后台自动登录
 - (void)autoLogin
 {
+    NSString *account = [[NSUserDefaults standardUserDefaults] objectForKey:USERACCOUNTKEY];
+    if (!account) {
+        account = @"";
+    }
+    NSString *password = [[NSUserDefaults standardUserDefaults] objectForKey:USERPASSWORDKEY];
+    if (!password) {
+        password = @"";
+    }
     
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/user/login",BASEURL];
+    NSDictionary * params  = @{@"cellphone": account,@"password" : password,@"rememberMe":@"1"};
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
+        NSString *user_id = respondDict[@"user_id"];
+        NSString *token = respondDict[@"token"];
+        if ([user_id isMemberOfClass:[NSNull class]] || user_id == nil) {
+            user_id = @"";
+        }
+        if ([token isMemberOfClass:[NSNull class]] || token == nil) {
+            token = @"";
+        }
+        [[NSUserDefaults standardUserDefaults] setObject:user_id forKey:USERIDKEY];
+        [[NSUserDefaults standardUserDefaults] setObject:token forKey:USERTOKENKEY];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
 }
 
 - (void)clearInfo
@@ -51,6 +87,7 @@
         [self hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
         [[NSUserDefaults standardUserDefaults] setObject:respondString forKey:USERDETAILDATAKEY];
+        [[NSUserDefaults standardUserDefaults] synchronize];
         NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
         [HeSysbsModel getSysModel].userDetailDict = [[NSDictionary alloc] initWithDictionary:respondDict];
         [[NSNotificationCenter defaultCenter] postNotificationName:USERDATAUPDATE_NOTIFICATION object:nil];
@@ -109,6 +146,11 @@
         //后台自动登录失败，退出登录
         [self clearInfo];
     }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:GETUSERDATA_NOTIFICATION object:nil];
 }
 
 - (void)didReceiveMemoryWarning {

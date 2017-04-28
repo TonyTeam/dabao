@@ -1,12 +1,19 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HeNoticeDetailVC">
             <connections>
+                <outlet property="contentWebView" destination="seW-Pr-Uui" id="iF5-Gd-6Qh"/>
+                <outlet property="timeLabel" destination="bta-pm-zdx" id="xC9-vC-ppP"/>
+                <outlet property="titleLabel" destination="N9o-IO-rkc" id="UhY-Dj-cUY"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -14,7 +21,47 @@
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N9o-IO-rkc">
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="S3N-om-RJw"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bta-pm-zdx">
+                    <rect key="frame" x="0.0" y="50" width="375" height="21"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="NBz-Rk-xhj"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="seW-Pr-Uui">
+                    <rect key="frame" x="0.0" y="71" width="375" height="596"/>
+                    <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <connections>
+                        <outlet property="delegate" destination="-1" id="083-vH-3l9"/>
+                    </connections>
+                </webView>
+            </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="N9o-IO-rkc" secondAttribute="trailing" id="7ad-8c-sCn"/>
+                <constraint firstAttribute="bottom" secondItem="seW-Pr-Uui" secondAttribute="bottom" id="DUA-hh-ucz"/>
+                <constraint firstAttribute="trailing" secondItem="bta-pm-zdx" secondAttribute="trailing" id="FiD-4z-Rl0"/>
+                <constraint firstItem="seW-Pr-Uui" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="KdK-Sm-ra9"/>
+                <constraint firstItem="N9o-IO-rkc" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="RLT-Tb-4nd"/>
+                <constraint firstItem="bta-pm-zdx" firstAttribute="top" secondItem="N9o-IO-rkc" secondAttribute="bottom" id="Y1Q-tH-zxb"/>
+                <constraint firstItem="seW-Pr-Uui" firstAttribute="top" secondItem="bta-pm-zdx" secondAttribute="bottom" id="YtN-Of-nPu"/>
+                <constraint firstAttribute="trailing" secondItem="seW-Pr-Uui" secondAttribute="trailing" id="cuD-ns-Y3K"/>
+                <constraint firstItem="bta-pm-zdx" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="dgu-Lh-GKm"/>
+                <constraint firstItem="N9o-IO-rkc" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="p26-cM-fKy"/>
+            </constraints>
+            <point key="canvasLocation" x="54.5" y="126.5"/>
         </view>
     </objects>
 </document>

@@ -133,6 +133,10 @@
         [[NSUserDefaults standardUserDefaults] setObject:token forKey:USERTOKENKEY];
         [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINCHANGE object:nil];
         
+        [[NSUserDefaults standardUserDefaults] setObject:account forKey:USERACCOUNTKEY];
+        [[NSUserDefaults standardUserDefaults] setObject:password forKey:USERPASSWORDKEY];
+        
+        [[NSUserDefaults standardUserDefaults] synchronize];
         
     } failure:^(NSError* err){
         [self hideHud];
