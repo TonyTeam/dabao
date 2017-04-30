@@ -81,10 +81,11 @@
 //获取用户的信息
 - (void)getUserInfo
 {
+    __weak HeTabBarVC *weakSelf = self;
     NSString *requestUrl = [NSString stringWithFormat:@"%@/user/view",BASEURL];
     NSDictionary * params  = nil;
     [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
-        [self hideHud];
+        [weakSelf hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
         [[NSUserDefaults standardUserDefaults] setObject:respondString forKey:USERDETAILDATAKEY];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -93,8 +94,8 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:USERDATAUPDATE_NOTIFICATION object:nil];
         
     } failure:^(NSError* err){
-        [self hideHud];
-        [self showHint:ERRORREQUESTTIP];
+        [weakSelf hideHud];
+        [weakSelf showHint:ERRORREQUESTTIP];
     }];
 }
 

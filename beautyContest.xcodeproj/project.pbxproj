@@ -4575,8 +4575,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = tw.paybao.dabao;
 				PRODUCT_NAME = "大寶";
-				PROVISIONING_PROFILE = "90a1ceab-db13-4744-be14-8341480b1102";
-				PROVISIONING_PROFILE_SPECIFIER = 20170428_dabao_Development;
+				PROVISIONING_PROFILE = "81ba2391-ce4f-4fcf-a8cf-0cb0b3474095";
+				PROVISIONING_PROFILE_SPECIFIER = 2017043002_dabao_Development;
 			};
 			name = Debug;
 		};
@@ -4612,8 +4612,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = tw.paybao.dabao;
 				PRODUCT_NAME = "大寶";
-				PROVISIONING_PROFILE = "84073804-fd99-40ac-a12f-4b319e5881f1";
-				PROVISIONING_PROFILE_SPECIFIER = 20170428_dabao_Release;
+				PROVISIONING_PROFILE = "9f329886-d458-4a8b-9869-65411927900b";
+				PROVISIONING_PROFILE_SPECIFIER = 2017043002_dabao_Release;
 			};
 			name = Release;
 		};
@@ -4733,8 +4733,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = tw.paybao.dabao;
 				PRODUCT_NAME = "大寶";
-				PROVISIONING_PROFILE = "ccb83ec1-50ab-44e4-a859-a23f427efc3a";
-				PROVISIONING_PROFILE_SPECIFIER = 20170418_dabao_Distribution;
+				PROVISIONING_PROFILE = "944434dc-3bef-4e80-b04e-586a758b9a27";
+				PROVISIONING_PROFILE_SPECIFIER = 2017043002_dabao_Distribution;
 			};
 			name = Distribution;
 		};
