@@ -187,8 +187,12 @@
         [self hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
         NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
-        id success = respondDict[@"success"];
-        if ([success isEqualToString:@"SUCCESS"]) {
+        id error = respondDict[@"error"];
+        if (!error) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:GETUSERDATA_NOTIFICATION object:nil];
+            
+            NSMutableDictionary *userDict = [[NSMutableDictionary alloc] initWithDictionary:[HeSysbsModel getSysModel].userDetailDict];
+            [userDict setObject:@YES forKey:@"hasPayPassword"];
             [self showHint:@"支付密碼设置成功"];
             [self performSelector:@selector(backToLastView) withObject:nil afterDelay:0.3];
         }

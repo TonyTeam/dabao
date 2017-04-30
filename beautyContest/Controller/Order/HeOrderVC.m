@@ -174,6 +174,10 @@
 
 - (void)backButtonClick:(UIButton *)sender
 {
+    if (self.popToRoot) {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+        return;
+    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 

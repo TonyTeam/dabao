@@ -8,6 +8,7 @@
 
 #import "QRCodeScanningVC.h"
 #import "ScanSuccessJumpVC.h"
+#import "HeQRCodePayVC.h"
 
 @interface QRCodeScanningVC ()
 
@@ -56,17 +57,30 @@
     NSString *string = noti.object;
     
     if ([string hasPrefix:@"http"]) {
-        ScanSuccessJumpVC *jumpVC = [[ScanSuccessJumpVC alloc] init];
-        jumpVC.jump_URL = string;
-        [self.navigationController pushViewController:jumpVC animated:YES];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            HeQRCodePayVC *qrCodePayVC = [[HeQRCodePayVC alloc] init];
+            qrCodePayVC.qrCode = [[NSString alloc] initWithString:string];
+            qrCodePayVC.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:qrCodePayVC animated:YES];
+        });
+//        [self qrCodeCreateWithQRCode:string];
+//        ScanSuccessJumpVC *jumpVC = [[ScanSuccessJumpVC alloc] init];
+//        jumpVC.hidesBottomBarWhenPushed = YES;
+//        jumpVC.jump_URL = string;
+//        [self.navigationController pushViewController:jumpVC animated:YES];
         
     } else { // 扫描结果为条形码
-        
+        [self showHint:@"该二维码非支付二维码"];
+        return;
         ScanSuccessJumpVC *jumpVC = [[ScanSuccessJumpVC alloc] init];
+        jumpVC.hidesBottomBarWhenPushed = YES;
         jumpVC.jump_bar_code = string;
         [self.navigationController pushViewController:jumpVC animated:YES];
     }
 }
+
+
 
 - (void)dealloc {
     SGQRCodeLog(@"QRCodeScanningVC - dealloc");

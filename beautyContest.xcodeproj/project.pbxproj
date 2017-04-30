@@ -100,6 +100,9 @@
 		EA3E8F001EAB9316007DDD64 /* YLButton.m in Sources */ = {isa = PBXBuildFile; fileRef = EA3E8EFF1EAB9316007DDD64 /* YLButton.m */; };
 		EA3E8F041EAB966C007DDD64 /* HeHistoryVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA3E8F021EAB966C007DDD64 /* HeHistoryVC.m */; };
 		EA3E8F051EAB966C007DDD64 /* HeHistoryVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA3E8F031EAB966C007DDD64 /* HeHistoryVC.xib */; };
+		EA5B59B91EB39215008E850A /* bankJson.txt in Resources */ = {isa = PBXBuildFile; fileRef = EA5B59B81EB39215008E850A /* bankJson.txt */; };
+		EA5C619B1EB57EEB00226177 /* HeQRCodePayVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA5C61991EB57EEB00226177 /* HeQRCodePayVC.m */; };
+		EA5C619C1EB57EEB00226177 /* HeQRCodePayVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA5C619A1EB57EEB00226177 /* HeQRCodePayVC.xib */; };
 		EA6C2E7D1EA85560005C015B /* HeDCoinStoreCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EA6C2E7C1EA85560005C015B /* HeDCoinStoreCell.m */; };
 		EA6C2E7F1EA8A63C005C015B /* icon_bank_note.png in Resources */ = {isa = PBXBuildFile; fileRef = EA6C2E7E1EA8A63C005C015B /* icon_bank_note.png */; };
 		EA6C2E831EA8A647005C015B /* icon_close.png in Resources */ = {isa = PBXBuildFile; fileRef = EA6C2E801EA8A647005C015B /* icon_close.png */; };
@@ -723,6 +726,10 @@
 		EA3E8F011EAB966C007DDD64 /* HeHistoryVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeHistoryVC.h; sourceTree = "<group>"; };
 		EA3E8F021EAB966C007DDD64 /* HeHistoryVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeHistoryVC.m; sourceTree = "<group>"; };
 		EA3E8F031EAB966C007DDD64 /* HeHistoryVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeHistoryVC.xib; sourceTree = "<group>"; };
+		EA5B59B81EB39215008E850A /* bankJson.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = bankJson.txt; sourceTree = "<group>"; };
+		EA5C61981EB57EEB00226177 /* HeQRCodePayVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeQRCodePayVC.h; sourceTree = "<group>"; };
+		EA5C61991EB57EEB00226177 /* HeQRCodePayVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeQRCodePayVC.m; sourceTree = "<group>"; };
+		EA5C619A1EB57EEB00226177 /* HeQRCodePayVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeQRCodePayVC.xib; sourceTree = "<group>"; };
 		EA6C2E7B1EA85560005C015B /* HeDCoinStoreCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeDCoinStoreCell.h; sourceTree = "<group>"; };
 		EA6C2E7C1EA85560005C015B /* HeDCoinStoreCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeDCoinStoreCell.m; sourceTree = "<group>"; };
 		EA6C2E7E1EA8A63C005C015B /* icon_bank_note.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_bank_note.png; sourceTree = "<group>"; };
@@ -1867,6 +1874,9 @@
 				EA3E8EEF1EAAEACF007DDD64 /* QRCodeGenerateVC.h */,
 				EA3E8EF01EAAEACF007DDD64 /* QRCodeGenerateVC.m */,
 				EA3E8EE71EAAE96A007DDD64 /* SGQRCode.h */,
+				EA5C61981EB57EEB00226177 /* HeQRCodePayVC.h */,
+				EA5C61991EB57EEB00226177 /* HeQRCodePayVC.m */,
+				EA5C619A1EB57EEB00226177 /* HeQRCodePayVC.xib */,
 				EA3E8ECD1EAAE8EC007DDD64 /* Category */,
 				EA3E8ED01EAAE8EC007DDD64 /* Controller */,
 				EA3E8ED31EAAE8EC007DDD64 /* CustomControls */,
@@ -2083,6 +2093,7 @@
 		EAC2C9031D4AF0E600E282A8 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				EA5B59B81EB39215008E850A /* bankJson.txt */,
 				EA3E8EF81EAAEC0A007DDD64 /* 大寶.entitlements */,
 				EAC2C9041D4AF0E600E282A8 /* main.m */,
 				EAC2C9B21D4AF40F00E282A8 /* appAPIDefine.h */,
@@ -3903,6 +3914,7 @@
 				EAC2CCFD1D4AF5D800E282A8 /* fail@3x.png in Resources */,
 				EA6C2E831EA8A647005C015B /* icon_close.png in Resources */,
 				EAC2CDEE1D4AF5D800E282A8 /* btn_020@2x.png in Resources */,
+				EA5C619C1EB57EEB00226177 /* HeQRCodePayVC.xib in Resources */,
 				EA6C2E871EA8B0A2005C015B /* icon_unconfirm.png in Resources */,
 				EAC2CD5D1D4AF5D800E282A8 /* LICENSE in Resources */,
 				EAC2CDE61D4AF5D800E282A8 /* LICENSE.txt in Resources */,
@@ -3916,6 +3928,7 @@
 				EAC2C9101D4AF0E600E282A8 /* Assets.xcassets in Resources */,
 				EA6C2E7F1EA8A63C005C015B /* icon_bank_note.png in Resources */,
 				EAC2CE0E1D4AF5D800E282A8 /* LICENSE in Resources */,
+				EA5B59B91EB39215008E850A /* bankJson.txt in Resources */,
 				EAC2C9CA1D4AF5CC00E282A8 /* HeTabBarVC.xib in Resources */,
 				EAC2CD061D4AF5D800E282A8 /* down_dark.png in Resources */,
 				EAC2CEAA1D4AF5EE00E282A8 /* README.txt in Resources */,
@@ -4137,6 +4150,7 @@
 				EAC2CDA81D4AF5D800E282A8 /* RACSequence.m in Sources */,
 				EAC2CCE51D4AF5D800E282A8 /* JSBadgeView.m in Sources */,
 				EA3E8F041EAB966C007DDD64 /* HeHistoryVC.m in Sources */,
+				EA5C619B1EB57EEB00226177 /* HeQRCodePayVC.m in Sources */,
 				EAC2CD7E1D4AF5D800E282A8 /* NSObject+RACKVOWrapper.m in Sources */,
 				EAC2CD7A1D4AF5D800E282A8 /* NSInvocation+RACTypeParsing.m in Sources */,
 				EAC2CDB41D4AF5D800E282A8 /* RACTargetQueueScheduler.m in Sources */,

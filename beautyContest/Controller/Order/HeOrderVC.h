@@ -10,6 +10,7 @@
 
 @interface HeOrderVC : HeBaseViewController
 @property(strong,nonatomic)NSDictionary *orderDetailDict;
-@property(assign,nonatomic)NSInteger orderType;
+@property(assign,nonatomic)NSInteger orderType;  //0:扫码 1:D币
+@property(assign,nonatomic)BOOL popToRoot;
 
 @end

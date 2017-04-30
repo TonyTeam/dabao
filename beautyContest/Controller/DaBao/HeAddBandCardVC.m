@@ -16,12 +16,16 @@
 #define ALERTTAG 200
 
 @interface HeAddBandCardVC ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
+{
+    NSInteger currentSelectIndex;
+}
 @property(strong,nonatomic)IBOutlet UITableView *tableview;
 @property(strong,nonatomic)NSArray *datasource;
 @property(strong,nonatomic)YLButton *selectButton;
 @property(strong,nonatomic)UITextField *bankUserNameField;
 @property(strong,nonatomic)UITextField *bankAccountField;
 @property(strong,nonatomic)UIView *dismissView;
+@property(strong,nonatomic)NSMutableArray *bankArray;
 
 @end
 
@@ -32,6 +36,7 @@
 @synthesize bankUserNameField;
 @synthesize bankAccountField;
 @synthesize dismissView;
+@synthesize bankArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -62,7 +67,20 @@
 - (void)initializaiton
 {
     [super initializaiton];
-    datasource = @[@"銀行名稱",@"開戶戶名",@"銀行賬號后六位"];
+    
+    currentSelectIndex = -1;
+    
+    NSString *bankJson = [[NSString alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"bankJson" ofType:@"txt"] encoding:NSUTF8StringEncoding error:nil];
+    datasource = [[bankJson objectFromJSONString] objectForKey:@"bank"];
+    
+    bankArray = [[NSMutableArray alloc] initWithCapacity:0];
+    for (NSDictionary *dict in datasource) {
+        NSString *name = dict[@"name"];
+        if ([name isMemberOfClass:[NSNull class]] || name == nil) {
+            name = @"";
+        }
+        [bankArray addObject:name];
+    }
 }
 
 - (void)initView
@@ -153,6 +171,10 @@
 
 - (void)confirmButtonClick:(UIButton *)button
 {
+    if (currentSelectIndex == -1) {
+        [self showHint:@"請選擇銀行"];
+        return;
+    }
     NSLog(@"confirmButtonClick");
     NSString *requestUrl = [NSString stringWithFormat:@"%@/account/send-bank-captcha",BASEURL];
     
@@ -175,11 +197,12 @@
     button.selected = YES;
     NSLog(@"selectButtonClick");
     
-    NSArray *bankArray = @[@"農業銀行",@"工商銀行",@"建設銀行",@"農業銀行",@"工商銀行",@"建設銀行"];
+    
     [FTPopOverMenu showForSender:button
                         withMenu:bankArray
                   imageNameArray:nil
                        doneBlock:^(NSInteger selectedIndex) {
+                           currentSelectIndex = selectedIndex;
                            NSString *buttonTitle = bankArray[selectedIndex];
                            [button setTitle:buttonTitle forState:UIControlStateNormal];
                            button.selected = NO;
@@ -328,9 +351,13 @@
     [self showHudInView:tableview hint:@"添加中..."];
     NSString *requestUrl = [NSString stringWithFormat:@"%@/account/create-bank",BASEURL];
     
-    NSString *acct_bank = @"";
-    NSString *acct_name = @"";
-    NSString *acct_no  = @"";
+    NSDictionary *dict = datasource[currentSelectIndex];
+    NSString *bankId = dict[@"id"];
+    NSString *bankName = dict[@"name"];
+    
+    NSString *acct_bank = [NSString stringWithFormat:@"%@ %@",bankId,bankName];
+    NSString *acct_name = bankUserNameField.text;
+    NSString *acct_no  = bankAccountField.text;
     NSString *captcha  = code;
     NSDictionary *params  = @{@"acct_bank":acct_bank,@"acct_name":acct_name,@"acct_no":acct_no,@"captcha":captcha};
     
