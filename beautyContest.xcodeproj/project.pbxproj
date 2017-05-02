@@ -7,6 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA0D90741EB63F6900A746C7 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0D90731EB63F6900A746C7 /* Bolts.framework */; };
+		EA0D90761EB63F7700A746C7 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0D90751EB63F7700A746C7 /* FBSDKCoreKit.framework */; };
+		EA0D90781EB63F7D00A746C7 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0D90771EB63F7D00A746C7 /* FBSDKLoginKit.framework */; };
+		EA0D907A1EB63F8800A746C7 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0D90791EB63F8800A746C7 /* FBSDKShareKit.framework */; };
+		EA0D907C1EB648DE00A746C7 /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0D907B1EB648DE00A746C7 /* UserNotifications.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		EA0D907E1EB648E500A746C7 /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0D907D1EB648E500A746C7 /* UserNotificationsUI.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		EA0D908E1EB6490200A746C7 /* FAImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0D90811EB6490200A746C7 /* FAImageView.m */; };
+		EA0D908F1EB6490200A746C7 /* NSString+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0D90831EB6490200A746C7 /* NSString+FontAwesome.m */; };
+		EA0D90901EB6490200A746C7 /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EA0D90851EB6490200A746C7 /* FontAwesome.ttf */; };
+		EA0D90911EB6490200A746C7 /* UIFont+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0D90871EB6490200A746C7 /* UIFont+FontAwesome.m */; };
+		EA0D90921EB6490200A746C7 /* UIImage+FontAwesome.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0D90891EB6490200A746C7 /* UIImage+FontAwesome.m */; };
+		EA0D90931EB6490200A746C7 /* KoaPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0D908D1EB6490200A746C7 /* KoaPullToRefresh.m */; };
+		EA0D90981EB6492800A746C7 /* AlicloudUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0D90951EB6492800A746C7 /* AlicloudUtils.framework */; };
+		EA0D90991EB6492800A746C7 /* CloudPushSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0D90961EB6492800A746C7 /* CloudPushSDK.framework */; };
+		EA0D909A1EB6492800A746C7 /* UTDID.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0D90971EB6492800A746C7 /* UTDID.framework */; };
+		EA0D909D1EB64A5700A746C7 /* LZLPushMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = EA0D909C1EB64A5700A746C7 /* LZLPushMessage.m */; };
 		EA20FC821EB2DC2000D52963 /* HeFeedBackReplyVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA20FC801EB2DC2000D52963 /* HeFeedBackReplyVC.m */; };
 		EA20FC831EB2DC2000D52963 /* HeFeedBackReplyVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA20FC811EB2DC2000D52963 /* HeFeedBackReplyVC.xib */; };
 		EA20FC871EB2DD4200D52963 /* HeHistoryFeedBackCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EA20FC861EB2DD4200D52963 /* HeHistoryFeedBackCell.m */; };
@@ -586,6 +602,28 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EA0D90731EB63F6900A746C7 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		EA0D90751EB63F7700A746C7 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		EA0D90771EB63F7D00A746C7 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		EA0D90791EB63F8800A746C7 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		EA0D907B1EB648DE00A746C7 /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		EA0D907D1EB648E500A746C7 /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
+		EA0D90801EB6490200A746C7 /* FAImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAImageView.h; sourceTree = "<group>"; };
+		EA0D90811EB6490200A746C7 /* FAImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAImageView.m; sourceTree = "<group>"; };
+		EA0D90821EB6490200A746C7 /* NSString+FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+FontAwesome.h"; sourceTree = "<group>"; };
+		EA0D90831EB6490200A746C7 /* NSString+FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FontAwesome.m"; sourceTree = "<group>"; };
+		EA0D90851EB6490200A746C7 /* FontAwesome.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FontAwesome.ttf; sourceTree = "<group>"; };
+		EA0D90861EB6490200A746C7 /* UIFont+FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+FontAwesome.h"; sourceTree = "<group>"; };
+		EA0D90871EB6490200A746C7 /* UIFont+FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+FontAwesome.m"; sourceTree = "<group>"; };
+		EA0D90881EB6490200A746C7 /* UIImage+FontAwesome.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+FontAwesome.h"; sourceTree = "<group>"; };
+		EA0D90891EB6490200A746C7 /* UIImage+FontAwesome.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+FontAwesome.m"; sourceTree = "<group>"; };
+		EA0D908C1EB6490200A746C7 /* KoaPullToRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KoaPullToRefresh.h; sourceTree = "<group>"; };
+		EA0D908D1EB6490200A746C7 /* KoaPullToRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KoaPullToRefresh.m; sourceTree = "<group>"; };
+		EA0D90951EB6492800A746C7 /* AlicloudUtils.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AlicloudUtils.framework; sourceTree = "<group>"; };
+		EA0D90961EB6492800A746C7 /* CloudPushSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CloudPushSDK.framework; sourceTree = "<group>"; };
+		EA0D90971EB6492800A746C7 /* UTDID.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = UTDID.framework; sourceTree = "<group>"; };
+		EA0D909B1EB64A5700A746C7 /* LZLPushMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LZLPushMessage.h; sourceTree = "<group>"; };
+		EA0D909C1EB64A5700A746C7 /* LZLPushMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LZLPushMessage.m; sourceTree = "<group>"; };
 		EA20FC7F1EB2DC2000D52963 /* HeFeedBackReplyVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeFeedBackReplyVC.h; sourceTree = "<group>"; };
 		EA20FC801EB2DC2000D52963 /* HeFeedBackReplyVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeFeedBackReplyVC.m; sourceTree = "<group>"; };
 		EA20FC811EB2DC2000D52963 /* HeFeedBackReplyVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeFeedBackReplyVC.xib; sourceTree = "<group>"; };
@@ -1596,21 +1634,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EA0D907E1EB648E500A746C7 /* UserNotificationsUI.framework in Frameworks */,
+				EA0D907C1EB648DE00A746C7 /* UserNotifications.framework in Frameworks */,
+				EAC2C9AC1D4AF36D00E282A8 /* CoreLocation.framework in Frameworks */,
+				EAC2C9B01D4AF37E00E282A8 /* CoreGraphics.framework in Frameworks */,
+				EAC2C98E1D4AF29500E282A8 /* libresolv.tbd in Frameworks */,
 				EA3E8EEE1EAAEA4B007DDD64 /* WebKit.framework in Frameworks */,
 				EA3E8EEC1EAAEA2F007DDD64 /* AVFoundation.framework in Frameworks */,
 				EA3E8EEA1EAAEA13007DDD64 /* CoreImage.framework in Frameworks */,
-				EAC2C9B01D4AF37E00E282A8 /* CoreGraphics.framework in Frameworks */,
 				EAC2C9AE1D4AF37600E282A8 /* Social.framework in Frameworks */,
-				EAC2C9AC1D4AF36D00E282A8 /* CoreLocation.framework in Frameworks */,
 				EAC2CEA41D4AF5EE00E282A8 /* ShareSDKUI.framework in Frameworks */,
 				EAC2CEA11D4AF5EE00E282A8 /* ShareSDK.framework in Frameworks */,
+				EA0D907A1EB63F8800A746C7 /* FBSDKShareKit.framework in Frameworks */,
 				EAC2CEA51D4AF5EE00E282A8 /* TencentOpenAPI.framework in Frameworks */,
 				EAC2C9AA1D4AF36400E282A8 /* CoreText.framework in Frameworks */,
 				EAC2C9A81D4AF35D00E282A8 /* CoreData.framework in Frameworks */,
+				EA0D90991EB6492800A746C7 /* CloudPushSDK.framework in Frameworks */,
 				EAC2CEAF1D4AF5EE00E282A8 /* libzbar.a in Frameworks */,
 				EAC2C9A61D4AF35500E282A8 /* Accounts.framework in Frameworks */,
 				EAC2C9A41D4AF34E00E282A8 /* MapKit.framework in Frameworks */,
 				EAC2C9A21D4AF33100E282A8 /* AddressBook.framework in Frameworks */,
+				EA0D90741EB63F6900A746C7 /* Bolts.framework in Frameworks */,
+				EA0D90781EB63F7D00A746C7 /* FBSDKLoginKit.framework in Frameworks */,
 				EAC2C9A01D4AF31900E282A8 /* MessageUI.framework in Frameworks */,
 				EAC2CEA91D4AF5EE00E282A8 /* libWeChatSDK.a in Frameworks */,
 				EAC2C99E1D4AF2FC00E282A8 /* AdSupport.framework in Frameworks */,
@@ -1625,10 +1670,11 @@
 				EAC2CEAE1D4AF5EE00E282A8 /* UMMobClick.framework in Frameworks */,
 				EAC2C9921D4AF2BF00E282A8 /* CoreVideo.framework in Frameworks */,
 				EAC2C9861D4AF26B00E282A8 /* CoreMedia.framework in Frameworks */,
+				EA0D90981EB6492800A746C7 /* AlicloudUtils.framework in Frameworks */,
 				EAC2CEA21D4AF5EE00E282A8 /* ShareSDKExtension.framework in Frameworks */,
 				EAC2CEAD1D4AF5EE00E282A8 /* ShareSDKConnector.framework in Frameworks */,
 				EAC2C9901D4AF29F00E282A8 /* libxml2.tbd in Frameworks */,
-				EAC2C98E1D4AF29500E282A8 /* libresolv.tbd in Frameworks */,
+				EA0D909A1EB6492800A746C7 /* UTDID.framework in Frameworks */,
 				EAC2C98C1D4AF28A00E282A8 /* libstdc++.6.0.9.tbd in Frameworks */,
 				EAC2C98A1D4AF28100E282A8 /* libz.tbd in Frameworks */,
 				EAC2C9881D4AF27600E282A8 /* libiconv.tbd in Frameworks */,
@@ -1638,6 +1684,7 @@
 				EAC2CEA71D4AF5EE00E282A8 /* libWeiboSDK.a in Frameworks */,
 				EAC2C97E1D4AF24300E282A8 /* libc++abi.tbd in Frameworks */,
 				EAC2C97C1D4AF23600E282A8 /* OpenGLES.framework in Frameworks */,
+				EA0D90761EB63F7700A746C7 /* FBSDKCoreKit.framework in Frameworks */,
 				EAC2C97A1D4AF22E00E282A8 /* SystemConfiguration.framework in Frameworks */,
 				EAC2C9781D4AF22200E282A8 /* Contacts.framework in Frameworks */,
 			);
@@ -1660,6 +1707,68 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EA0D90721EB63F5B00A746C7 /* FacebookSDK */ = {
+			isa = PBXGroup;
+			children = (
+				EA0D90791EB63F8800A746C7 /* FBSDKShareKit.framework */,
+				EA0D90771EB63F7D00A746C7 /* FBSDKLoginKit.framework */,
+				EA0D90751EB63F7700A746C7 /* FBSDKCoreKit.framework */,
+				EA0D90731EB63F6900A746C7 /* Bolts.framework */,
+			);
+			path = FacebookSDK;
+			sourceTree = "<group>";
+		};
+		EA0D907F1EB6490200A746C7 /* FontAwesome+iOS */ = {
+			isa = PBXGroup;
+			children = (
+				EA0D90801EB6490200A746C7 /* FAImageView.h */,
+				EA0D90811EB6490200A746C7 /* FAImageView.m */,
+				EA0D90821EB6490200A746C7 /* NSString+FontAwesome.h */,
+				EA0D90831EB6490200A746C7 /* NSString+FontAwesome.m */,
+				EA0D90841EB6490200A746C7 /* Resources */,
+				EA0D90861EB6490200A746C7 /* UIFont+FontAwesome.h */,
+				EA0D90871EB6490200A746C7 /* UIFont+FontAwesome.m */,
+				EA0D90881EB6490200A746C7 /* UIImage+FontAwesome.h */,
+				EA0D90891EB6490200A746C7 /* UIImage+FontAwesome.m */,
+			);
+			path = "FontAwesome+iOS";
+			sourceTree = "<group>";
+		};
+		EA0D90841EB6490200A746C7 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				EA0D90851EB6490200A746C7 /* FontAwesome.ttf */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		EA0D908A1EB6490200A746C7 /* KoaPullToRefresh */ = {
+			isa = PBXGroup;
+			children = (
+				EA0D908B1EB6490200A746C7 /* KoaPullToRefresh */,
+			);
+			path = KoaPullToRefresh;
+			sourceTree = "<group>";
+		};
+		EA0D908B1EB6490200A746C7 /* KoaPullToRefresh */ = {
+			isa = PBXGroup;
+			children = (
+				EA0D908C1EB6490200A746C7 /* KoaPullToRefresh.h */,
+				EA0D908D1EB6490200A746C7 /* KoaPullToRefresh.m */,
+			);
+			path = KoaPullToRefresh;
+			sourceTree = "<group>";
+		};
+		EA0D90941EB6492800A746C7 /* AliPushSDK */ = {
+			isa = PBXGroup;
+			children = (
+				EA0D90951EB6492800A746C7 /* AlicloudUtils.framework */,
+				EA0D90961EB6492800A746C7 /* CloudPushSDK.framework */,
+				EA0D90971EB6492800A746C7 /* UTDID.framework */,
+			);
+			path = AliPushSDK;
+			sourceTree = "<group>";
+		};
 		EA20FC841EB2DD2A00D52963 /* FeedBack */ = {
 			isa = PBXGroup;
 			children = (
@@ -1992,6 +2101,8 @@
 		EA3E8EE81EAAEA13007DDD64 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EA0D907D1EB648E500A746C7 /* UserNotificationsUI.framework */,
+				EA0D907B1EB648DE00A746C7 /* UserNotifications.framework */,
 				EA3E8EED1EAAEA4B007DDD64 /* WebKit.framework */,
 				EA3E8EEB1EAAEA2F007DDD64 /* AVFoundation.framework */,
 				EA3E8EE91EAAEA13007DDD64 /* CoreImage.framework */,
@@ -2205,6 +2316,8 @@
 		EAC2C9CE1D4AF5D700E282A8 /* Custom */ = {
 			isa = PBXGroup;
 			children = (
+				EA0D907F1EB6490200A746C7 /* FontAwesome+iOS */,
+				EA0D908A1EB6490200A746C7 /* KoaPullToRefresh */,
 				EA3E8EFD1EAB9316007DDD64 /* YLButton */,
 				EA3E8EF91EAB4AFF007DDD64 /* FTPopOverMenu */,
 				EA38E9F71EA30C5D00971B7A /* Masonry */,
@@ -3504,6 +3617,8 @@
 		EAC2CE201D4AF5E800E282A8 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				EA0D909B1EB64A5700A746C7 /* LZLPushMessage.h */,
+				EA0D909C1EB64A5700A746C7 /* LZLPushMessage.m */,
 				EAC2CE2D1D4AF5E800E282A8 /* HeSysbsModel.h */,
 				EAC2CE2E1D4AF5E800E282A8 /* HeSysbsModel.m */,
 				EAC2CE311D4AF5E800E282A8 /* User.h */,
@@ -3515,6 +3630,8 @@
 		EAC2CE3F1D4AF5EE00E282A8 /* ThirdPartySDK */ = {
 			isa = PBXGroup;
 			children = (
+				EA0D90941EB6492800A746C7 /* AliPushSDK */,
+				EA0D90721EB63F5B00A746C7 /* FacebookSDK */,
 				EAC2CE401D4AF5EE00E282A8 /* JPush-iOS-SDK-2.1.7 */,
 				EAC2CE441D4AF5EE00E282A8 /* libqrencode */,
 				EAC2CE551D4AF5EE00E282A8 /* ShareSDK3.3.0 */,
@@ -3938,6 +4055,7 @@
 				EAC2CD321D4AF5D800E282A8 /* MBProgressHUD.bundle in Resources */,
 				EA38E9C21EA1DFE100971B7A /* HeOrderVC.xib in Resources */,
 				EA38E9E51EA1FCC900971B7A /* bg_home_down.png in Resources */,
+				EA0D90901EB6490200A746C7 /* FontAwesome.ttf in Resources */,
 				EA3102C51EA9DA1100F87B23 /* HeAboutUsVC.xib in Resources */,
 				EAC2CD161D4AF5D800E282A8 /* grayArrow@2x.png in Resources */,
 				EAC2CDF11D4AF5D800E282A8 /* btn_021@2x.png in Resources */,
@@ -4074,6 +4192,7 @@
 				EAC2CD131D4AF5D800E282A8 /* EGORefreshTableFootView.m in Sources */,
 				EAC2CCBE1D4AF5D800E282A8 /* README.md in Sources */,
 				EAC2CCB81D4AF5D800E282A8 /* AFSecurityPolicy.m in Sources */,
+				EA0D90911EB6490200A746C7 /* UIFont+FontAwesome.m in Sources */,
 				EAEDE8E11EAC2466000681CE /* LoginAndRegisterController.m in Sources */,
 				EAC2CD2F1D4AF5D800E282A8 /* README.md in Sources */,
 				EAC2CDAF1D4AF5D800E282A8 /* RACStringSequence.m in Sources */,
@@ -4139,6 +4258,7 @@
 				EAC2CCC81D4AF5D800E282A8 /* ASIAuthenticationDialog.m in Sources */,
 				EAC2CD301D4AF5D800E282A8 /* KxMenu.m in Sources */,
 				EAC2CDE81D4AF5D800E282A8 /* SVIndefiniteAnimatedView.m in Sources */,
+				EA0D90921EB6490200A746C7 /* UIImage+FontAwesome.m in Sources */,
 				EAC2CD241D4AF5D800E282A8 /* IQKeyboardManager.m in Sources */,
 				EAC2CCDB1D4AF5D800E282A8 /* UILabel+Corner.m in Sources */,
 				EAC2CECF1D4AF71900E282A8 /* NSString+change.m in Sources */,
@@ -4211,6 +4331,7 @@
 				EAC2CCF01D4AF5D800E282A8 /* MLLinkClickLabel.m in Sources */,
 				EAC2CCC31D4AF5D800E282A8 /* UIImageView+AFNetworking.m in Sources */,
 				EAC2CDCC1D4AF5D800E282A8 /* UITextField+RACSignalSupport.m in Sources */,
+				EA0D90931EB6490200A746C7 /* KoaPullToRefresh.m in Sources */,
 				EAC2CD5E1D4AF5D800E282A8 /* README.md in Sources */,
 				EAC2CD071D4AF5D800E282A8 /* DropDownListView.m in Sources */,
 				EAC2CDB01D4AF5D800E282A8 /* RACSubject.m in Sources */,
@@ -4230,6 +4351,7 @@
 				EAC2C9C71D4AF5CC00E282A8 /* HeBaseViewController.m in Sources */,
 				EAC2CD831D4AF5D800E282A8 /* NSSet+RACSequenceAdditions.m in Sources */,
 				EA38EA171EA30C5D00971B7A /* MASConstraintMaker.m in Sources */,
+				EA0D908F1EB6490200A746C7 /* NSString+FontAwesome.m in Sources */,
 				EAC2CDBA1D4AF5D800E282A8 /* RACValueTransformer.m in Sources */,
 				EAC2CD861D4AF5D800E282A8 /* NSString+RACSupport.m in Sources */,
 				EAC2CCC51D4AF5D800E282A8 /* UIRefreshControl+AFNetworking.m in Sources */,
@@ -4259,6 +4381,7 @@
 				EAC2CD651D4AF5D800E282A8 /* SIMenuButton.m in Sources */,
 				EAC2CDB91D4AF5D800E282A8 /* RACUnit.m in Sources */,
 				EAC2CD3C1D4AF5D800E282A8 /* README.md in Sources */,
+				EA0D908E1EB6490200A746C7 /* FAImageView.m in Sources */,
 				EAC2CD041D4AF5D800E282A8 /* DFUserDefaultStorageService.m in Sources */,
 				EAC2CD5F1D4AF5D800E282A8 /* MRZoomScrollView.m in Sources */,
 				EAC2CDC11D4AF5D800E282A8 /* UIControl+RACSignalSupportPrivate.m in Sources */,
@@ -4283,6 +4406,7 @@
 				EAC2CDC51D4AF5D800E282A8 /* UIRefreshControl+RACCommandSupport.m in Sources */,
 				EAC2CEA01D4AF5EE00E282A8 /* split.c in Sources */,
 				EAC2CD8D1D4AF5D800E282A8 /* RACChannel.m in Sources */,
+				EA0D909D1EB64A5700A746C7 /* LZLPushMessage.m in Sources */,
 				EAC2CCF71D4AF5D800E282A8 /* DFTableViewRefreshControl.m in Sources */,
 				EAC2CDBE1D4AF5D800E282A8 /* UIButton+RACCommandSupport.m in Sources */,
 				EAC2CCF11D4AF5D800E282A8 /* pinyin.m in Sources */,
@@ -4560,6 +4684,8 @@
 					"$(PROJECT_DIR)/beautyContest/ThirdPartySDK/ShareSDK3.3.0/Support/PlatformSDK/QQSDK",
 					"$(PROJECT_DIR)/beautyContest/ThirdPartySDK/ShareSDK3.3.0/Support/Required",
 					"$(PROJECT_DIR)/beautyContest/ThirdPartySDK/umsdk_IOS_analyics_no-idfa_v4.0.5",
+					"$(PROJECT_DIR)/beautyContest/ThirdPartySDK/FacebookSDK",
+					"$(PROJECT_DIR)/beautyContest/ThirdPartySDK/AliPushSDK",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/beautyContest/beautyContest-Prefix.pch";
@@ -4597,6 +4723,8 @@
 					"$(PROJECT_DIR)/beautyContest/ThirdPartySDK/ShareSDK3.3.0/Support/PlatformSDK/QQSDK",
 					"$(PROJECT_DIR)/beautyContest/ThirdPartySDK/ShareSDK3.3.0/Support/Required",
 					"$(PROJECT_DIR)/beautyContest/ThirdPartySDK/umsdk_IOS_analyics_no-idfa_v4.0.5",
+					"$(PROJECT_DIR)/beautyContest/ThirdPartySDK/FacebookSDK",
+					"$(PROJECT_DIR)/beautyContest/ThirdPartySDK/AliPushSDK",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/beautyContest/beautyContest-Prefix.pch";
@@ -4718,6 +4846,8 @@
 					"$(PROJECT_DIR)/beautyContest/ThirdPartySDK/ShareSDK3.3.0/Support/PlatformSDK/QQSDK",
 					"$(PROJECT_DIR)/beautyContest/ThirdPartySDK/ShareSDK3.3.0/Support/Required",
 					"$(PROJECT_DIR)/beautyContest/ThirdPartySDK/umsdk_IOS_analyics_no-idfa_v4.0.5",
+					"$(PROJECT_DIR)/beautyContest/ThirdPartySDK/FacebookSDK",
+					"$(PROJECT_DIR)/beautyContest/ThirdPartySDK/AliPushSDK",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SRCROOT)/beautyContest/beautyContest-Prefix.pch";

@@ -11,6 +11,7 @@
 #import "RDVTabBar.h"
 #import "RDVTabBarController.h"
 #import "HeSysbsModel.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 @interface HeTabBarVC ()
 
@@ -35,8 +36,17 @@
 - (void)initialization
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getUserInfo) name:GETUSERDATA_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(fbsupdateContent:)
+                                                 name:FBSDKProfileDidChangeNotification
+                                               object:nil];
+    
 }
 
+- (void)fbsupdateContent:(NSNotification *)notification
+{
+    NSLog(@"notification = %@",notification);
+}
 //后台自动登录
 - (void)autoLogin
 {

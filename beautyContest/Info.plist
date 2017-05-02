@@ -61,5 +61,27 @@
 	<string>大寶訪問您的通訊錄，方便您收到短信</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>大寶訪問您的相冊，讓您修改屬於自己的頭像</string>
+    
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>fb302339483514249</string>
+            </array>
+        </dict>
+    </array>
+    <key>FacebookAppID</key>
+    <string>302339483514249</string>
+    <key>FacebookDisplayName</key>
+    <string>大寶</string>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>fbapi</string>
+        <string>fb-messenger-api</string>
+        <string>fbauth2</string>
+        <string>fbshareextension</string>
+    </array>
+    
 </dict>
 </plist>

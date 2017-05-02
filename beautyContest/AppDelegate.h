@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <CloudPushSDK/CloudPushSDK.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

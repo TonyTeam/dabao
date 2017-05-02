@@ -7,6 +7,9 @@
 //
 
 #import "HeLoginVC.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import <FBSDKCoreKit/FBSDKProfile.h>
 
 @interface HeLoginVC ()<UITextFieldDelegate>
 @property(strong,nonatomic)IBOutlet UIButton *loginButton;
@@ -148,6 +151,26 @@
 - (IBAction)faceBookLogin:(id)sender
 {
     NSLog(@"faceBookLogin");
+    if ([FBSDKAccessToken currentAccessToken]) {
+        // User is logged in, do work such as go to next view controller.
+    }
+    
+    FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
+    [login
+     logInWithReadPermissions: @[@"public_profile"]
+     fromViewController:self
+     handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+         NSLog(@"facebook login result.grantedPermissions = %@,error = %@",result.grantedPermissions,error);
+         if (error) {
+             NSLog(@"Process error");
+         } else if (result.isCancelled) {
+             NSLog(@"Cancelled");
+         } else {
+             NSLog(@"Logged in");
+             FBSDKProfile *userProfile = [FBSDKProfile currentProfile];
+             NSLog(@"userProfile = %@",userProfile);
+         }
+     }];
 }
 
 - (IBAction)securityButtonClick:(UIButton *)sender

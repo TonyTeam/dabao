@@ -137,7 +137,9 @@
     if ([passwordField isFirstResponder]) {
         [passwordField resignFirstResponder];
     }
+    
 }
+
 
 - (IBAction)enrollButtonClick:(id)sender
 {
