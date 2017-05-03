@@ -67,7 +67,13 @@
         tipLabel.hidden = YES;
         return;
     }
-    tipLabel.hidden = NO;
+    CustomNavigationController *nav = (CustomNavigationController *)self.selectedViewController;
+    if ([nav.viewControllers count] > 1) {
+        tipLabel.hidden = YES;
+    }
+    else{
+        tipLabel.hidden = NO;
+    }
     
     [appWindow addSubview:tipLabel];
 }

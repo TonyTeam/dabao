@@ -117,13 +117,31 @@
         [self showHint:@"請輸入正確手機號"];
         return;
     }
+    __weak HeLoginVC *weakSelf = self;
     NSString *requestUrl = [NSString stringWithFormat:@"%@/user/login",BASEURL];
     NSDictionary * params  = @{@"cellphone": account,@"password" : password,@"rememberMe":@"1"};
     [self showHudInView:self.view hint:@"登錄中..."];
     [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
-        [self hideHud];
+        [weakSelf hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
         NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
+        NSDictionary *error = respondDict[@"error"];
+        if (error) {
+            NSArray *allValue = error.allValues;
+            NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+            for (NSInteger index = 0; index < [allValue count]; index++) {
+                NSString *string = allValue[index];
+                if (index == [allValue count] - 1) {
+                    [errorString appendFormat:@"%@",string];
+                }
+                else{
+                    [errorString appendFormat:@"%@,",string];
+                }
+                
+            }
+            [weakSelf showHint:errorString];
+            return;
+        }
         NSString *user_id = respondDict[@"user_id"];
         NSString *token = respondDict[@"token"];
         if ([user_id isMemberOfClass:[NSNull class]] || user_id == nil) {
@@ -142,8 +160,8 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
         
     } failure:^(NSError* err){
-        [self hideHud];
-        [self showHint:ERRORREQUESTTIP];
+        [weakSelf hideHud];
+        [weakSelf showHint:ERRORREQUESTTIP];
     }];
     
 }

@@ -96,13 +96,15 @@
     
     passwordField = [[UITextField alloc] init];
     passwordField.delegate = self;
+    passwordField.secureTextEntry = YES;
     passwordField.font = [UIFont systemFontOfSize:15.0];
     passwordField.placeholder = @"請輸入密碼";
     
     confirmPasswordField = [[UITextField alloc] init];
     confirmPasswordField.delegate = self;
+    confirmPasswordField.secureTextEntry = YES;
     confirmPasswordField.font = [UIFont systemFontOfSize:15.0];
-    confirmPasswordField.placeholder = @"請輸入密碼";
+    confirmPasswordField.placeholder = @"請再次輸入密碼";
     
     getCodeButon = [[UIButton alloc] init];
     getCodeButon.layer.masksToBounds = YES;
@@ -176,32 +178,35 @@
         [self showHint:@"請再次輸入支付密碼"];
         return;
     }
-    
+    if (![password isEqualToString:confirmPassword]) {
+        [self showHint:@"兩次輸入的密碼不一致"];
+        return;
+    }
     NSString *requestUrl = [NSString stringWithFormat:@"%@/user/set-pay-pwd",BASEURL];
     
     NSDictionary * params  = @{@"captcha":verifyCode,@"password":password};
+    __weak HeModifyPayPasswordVC *weakSelf = self;
     [self showHudInView:self.view hint:@"支付密碼设置中..."];
     [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
-        [self hideHud];
+        [weakSelf hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
         NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
         id error = respondDict[@"error"];
         if (!error) {
-            [[NSNotificationCenter defaultCenter] postNotificationName:GETUSERDATA_NOTIFICATION object:nil];
-            
             NSMutableDictionary *userDict = [[NSMutableDictionary alloc] initWithDictionary:[HeSysbsModel getSysModel].userDetailDict];
             [userDict setObject:@YES forKey:@"hasPayPassword"];
-            [self showHint:@"支付密碼设置成功"];
-            [self performSelector:@selector(backToLastView) withObject:nil afterDelay:0.3];
+            [weakSelf showHint:@"支付密碼设置成功"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:GETUSERDATA_NOTIFICATION object:nil];
+            [weakSelf performSelector:@selector(backToLastView) withObject:nil afterDelay:0.5];
         }
         else{
-            [self showHint:@"支付密碼设置出錯"];
+            [weakSelf showHint:@"支付密碼设置出錯"];
         }
         
         
     } failure:^(NSError* err){
-        [self hideHud];
-        [self showHint:ERRORREQUESTTIP];
+        [weakSelf hideHud];
+        [weakSelf showHint:ERRORREQUESTTIP];
     }];
     
 }

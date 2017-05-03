@@ -64,7 +64,7 @@
     self.navigationController.navigationBarHidden = YES;
     
     CGRect frame= segmentControl.frame;
-    CGFloat fNewHeight = 50.0;
+    CGFloat fNewHeight = 40.0;
     [segmentControl setFrame:CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, fNewHeight)];
     
 }
@@ -296,6 +296,9 @@
         pay_status_name = @"";
     }
     cell.statusLabel.text = pay_status_name;
+    if (orderType == 0) {
+        cell.statusLabel.textColor = APPDEFAULTORANGE;
+    }
     
     NSString *pay_status_style = dict[@"pay_status_style"];
     if ([pay_status_style isMemberOfClass:[NSNull class]]) {

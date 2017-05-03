@@ -15,6 +15,9 @@
 @property(strong,nonatomic)IBOutlet UITableView *tableview;
 @property(strong,nonatomic)IBOutlet UILabel *dCoinValueLabel;
 @property(strong,nonatomic)IBOutlet UILabel *dCoinTitleLabel;
+@property(strong,nonatomic)IBOutlet UILabel *orderTitleLabel;
+@property(assign,nonatomic)BOOL isSuperPay; //是否超商付款
+@property(assign,nonatomic)BOOL isTradeFinsh; //是否交易成功
 
 @property(strong,nonatomic)NSArray *datasource;
 @property(strong,nonatomic)IBOutlet UILabel *titleLabel;
@@ -28,6 +31,9 @@
 @synthesize titleLabel;
 @synthesize orderDetailDict;
 @synthesize dCoinTitleLabel;
+@synthesize orderTitleLabel;
+@synthesize isSuperPay;
+@synthesize isTradeFinsh;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -71,10 +77,55 @@
 - (void)initializaiton
 {
     [super initializaiton];
-    datasource = @[@"訂單狀態",@"訂單號",@"付款方式",@"收款賬號",@"付款金額",@"創建時間"];
-    if (_orderType == 0) {
-        datasource = @[@"訂單狀態",@"訂單號",@"創建時間"];
+    NSString *pay_status_name = orderDetailDict[@"status_name"];
+    if ([pay_status_name isMemberOfClass:[NSNull class]]) {
+        pay_status_name = @"";
     }
+    if ([pay_status_name isEqualToString:@"交易成功"]) {
+        isTradeFinsh = YES;
+        datasource = @[@"訂單狀態",@"訂單號",@"付款方式",@"收款賬號",@"付款金額",@"創建時間",@"交易成功時間"];
+        id allpay_request = orderDetailDict[@"allpay_request"];
+        if ([allpay_request isMemberOfClass:[NSNull class]]) {
+            allpay_request = nil;
+        }
+        id ChoosePayment = allpay_request[@"ChoosePayment"];
+        if ([ChoosePayment isMemberOfClass:[NSNull class]] || ChoosePayment == nil) {
+            ChoosePayment = nil;
+        }
+        isSuperPay = NO;
+        if ([ChoosePayment isEqualToString:@"CVS"]) {
+            isSuperPay = YES;
+            datasource = @[@"訂單狀態",@"訂單號",@"付款方式",@"付款金額",@"創建時間",@"交易成功時間"];
+        }
+        
+        
+        if (_orderType == 0) {
+            datasource = @[@"訂單狀態",@"訂單號",@"創建時間",@"交易成功時間"];
+        }
+    }
+    else{
+        isTradeFinsh = NO;
+        datasource = @[@"訂單狀態",@"訂單號",@"付款方式",@"收款賬號",@"付款金額",@"創建時間"];
+        id allpay_request = orderDetailDict[@"allpay_request"];
+        if ([allpay_request isMemberOfClass:[NSNull class]]) {
+            allpay_request = nil;
+        }
+        id ChoosePayment = allpay_request[@"ChoosePayment"];
+        if ([ChoosePayment isMemberOfClass:[NSNull class]] || ChoosePayment == nil) {
+            ChoosePayment = nil;
+        }
+        isSuperPay = NO;
+        if ([ChoosePayment isEqualToString:@"CVS"]) {
+            isSuperPay = YES;
+            datasource = @[@"訂單狀態",@"訂單號",@"付款方式",@"付款金額",@"創建時間"];
+        }
+        
+        
+        if (_orderType == 0) {
+            datasource = @[@"訂單狀態",@"訂單號",@"創建時間"];
+        }
+    }
+    
 }
 
 - (void)initView
@@ -99,6 +150,10 @@
     
     UIFont *contentFont = [UIFont systemFontOfSize:13.0];
     NSString *contentString = @"請將費用通過ATM或用網銀轉入上方\"收款賬戶\"內，即可完成儲值";
+    if (isSuperPay) {
+        contentString = @"";
+        tipLabelH = 0;
+    }
     CGSize contentsize = [MLLabel getViewSizeByString:contentString maxWidth:tipLabelW font:contentFont lineHeight:1.2f lines:0];
     tipLabelH = contentsize.height;
     
@@ -112,23 +167,24 @@
     [footerview addSubview:tipLabel];
     if (_orderType == 0) {
         tipLabel.hidden = YES;
+        orderTitleLabel.text = @"掃碼訂單";
     }
     
     CGFloat backButtonX = 20;
     CGFloat backButtonY = CGRectGetMaxY(tipLabel.frame) + 10;
     CGFloat backButtonW = SCREENWIDTH - 2 * backButtonX;
-    CGFloat backButtonH = 40;
+    CGFloat backButtonH = 50;
     
     UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(backButtonX, backButtonY, backButtonW, backButtonH)];
     backButton.layer.masksToBounds = YES;
     backButton.layer.cornerRadius = 8.0;
     [backButton setTitle:@"返回" forState:UIControlStateNormal];
-    backButton.titleLabel.font = [UIFont systemFontOfSize:16.0];
+    backButton.titleLabel.font = [UIFont systemFontOfSize:18.0];
     [backButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [backButton addTarget:self action:@selector(backButtonClick:) forControlEvents:UIControlEventTouchUpInside];
     [footerview addSubview:backButton];
     
-    [backButton setBackgroundImage:[Tool buttonImageFromColor:[UIColor colorWithRed:250.0 / 255.0 green:49.0 / 255.0 blue:43.0 / 255.0 alpha:1.0] withImageSize:backButton.frame.size] forState:UIControlStateNormal];
+    [backButton setBackgroundImage:[Tool buttonImageFromColor:DEFAULTREDCOLOR withImageSize:backButton.frame.size] forState:UIControlStateNormal];
     
 }
 
@@ -154,7 +210,7 @@
             }
             dCoinValueLabel.text = [NSString stringWithFormat:@"%@ D幣",biz_rmb];
             
-            NSString *ItemName = orderDetailDict[@"ItemName"];
+            NSString *ItemName = orderDetailDict[@"biz_name"];
             if (_orderType == 0) {
                 ItemName = orderDetailDict[@"qr_brief"];
             }
@@ -231,7 +287,15 @@
                 status_name = @"";
             }
             contentLabel.text = status_name;
-            contentLabel.textColor = [UIColor redColor];
+            if (isTradeFinsh) {
+                contentLabel.textColor = [UIColor greenColor];
+            }
+            else{
+                contentLabel.textColor = DEFAULTREDCOLOR;
+            }
+            if (_orderType == 0) {
+                contentLabel.textColor = APPDEFAULTORANGE;
+            }
             break;
         }
         case 1:{
@@ -251,40 +315,99 @@
                 contentLabel.text = [NSString stringWithFormat:@"%@",created_at];
             }
             else{
-                NSString *oid = orderDetailDict[@"pm_payee_acct_no"];
-                if ([oid isMemberOfClass:[NSNull class]] || oid == nil) {
-                    oid = @"";
+                id allpay_request = orderDetailDict[@"allpay_request"];
+                if ([allpay_request isMemberOfClass:[NSNull class]]) {
+                    allpay_request = nil;
                 }
-                contentLabel.text = oid;
+                id ChoosePayment = allpay_request[@"ChoosePayment"];
+                if ([ChoosePayment isMemberOfClass:[NSNull class]] || ChoosePayment == nil) {
+                    ChoosePayment = nil;
+                }
+                if ([ChoosePayment isEqualToString:@"CVS"]) {
+                    contentLabel.text = @"超商付款";
+                }
+                else{
+                    contentLabel.text = @"銀行賬戶付款";
+                }
             }
             
             break;
         }
         case 3:{
-            NSString *pm_payee_acct_no = orderDetailDict[@"pm_payee_acct_no"];
-            if ([pm_payee_acct_no isMemberOfClass:[NSNull class]] || pm_payee_acct_no == nil) {
-                pm_payee_acct_no = @"";
+            if (_orderType == 0 && isTradeFinsh) {
+                //掃碼交易完成訂單顯示完成時間
+                NSString *created_at = orderDetailDict[@"updated_at"];
+                if ([created_at isMemberOfClass:[NSNull class]] || created_at == nil) {
+                    created_at = @"";
+                }
+                contentLabel.textColor = DEFAULTREDCOLOR;
+                contentLabel.text = [NSString stringWithFormat:@"%@",created_at];
             }
-            contentLabel.text = pm_payee_acct_no;
+            else{
+                if (isSuperPay) {
+                    NSString *pay_amount = orderDetailDict[@"pay_amount"];
+                    if ([pay_amount isMemberOfClass:[NSNull class]] || pay_amount == nil) {
+                        pay_amount = @"";
+                    }
+                    contentLabel.text = [NSString stringWithFormat:@"%@台幣",pay_amount];
+                }
+                else{
+                    NSString *pm_payee_acct_no = orderDetailDict[@"pm_payee_acct_no"];
+                    if ([pm_payee_acct_no isMemberOfClass:[NSNull class]] || pm_payee_acct_no == nil) {
+                        pm_payee_acct_no = @"";
+                    }
+                    contentLabel.text = pm_payee_acct_no;
+                }
+            }
+            
+            
             break;
         }
         case 4:{
-            NSString *pay_amount = orderDetailDict[@"pay_amount"];
-            if ([pay_amount isMemberOfClass:[NSNull class]] || pay_amount == nil) {
-                pay_amount = @"";
+            if (isSuperPay) {
+                NSString *created_at = orderDetailDict[@"created_at"];
+                if ([created_at isMemberOfClass:[NSNull class]] || created_at == nil) {
+                    created_at = @"";
+                }
+                contentLabel.text = [NSString stringWithFormat:@"%@",created_at];
             }
-            contentLabel.text = [NSString stringWithFormat:@"%@台幣",pay_amount];
+            else{
+                NSString *pay_amount = orderDetailDict[@"pay_amount"];
+                if ([pay_amount isMemberOfClass:[NSNull class]] || pay_amount == nil) {
+                    pay_amount = @"";
+                }
+                contentLabel.text = [NSString stringWithFormat:@"%@台幣",pay_amount];
+            }
             break;
         }
         case 5:{
-            NSString *created_at = orderDetailDict[@"created_at"];
+            if (isSuperPay) {
+                NSString *created_at = orderDetailDict[@"updated_at"];
+                if ([created_at isMemberOfClass:[NSNull class]] || created_at == nil) {
+                    created_at = @"";
+                }
+                contentLabel.textColor = DEFAULTREDCOLOR;
+                contentLabel.text = [NSString stringWithFormat:@"%@",created_at];
+            }
+            else{
+                NSString *created_at = orderDetailDict[@"created_at"];
+                if ([created_at isMemberOfClass:[NSNull class]] || created_at == nil) {
+                    created_at = @"";
+                }
+                contentLabel.text = [NSString stringWithFormat:@"%@",created_at];
+            }
+            
+            break;
+        }
+        case 6:{
+            NSString *created_at = orderDetailDict[@"updated_at"];
+            contentLabel.textColor = DEFAULTREDCOLOR;
             if ([created_at isMemberOfClass:[NSNull class]] || created_at == nil) {
                 created_at = @"";
             }
             contentLabel.text = [NSString stringWithFormat:@"%@",created_at];
             break;
         }
-            
         default:
             break;
     }

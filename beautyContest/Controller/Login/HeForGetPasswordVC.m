@@ -131,14 +131,16 @@
     verifyCodeField.placeholder = @"請輸入驗證碼";
     
     passwordField = [[UITextField alloc] init];
+    passwordField.secureTextEntry = YES;
     passwordField.delegate = self;
     passwordField.font = [UIFont systemFontOfSize:15.0];
     passwordField.placeholder = @"請輸入密碼";
     
     confirmPasswordField = [[UITextField alloc] init];
+    confirmPasswordField.secureTextEntry = YES;
     confirmPasswordField.delegate = self;
     confirmPasswordField.font = [UIFont systemFontOfSize:15.0];
-    confirmPasswordField.placeholder = @"請輸入密碼";
+    confirmPasswordField.placeholder = @"請輸入再次密碼";
     
     getCodeButon = [[UIButton alloc] init];
     getCodeButon.layer.masksToBounds = YES;
@@ -245,11 +247,12 @@
         [self showHint:@"請再次輸入密碼"];
         return;
     }
+    if (![password isEqualToString:confirmPassword]) {
+        [self showHint:@"兩次輸入密碼不一致"];
+        return;
+    }
+    
     if (_modifyType != 1) {
-        if (![password isEqualToString:confirmPassword]) {
-            [self showHint:@"兩次輸入密碼不一致"];
-            return;
-        }
         [self forgetPassword];
     }
     else{
@@ -266,6 +269,7 @@
 
     NSString *requestUrl = [NSString stringWithFormat:@"%@/user/reset-password",BASEURL];
     
+    __weak HeForGetPasswordVC *weakSelf = self;
     NSDictionary * params  = @{@"cellphone": account,@"captcha":code,@"password":password};
     [self showHudInView:self.view hint:@"重置密碼中..."];
     [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
@@ -274,11 +278,11 @@
         NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
         id success = respondDict[@"success"];
         if ([success isEqualToString:@"SUCCESS"]) {
-            [self showHint:@"密碼重置成功"];
-            [self performSelector:@selector(backToLastView) withObject:nil afterDelay:0.3];
+            [weakSelf showHint:@"密碼重置成功,請重新登錄"];
+            [weakSelf performSelector:@selector(logoutMethod) withObject:nil afterDelay:0.8];
         }
         else{
-            [self showHint:@"密碼重置出錯"];
+            [weakSelf showHint:@"密碼重置出錯"];
         }
         
         
@@ -286,6 +290,19 @@
         [self hideHud];
         [self showHint:ERRORREQUESTTIP];
     }];
+}
+
+- (void)logoutMethod
+{
+    NSLog(@"logoutButton");
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERACCOUNTKEY];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERTOKENKEY];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERIDKEY];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERPASSWORDKEY];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERDETAILDATAKEY];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINCHANGE object:nil];
 }
 
 //修改密碼
@@ -300,6 +317,8 @@
     
     NSString *requestUrl = [NSString stringWithFormat:@"%@/user/reset-password",BASEURL];
     
+    __weak HeForGetPasswordVC *weakSelf = self;
+    
     NSDictionary * params  = @{@"cellphone": account,@"captcha":code,@"password":password};
     [self showHudInView:self.view hint:@"修改密碼中..."];
     [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
@@ -308,11 +327,11 @@
         NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
         id success = respondDict[@"success"];
         if ([success isEqualToString:@"SUCCESS"]) {
-            [self showHint:@"密碼重置成功"];
-            [self performSelector:@selector(backToLastView) withObject:nil afterDelay:0.3];
+            [weakSelf showHint:@"密碼修改成功,請重新登錄"];
+            [weakSelf performSelector:@selector(logoutMethod) withObject:nil afterDelay:0.8];
         }
         else{
-            [self showHint:@"密碼重置出錯"];
+            [self showHint:@"密碼修改出錯"];
         }
         
         
@@ -380,25 +399,47 @@
     switch (row) {
         case 0:
         {
-            accountField.frame = CGRectMake(titleszie.width + 20, 0, (SCREENWIDTH - titleszie.width - 30), cellH);
-            [cell addSubview:accountField];
+            if (_modifyType == 0) {
+                accountField.frame = CGRectMake(titleszie.width + 20, 0, (SCREENWIDTH - titleszie.width - 30), cellH);
+                [cell addSubview:accountField];
+            }
+            else{
+                getCodeButon.frame = CGRectMake(SCREENWIDTH - 85, (cellH - 20) / 2.0, 70, 20);
+                getCodeButon.layer.cornerRadius = 20.0 / 2.0;
+                [cell addSubview:getCodeButon];
+                
+                verifyCodeField.frame = CGRectMake(titleszie.width + 20, 0, (CGRectGetMinX(getCodeButon.frame) - (titleszie.width + 10)), cellH);
+                [cell addSubview:verifyCodeField];
+            }
+            
             break;
         }
         case 1:
         {
-            getCodeButon.frame = CGRectMake(SCREENWIDTH - 85, (cellH - 20) / 2.0, 70, 20);
-            getCodeButon.layer.cornerRadius = 20.0 / 2.0;
-            [cell addSubview:getCodeButon];
-            
-            verifyCodeField.frame = CGRectMake(titleszie.width + 20, 0, (CGRectGetMinX(getCodeButon.frame) - (titleszie.width + 10)), cellH);
-            [cell addSubview:verifyCodeField];
-            
+            if (_modifyType == 0) {
+                getCodeButon.frame = CGRectMake(SCREENWIDTH - 85, (cellH - 20) / 2.0, 70, 20);
+                getCodeButon.layer.cornerRadius = 20.0 / 2.0;
+                [cell addSubview:getCodeButon];
+                
+                verifyCodeField.frame = CGRectMake(titleszie.width + 20, 0, (CGRectGetMinX(getCodeButon.frame) - (titleszie.width + 10)), cellH);
+                [cell addSubview:verifyCodeField];
+            }
+            else{
+                passwordField.frame = CGRectMake(titleszie.width + 20, 0, (SCREENWIDTH - titleszie.width - 30), cellH);
+                [cell addSubview:passwordField];
+            }
             break;
         }
         case 2:
         {
-            passwordField.frame = CGRectMake(titleszie.width + 20, 0, (SCREENWIDTH - titleszie.width - 30), cellH);
-            [cell addSubview:passwordField];
+            if (_modifyType == 0) {
+                passwordField.frame = CGRectMake(titleszie.width + 20, 0, (SCREENWIDTH - titleszie.width - 30), cellH);
+                [cell addSubview:passwordField];
+            }
+            else{
+                confirmPasswordField.frame = CGRectMake(titleszie.width + 20, 0, (SCREENWIDTH - titleszie.width - 30), cellH);
+                [cell addSubview:confirmPasswordField];
+            }
             
             break;
         }

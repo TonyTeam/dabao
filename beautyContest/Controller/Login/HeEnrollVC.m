@@ -172,20 +172,16 @@
         [self hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
         NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
-        
-        NSString *user_id = respondDict[@"user_id"];
-        NSString *token = respondDict[@"token"];
-        if ([user_id isMemberOfClass:[NSNull class]] || user_id == nil || [user_id isEqualToString:@""]) {
-            user_id = @"";
-        }
-        if (![user_id isEqualToString:@""]) {
-            [self showHint:@"註冊成功"];
-            [self performSelector:@selector(backToLastView) withObject:nil afterDelay:0.3];
+        NSString *error = respondDict[@"error"][@"cellphone"];
+        if (error) {
+            [self showHint:error];
             return;
         }
-        else{
-            [self showHint:@"註冊失敗"];
-        }
+        accountField.text = nil;
+        passwordField.text = nil;
+        codeField.text = nil;
+        [self showHint:@"註冊成功"];
+        [[NSNotificationCenter defaultCenter] postNotificationName:ENROLLSUCCESS_NOTIFICATION object:nil];
         
         
     } failure:^(NSError* err){

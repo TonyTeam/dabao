@@ -18,6 +18,7 @@
 @property(strong,nonatomic)NSTimer *pollingTime;
 @property(strong,nonatomic)NSDictionary *qrCodeDict;
 @property(strong,nonatomic)UIView *dismissView;
+@property(assign,nonatomic)NSInteger repeatTime;
 
 @end
 
@@ -27,6 +28,7 @@
 @synthesize pollingTime;
 @synthesize qrCodeDict;
 @synthesize dismissView;
+@synthesize repeatTime;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -63,9 +65,19 @@
         appScanWaitingTime = 1;
     }
     __weak HeQRCodePayVC *weakSelf = self;
-    pollingTime = [NSTimer scheduledTimerWithTimeInterval:appScanWaitingTime repeats:YES block:^(NSTimer *timer){
+    NSInteger repeatTime = 1;
+    pollingTime = [NSTimer scheduledTimerWithTimeInterval:5.0 repeats:YES block:^(NSTimer *timer){
+       
+        weakSelf.repeatTime = weakSelf.repeatTime + 1;
+        if (weakSelf.repeatTime * 5.0 > appScanWaitingTime) {
+            [self showHint:@"系統繁忙，請稍候再試"];
+            [self.navigationController popToRootViewControllerAnimated:YES];
+            return;
+        }
+        
         [weakSelf pollingQRcodeWithDict:qrCodeDict];
     }];
+//    [pollingTime fire];
 }
 
 - (void)initView
@@ -93,7 +105,7 @@
             [weakSelf pollingQRcodeWithDict:repondDict];
         }
         else{
-            id errorObj = [error objectFromJSONString];
+            id errorObj = error;
             NSString *errorTip = errorObj[@"qrcode"];
             if ([errorTip isMemberOfClass:[NSNull class]] || errorTip == nil) {
                 [weakSelf showHint:errorTip];
@@ -110,6 +122,7 @@
 
 - (void)pollingQRcodeWithDict:(NSDictionary *)dict
 {
+    [self showHudInView:self.view hint:@"正在識別中..."];
     NSString *requestUrl = [NSString stringWithFormat:@"%@/qrcode/index",BASEURL];
     NSString *qrcode = dict[@"qrcode"];
     if ([qrcode isMemberOfClass:[NSNull class]] || qrcode == nil) {
@@ -119,7 +132,7 @@
     
     __weak HeQRCodePayVC *weakSelf = self;
     [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
-        [weakSelf hideHud];
+        
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
         id repondDict = [respondString objectFromJSONString];
         id status = repondDict[@"status"];
@@ -138,6 +151,7 @@
         }
         else if ([status isEqualToString:@"normal"]){
             //二维码正常，进入支付
+            [weakSelf hideHud];
             if (pollingTime.isValid) {
                 [pollingTime invalidate];
             }

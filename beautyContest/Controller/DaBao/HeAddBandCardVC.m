@@ -21,6 +21,9 @@
 }
 @property(strong,nonatomic)IBOutlet UITableView *tableview;
 @property(strong,nonatomic)NSArray *datasource;
+
+@property(strong,nonatomic)NSArray *titledatasource;
+
 @property(strong,nonatomic)YLButton *selectButton;
 @property(strong,nonatomic)UITextField *bankUserNameField;
 @property(strong,nonatomic)UITextField *bankAccountField;
@@ -68,6 +71,7 @@
 {
     [super initializaiton];
     
+    _titledatasource = @[@"銀行名稱",@"開戶戶名",@"銀行賬號后六位"];
     currentSelectIndex = -1;
     
     NSString *bankJson = [[NSString alloc] initWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"bankJson" ofType:@"txt"] encoding:NSUTF8StringEncoding error:nil];
@@ -135,6 +139,7 @@
     bankUserNameField.placeholder = @"請輸入開戶戶名";
     
     bankAccountField = [[UITextField alloc] init];
+    bankAccountField.tag = 6;
     bankAccountField.delegate = self;
     bankAccountField.font = [UIFont systemFontOfSize:15.0];
     bankAccountField.placeholder = @"請輸入銀行賬號后六位";
@@ -173,6 +178,16 @@
 {
     if (currentSelectIndex == -1) {
         [self showHint:@"請選擇銀行"];
+        return;
+    }
+    NSString *acct_name = bankUserNameField.text;
+    NSString *acct_no  = bankAccountField.text;
+    if ([acct_name isEqualToString:@""] || acct_name == nil) {
+        [self showHint:@"請輸入開戶戶名"];
+        return;
+    }
+    if (acct_no.length != 6) {
+        [self showHint:@"請輸入銀行賬號后六位"];
         return;
     }
     NSLog(@"confirmButtonClick");
@@ -373,6 +388,7 @@
     NSString *acct_bank = [NSString stringWithFormat:@"%@ %@",bankId,bankName];
     NSString *acct_name = bankUserNameField.text;
     NSString *acct_no  = bankAccountField.text;
+    
     NSString *captcha  = code;
     NSDictionary *params  = @{@"acct_bank":acct_bank,@"acct_name":acct_name,@"acct_no":acct_no,@"captcha":captcha};
     
@@ -402,6 +418,15 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string{
+    if (textField.tag == 3) {
+        NSMutableString *text = [[NSMutableString alloc] initWithString:textField.text];
+        [text replaceCharactersInRange:range withString:string];
+        return [text length] <= 6;
+    }
+    return YES;
+}
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return 3;
@@ -425,23 +450,15 @@
         cell = [[HeBaseTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIndentifier cellSize:cellsize];
         
     }
-    NSDictionary *dict = nil;
-    @try {
-        dict = datasource[row];
-    } @catch (NSException *exception) {
-        
-    } @finally {
-        
-    }
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, (SCREENWIDTH - 20) / 2.0, cellH)];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont systemFontOfSize:15.0];
-    titleLabel.text = dict[@"name"];
+    titleLabel.text = _titledatasource[row];
     titleLabel.textColor = [UIColor colorWithWhite:30.0 / 255.0 alpha:1.0];
     [cell addSubview:titleLabel];
     
-    CGSize titleszie = [MLLabel getViewSizeByString:dict[@"name"] maxWidth:(SCREENWIDTH - 20) / 2.0 font:[UIFont systemFontOfSize:15.0] lineHeight:1.2f lines:0];
+    CGSize titleszie = [MLLabel getViewSizeByString:_titledatasource[row]maxWidth:(SCREENWIDTH - 20) / 2.0 font:[UIFont systemFontOfSize:15.0] lineHeight:1.2f lines:0];
     
     switch (row) {
         case 0:
@@ -487,7 +504,6 @@
     NSInteger row = indexPath.row;
     NSInteger section = indexPath.section;
     NSLog(@"section = %ld , row = %ld",section,row);
-    
 }
 
 - (void)didReceiveMemoryWarning {

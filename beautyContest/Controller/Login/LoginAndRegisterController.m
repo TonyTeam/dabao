@@ -49,6 +49,7 @@
 - (void)initializaiton
 {
     [super initializaiton];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(enrollFinish:) name:ENROLLSUCCESS_NOTIFICATION object:nil];
 }
 
 - (void)initView
@@ -112,6 +113,11 @@
 }
 
 
+- (void)enrollFinish:(NSNotification *)notification
+{
+    //跳轉到登錄界面
+    [self onLogin:self.loginBtn];
+}
 
 - (IBAction)onLogin:(UIButton *)sender {
     [self.pageViewController setViewControllers:@[self.loginViewController] direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:nil];
@@ -184,6 +190,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ENROLLSUCCESS_NOTIFICATION object:nil];
+}
 /*
 #pragma mark - Navigation
 

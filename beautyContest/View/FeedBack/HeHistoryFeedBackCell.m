@@ -54,7 +54,7 @@
         feedBackIDLabel.text = @"問題ID：100";
         [bgView addSubview:feedBackIDLabel];
         
-        feedBackTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(bgViewW - feedBackIDLabelW - feedBackIDLabelX, feedBackIDLabelY, feedBackIDLabelW, feedBackIDLabelH)];
+        feedBackTimeLabel = [[UILabel alloc] initWithFrame:CGRectMake(bgViewW - feedBackIDLabelW - feedBackIDLabelX - 30, feedBackIDLabelY, feedBackIDLabelW + 30, feedBackIDLabelH)];
         feedBackTimeLabel.backgroundColor = [UIColor clearColor];
         feedBackTimeLabel.font = [UIFont systemFontOfSize:13.0];
         feedBackTimeLabel.textColor = [UIColor grayColor];

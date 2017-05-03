@@ -12,6 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HeBankCardVC">
             <connections>
                 <outlet property="addButton" destination="qWY-T4-6Ot" id="tTv-Du-LUV"/>
+                <outlet property="bankCarNumLabel" destination="zur-Ja-2hS" id="xTP-T6-6f9"/>
                 <outlet property="numLabel" destination="zur-Ja-2hS" id="COG-2f-yG1"/>
                 <outlet property="tableview" destination="kQR-of-PTh" id="LJH-bo-S3h"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>

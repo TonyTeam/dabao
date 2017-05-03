@@ -151,7 +151,7 @@
             UIImageView *imageview = [[UIImageView alloc] initWithImage:noImage];
             imageview.frame = CGRectMake(imageX, imageY, imageW, imageH);
             CGPoint center = bgView.center;
-            center.y = center.y - 60;
+            center.y = center.y - 80;
             imageview.center = center;
             [bgView addSubview:imageview];
             tableview.backgroundView = bgView;
@@ -177,7 +177,6 @@
 //删除银行卡
 - (void)deleteCardWithNum:(NSString *)deleteCardNum
 {
-//    [self showHudInView:tableview hint:@"删除中..."];
     NSString *requestUrl = [NSString stringWithFormat:@"%@/account/delete",BASEURL];
     
     NSDictionary *params  = @{@"id":deleteCardNum};
@@ -192,26 +191,67 @@
         if (error) {
             [self showHint:@"刪除失敗"];
         }
-        [weakSelf loadBankCardData];
+        //进行懒加载
+        [weakSelf reloadBankCard];
+        //更新用户的信息，包括银行卡账号信息
+        [[NSNotificationCenter defaultCenter] postNotificationName:GETUSERDATA_NOTIFICATION object:nil];
         
-//        id bankCardArray = [respondString objectFromJSONString];
-//        if ([bankCardArray isMemberOfClass:[NSNull class]]) {
-//            bankCardArray = [bankCardArray array];
-//        }
-//        [datasource removeAllObjects];
-//        for (NSDictionary *dict in bankCardArray) {
-//            [datasource addObject:dict];
-//        }
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [tableview reloadData];
-//        });
         
     } failure:^(NSError* err){
-//        [self hideHud];
-//        [self showHint:ERRORREQUESTTIP];
+
     }];
 }
 
+- (void)reloadBankCard
+{
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/account/index",BASEURL];
+    
+    NSDictionary *params  = nil;
+    
+    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        id bankCardArray = [respondString objectFromJSONString];
+        if ([bankCardArray isMemberOfClass:[NSNull class]]) {
+            bankCardArray = [bankCardArray array];
+        }
+        [datasource removeAllObjects];
+        for (NSDictionary *dict in bankCardArray) {
+            [datasource addObject:dict];
+        }
+        if ([datasource count] == 0) {
+            UIView *bgView = [[UIView alloc] initWithFrame:self.view.bounds];
+            UIImage *noImage = [UIImage imageNamed:@"icon_cry"];
+            CGFloat scale = noImage.size.height / noImage.size.width;
+            CGFloat imageW = 120;
+            CGFloat imageH = imageW * scale;
+            CGFloat imageX = (SCREENWIDTH - imageW) / 2.0;
+            CGFloat imageY = SCREENHEIGH - imageH - 100;
+            UIImageView *imageview = [[UIImageView alloc] initWithImage:noImage];
+            imageview.frame = CGRectMake(imageX, imageY, imageW, imageH);
+            CGPoint center = bgView.center;
+            center.y = center.y - 80;
+            imageview.center = center;
+            [bgView addSubview:imageview];
+            tableview.backgroundView = bgView;
+        }
+        else{
+            tableview.backgroundView = nil;
+        }
+        if ([datasource count] > 0) {
+            bankCarNumLabel.text = [NSString stringWithFormat:@"%ld",[datasource count]];
+        }
+        else{
+            bankCarNumLabel.text = @"0";
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [tableview reloadData];
+        });
+        
+    } failure:^(NSError* err){
+        
+    }];
+}
 - (IBAction)backItemClick:(id)sender
 {
     [self.navigationController popViewControllerAnimated:YES];

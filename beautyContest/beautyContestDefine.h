@@ -59,6 +59,8 @@
 //友盟iPad的key
 #define UMANALYSISKEY_HD @"57440c64e0f55a69480019d6"
 
+//註冊成功
+#define ENROLLSUCCESS_NOTIFICATION @"enrollNotification"
 
 //登录状态发生变化的通知
 #define KNOTIFICATION_LOGINCHANGE @"loginStateChange"
@@ -99,7 +101,7 @@
 
 #define shortNoticeLabelTag (1576858)
 
-#define DEFAULTREDCOLOR ([UIColor colorWithRed:253.0 / 255.0 green:105.0 / 255.0 blue:102.0 / 255.0 alpha:1.0])
+#define DEFAULTREDCOLOR ([UIColor colorWithRed:249.0 / 255.0 green:49.0 / 255.0 blue:41.0 / 255.0 alpha:1.0])
 #define ERRORREQUESTTIP @"网络出错，请稍后再试!"
 #define MODIFYPASSWORDKEY @"modifyPasswordKey"
 
