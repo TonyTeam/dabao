@@ -120,8 +120,6 @@
 {
     NSLog(@"getVerifyCode");
     [self cancelInputTap:nil];
-    NSString *userPhone = [[NSUserDefaults standardUserDefaults] objectForKey:USERACCOUNTKEY];
-    
     NSString *requestUrl = [NSString stringWithFormat:@"%@/user/send-pay-pwd-captcha",BASEURL];
     [self showHudInView:self.view hint:@"獲取中..."];
     [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:nil success:^(AFHTTPRequestOperation* operation,id response){

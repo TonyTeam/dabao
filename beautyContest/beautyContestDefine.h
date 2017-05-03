@@ -63,6 +63,11 @@
 //登录状态发生变化的通知
 #define KNOTIFICATION_LOGINCHANGE @"loginStateChange"
 
+//更新銀行卡列表
+#define UPDATEUSERBANKCARD_NOTIFICATION @"updateUserBankCardNotification"
+
+//更新訂單
+#define UPDATEORDER_NOTIFICATION @"updateOrderNotification"
 //更新用戶資料通知
 #define UPDATEUSER_NOTIFICATION @"updateUserNotification"
 //獲取用戶資料統治者
@@ -91,6 +96,8 @@
 #define FEEDBACKDATA @"feedbackDataKey"
 
 #define USERDATAUPDATE_NOTIFICATION @"userDataUpdateNotification"
+
+#define shortNoticeLabelTag (1576858)
 
 #define DEFAULTREDCOLOR ([UIColor colorWithRed:253.0 / 255.0 green:105.0 / 255.0 blue:102.0 / 255.0 alpha:1.0])
 #define ERRORREQUESTTIP @"网络出错，请稍后再试!"

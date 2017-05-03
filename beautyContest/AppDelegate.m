@@ -18,8 +18,8 @@
 #import <UserNotifications/UserNotifications.h>
 #endif
 
-static NSString *const aliPushAppKey = @"******";
-static NSString *const aliPushAppSecret = @"******";
+static NSString *const aliPushAppKey = @"23705108";
+static NSString *const aliPushAppSecret = @"85ebfe7f598739a3cb6a16e3f8bb47e6";
 static NSString *const fbsAppID = @"302339483514249";
 
 @interface AppDelegate ()<UNUserNotificationCenterDelegate>

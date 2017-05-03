@@ -78,9 +78,9 @@
     tableview.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     UIView *footerview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREENWIDTH, 100)];
-    footerview.backgroundColor = [UIColor colorWithWhite:237.0 / 255.0 alpha:1.0];
     tableview.tableFooterView = footerview;
     
+    self.view.backgroundColor = [UIColor colorWithWhite:245.0 / 255.0 alpha:1.0];
     CGFloat commitButtonX = 20;
     CGFloat commitButtonY = 10;
     CGFloat commitButtonW = SCREENWIDTH - 2 * commitButtonX;
@@ -100,11 +100,19 @@
 - (void)commitButtonClick:(UIButton *)sender
 {
     NSLog(@"commitButtonClick");
-    [self showHudInView:tableview hint:@"創建中..."];
+    
     NSString *requestUrl = [NSString stringWithFormat:@"%@/order-ingot/create",BASEURL];
     
+    NSString *biz_rmb = storeCoinField.text;
+    if ([biz_rmb floatValue] < 1) {
+        [self showHint:@"儲值金額必須大於1"];
+        return;
+    }
+    if (selectBank == -1) {
+        [self showHint:@"請選擇支付方式"];
+        return;
+    }
     
-    NSString *biz_rmb = @"ingot";
     NSString *payment_method = @"20";
     switch (selectBank) {
         case 1:
@@ -129,12 +137,49 @@
             break;
     }
     NSDictionary *params  = @{@"biz_rmb":biz_rmb,@"payment_method":payment_method};
-    
-    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+    [self showHudInView:tableview hint:@"創建中..."];
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         [self hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
         NSDictionary *respondDict = [respondString objectFromJSONString];
         
+        NSMutableString *error = [[NSMutableString alloc] initWithCapacity:0];
+        id biz_rmbObj = respondDict[@"error"][@"biz_rmb"];
+        if ([biz_rmbObj isMemberOfClass:[NSNull class]] || biz_rmbObj == nil) {
+            biz_rmbObj = @"";
+        }
+        else{
+            [error appendFormat:@"%@",biz_rmbObj];
+        }
+        id amountObj = respondDict[@"error"][@"amount"];
+        if ([amountObj isMemberOfClass:[NSNull class]] || amountObj == nil) {
+            amountObj = @"";
+        }
+        else{
+            if (error.length > 0) {
+                [error appendFormat:@",%@",amountObj];
+            }
+            else{
+                [error appendFormat:@"%@",amountObj];
+            }
+        }
+        id payment_method = respondDict[@"error"][@"payment_method"];
+        if ([payment_method isMemberOfClass:[NSNull class]] || payment_method == nil) {
+            payment_method = @"";
+        }
+        else{
+            if (error.length > 0) {
+                [error appendFormat:@",%@",payment_method];
+            }
+            else{
+                [error appendFormat:@"%@",payment_method];
+            }
+        }
+        if (error.length > 0) {
+            [self showHint:error];
+            return ;
+        }
+        [[NSNotificationCenter defaultCenter] postNotificationName:UPDATEORDER_NOTIFICATION object:nil];
         [self showHint:@"創建成功"];
         [self performSelector:@selector(backToLastView) withObject:nil afterDelay:0.2];
     } failure:^(NSError* err){

@@ -183,8 +183,16 @@
     [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         [self hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
-        [self showHint:@"驗證碼發送成功"];
-        [self performSelector:@selector(inputVerifyCode) withObject:nil afterDelay:0.2];
+        NSDictionary *respondDict = [respondString objectFromJSONString];
+        id error = respondDict[@"error"];
+        if (error) {
+            [self showHint:@"驗證碼發送失敗"];
+        }
+        else{
+            [self showHint:@"驗證碼發送成功"];
+            [self performSelector:@selector(inputVerifyCode) withObject:nil afterDelay:0.2];
+        }
+        
         
     } failure:^(NSError* err){
         [self hideHud];
@@ -245,7 +253,7 @@
     messageTitleLabel.textColor = [UIColor blackColor];
     messageTitleLabel.textAlignment = NSTextAlignmentCenter;
     messageTitleLabel.backgroundColor = [UIColor clearColor];
-    messageTitleLabel.text = @"支付密码";
+    messageTitleLabel.text = @"驗證碼";
     messageTitleLabel.frame = CGRectMake(0, 0, viewW, labelH);
     [shareAlert addSubview:messageTitleLabel];
     
@@ -257,7 +265,6 @@
     labelY = labelY + labelH + 10;
     UITextField *textview = [[UITextField alloc] init];
     textview.tag = 10;
-    textview.secureTextEntry = YES;
     textview.backgroundColor = [UIColor whiteColor];
     textview.tintColor= [UIColor blueColor];
     textview.placeholder = @"請輸入驗證碼";
@@ -272,12 +279,12 @@
     
     CGFloat buttonDis = 10;
     CGFloat buttonW = (viewW - 3 * buttonDis) / 2.0;
-    CGFloat buttonH = 40;
-    CGFloat buttonY = labelY = labelY + labelH + 10;
+    CGFloat buttonH = 50;
+    CGFloat buttonY = viewH - 50;
     CGFloat buttonX = 10;
     
     UIButton *shareButton = [[UIButton alloc] initWithFrame:CGRectMake(buttonX, buttonY, buttonW, buttonH)];
-    [shareButton setTitle:@"确定" forState:UIControlStateNormal];
+    [shareButton setTitle:@"確認" forState:UIControlStateNormal];
     [shareButton addTarget:self action:@selector(alertbuttonClick:) forControlEvents:UIControlEventTouchUpInside];
     shareButton.tag = 1;
     [shareButton.titleLabel setFont:shareFont];
@@ -295,6 +302,14 @@
     //    [cancelButton setBackgroundImage:[Tool buttonImageFromColor:APPDEFAULTORANGE withImageSize:shareButton.frame.size] forState:UIControlStateHighlighted];
     [cancelButton setTitleColor:APPDEFAULTORANGE forState:UIControlStateNormal];
     [shareAlert addSubview:cancelButton];
+    
+    UIView *sepLine = [[UIView alloc] initWithFrame:CGRectMake(0, viewH - 50, viewW, 1)];
+    sepLine.backgroundColor = [UIColor colorWithWhite:230.0 / 255.0 alpha:1.0];
+    [shareAlert addSubview:sepLine];
+    
+    UIView *sepLine1 = [[UIView alloc] initWithFrame:CGRectMake((viewW - 1) / 2.0, viewH - 50, 1, 50)];
+    sepLine1.backgroundColor = [UIColor colorWithWhite:230.0 / 255.0 alpha:1.0];
+    [shareAlert addSubview:sepLine1];
     
     CAKeyframeAnimation *popAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
     popAnimation.duration = 0.4;
@@ -361,11 +376,21 @@
     NSString *captcha  = code;
     NSDictionary *params  = @{@"acct_bank":acct_bank,@"acct_name":acct_name,@"acct_no":acct_no,@"captcha":captcha};
     
-    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         [self hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
-        [self performSelector:@selector(backToLastView) withObject:nil afterDelay:0.2];
-        [self showHint:@"添加成功"];
+        NSDictionary *resultDict = [respondString objectFromJSONString];
+        id error = resultDict[@"error"];
+        if (error) {
+            [self showHint:@"添加失敗"];
+        }
+        else{
+            [[NSNotificationCenter defaultCenter] postNotificationName:UPDATEUSERBANKCARD_NOTIFICATION object:nil];
+            [[NSNotificationCenter defaultCenter] postNotificationName:GETUSERDATA_NOTIFICATION object:nil];
+            [self performSelector:@selector(backToLastView) withObject:nil afterDelay:0.2];
+            [self showHint:@"添加成功"];
+        }
+        
         
     } failure:^(NSError* err){
         [self hideHud];
@@ -400,15 +425,23 @@
         cell = [[HeBaseTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIndentifier cellSize:cellsize];
         
     }
+    NSDictionary *dict = nil;
+    @try {
+        dict = datasource[row];
+    } @catch (NSException *exception) {
+        
+    } @finally {
+        
+    }
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, (SCREENWIDTH - 20) / 2.0, cellH)];
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont systemFontOfSize:15.0];
-    titleLabel.text = datasource[row];
+    titleLabel.text = dict[@"name"];
     titleLabel.textColor = [UIColor colorWithWhite:30.0 / 255.0 alpha:1.0];
     [cell addSubview:titleLabel];
     
-    CGSize titleszie = [MLLabel getViewSizeByString:datasource[row] maxWidth:(SCREENWIDTH - 20) / 2.0 font:[UIFont systemFontOfSize:15.0] lineHeight:1.2f lines:0];
+    CGSize titleszie = [MLLabel getViewSizeByString:dict[@"name"] maxWidth:(SCREENWIDTH - 20) / 2.0 font:[UIFont systemFontOfSize:15.0] lineHeight:1.2f lines:0];
     
     switch (row) {
         case 0:

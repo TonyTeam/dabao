@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12118" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -131,7 +131,7 @@
                     </variation>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c0M-Za-HhB">
-                    <rect key="frame" x="35" y="40" width="250" height="250"/>
+                    <rect key="frame" x="35" y="50" width="250" height="250"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="250" id="bSc-Ct-hOs"/>
                         <constraint firstAttribute="height" constant="250" id="sNg-Qx-bCJ"/>
@@ -171,7 +171,7 @@
                 <constraint firstItem="cTg-HA-y5T" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="opp-OV-3Vc"/>
                 <constraint firstItem="cTg-HA-y5T" firstAttribute="top" secondItem="4i3-vu-WGe" secondAttribute="bottom" constant="10" id="qoJ-1R-bX1"/>
                 <constraint firstItem="cTg-HA-y5T" firstAttribute="top" secondItem="UHx-y6-4Tz" secondAttribute="bottom" constant="141" id="vs5-Zb-S4e"/>
-                <constraint firstItem="c0M-Za-HhB" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="40" id="wAM-tN-eLB"/>
+                <constraint firstItem="c0M-Za-HhB" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="50" id="wAM-tN-eLB"/>
                 <constraint firstItem="cTg-HA-y5T" firstAttribute="top" secondItem="BPc-pU-kf3" secondAttribute="bottom" constant="10" id="xub-E0-vkS"/>
             </constraints>
             <variation key="default">

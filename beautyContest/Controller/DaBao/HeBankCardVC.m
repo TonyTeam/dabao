@@ -75,6 +75,7 @@
 {
     [super initializaiton];
     datasource = [[NSMutableArray alloc] initWithCapacity:0];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateBankCard:) name:UPDATEUSERBANKCARD_NOTIFICATION object:nil];
 }
 
 - (void)initView
@@ -116,6 +117,11 @@
     }];
 }
 
+- (void)updateBankCard:(NSNotification *)notificaiton
+{
+    [self loadBankCardData];
+}
+
 - (void)loadBankCardData
 {
     [self showHudInView:tableview hint:@"加載中..."];
@@ -134,6 +140,31 @@
         for (NSDictionary *dict in bankCardArray) {
             [datasource addObject:dict];
         }
+        if ([datasource count] == 0) {
+            UIView *bgView = [[UIView alloc] initWithFrame:self.view.bounds];
+            UIImage *noImage = [UIImage imageNamed:@"icon_cry"];
+            CGFloat scale = noImage.size.height / noImage.size.width;
+            CGFloat imageW = 120;
+            CGFloat imageH = imageW * scale;
+            CGFloat imageX = (SCREENWIDTH - imageW) / 2.0;
+            CGFloat imageY = SCREENHEIGH - imageH - 100;
+            UIImageView *imageview = [[UIImageView alloc] initWithImage:noImage];
+            imageview.frame = CGRectMake(imageX, imageY, imageW, imageH);
+            CGPoint center = bgView.center;
+            center.y = center.y - 60;
+            imageview.center = center;
+            [bgView addSubview:imageview];
+            tableview.backgroundView = bgView;
+        }
+        else{
+            tableview.backgroundView = nil;
+        }
+        if ([datasource count] > 0) {
+            bankCarNumLabel.text = [NSString stringWithFormat:@"%ld",[datasource count]];
+        }
+        else{
+            bankCarNumLabel.text = @"0";
+        }
         dispatch_async(dispatch_get_main_queue(), ^{
             [tableview reloadData];
         });
@@ -149,11 +180,20 @@
 //    [self showHudInView:tableview hint:@"删除中..."];
     NSString *requestUrl = [NSString stringWithFormat:@"%@/account/delete",BASEURL];
     
-    NSDictionary *params  = nil;
+    NSDictionary *params  = @{@"id":deleteCardNum};
     
-    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+    __weak HeBankCardVC *weakSelf = self;
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
 //        [self hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        
+        NSDictionary *resultDict = [respondString objectFromJSONString];
+        id error = resultDict[@"error"];
+        if (error) {
+            [self showHint:@"刪除失敗"];
+        }
+        [weakSelf loadBankCardData];
+        
 //        id bankCardArray = [respondString objectFromJSONString];
 //        if ([bankCardArray isMemberOfClass:[NSNull class]]) {
 //            bankCardArray = [bankCardArray array];
@@ -293,7 +333,7 @@
                 acct_id = @"";
             }
             [datasource removeObjectAtIndex:row];
-            
+            bankCarNumLabel.text = [NSString stringWithFormat:@"%ld",[datasource count]];
             [self deleteCardWithNum:acct_id];
             [tableView reloadData];
         }
@@ -302,9 +342,19 @@
     
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return @"刪除";
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATEUSERBANKCARD_NOTIFICATION object:nil];
 }
 
 /*

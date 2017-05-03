@@ -90,6 +90,13 @@
     pageSize = 50;
     pageIndex = 1;
     orderType = 0;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateOrder:) name:UPDATEORDER_NOTIFICATION object:nil];
+}
+
+- (void)updateOrder:(NSNotification *)notification
+{
+    pageIndex = 1;
+    [self loadIngot];
 }
 
 - (void)initView
@@ -173,6 +180,27 @@
                     [datasource addObject:dict];
                 }
             }
+            if ([datasource count] == 0) {
+                UIView *bgView = [[UIView alloc] initWithFrame:self.view.bounds];
+                UIImage *noImage = [UIImage imageNamed:@"icon_cry"];
+                CGFloat scale = noImage.size.height / noImage.size.width;
+                CGFloat imageW = 120;
+                CGFloat imageH = imageW * scale;
+                CGFloat imageX = (SCREENWIDTH - imageW) / 2.0;
+                CGFloat imageY = SCREENHEIGH - imageH - 100;
+                UIImageView *imageview = [[UIImageView alloc] initWithImage:noImage];
+                imageview.frame = CGRectMake(imageX, imageY, imageW, imageH);
+                CGPoint center = bgView.center;
+                center.y = center.y - 60;
+                imageview.center = center;
+                [bgView addSubview:imageview];
+                tableview.backgroundView = bgView;
+            }
+            else{
+                tableview.backgroundView = nil;
+            }
+            [tableview reloadData];
+            
             dispatch_async(dispatch_get_main_queue(), ^{
                 [tableview reloadData];
             });
@@ -320,6 +348,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATEORDER_NOTIFICATION object:nil];
+}
 /*
 #pragma mark - Navigation
 

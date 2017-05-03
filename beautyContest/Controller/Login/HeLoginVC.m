@@ -155,6 +155,7 @@
         // User is logged in, do work such as go to next view controller.
     }
     
+    __weak HeLoginVC *weakSelf = self;
     FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
     [login
      logInWithReadPermissions: @[@"public_profile"]
@@ -162,15 +163,56 @@
      handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
          NSLog(@"facebook login result.grantedPermissions = %@,error = %@",result.grantedPermissions,error);
          if (error) {
+             [self showHint:@"FaceBook登錄失敗"];
              NSLog(@"Process error");
          } else if (result.isCancelled) {
              NSLog(@"Cancelled");
          } else {
              NSLog(@"Logged in");
              FBSDKProfile *userProfile = [FBSDKProfile currentProfile];
+             [weakSelf faceBookLoginWithToken:result.token.tokenString];
              NSLog(@"userProfile = %@",userProfile);
          }
      }];
+}
+
+- (void)faceBookLoginWithToken:(id)accessToken
+{
+    [self cancelInputTap:nil];
+    NSString *faceBookAccessToken = [NSString stringWithFormat:@"%@",accessToken];
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/user/login-by-facebook",BASEURL];
+    NSDictionary * params  = @{@"fb_access_token": faceBookAccessToken};
+    [self showHudInView:self.view hint:@"登錄中..."];
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
+        NSString *error = respondDict[@"error"];
+        if ([error isKindOfClass:[NSString class]]) {
+            [self showHint:error];
+            return;
+        }
+        NSString *user_id = respondDict[@"user_id"];
+        NSString *token = respondDict[@"token"];
+        if ([user_id isMemberOfClass:[NSNull class]] || user_id == nil) {
+            user_id = @"";
+        }
+        if ([token isMemberOfClass:[NSNull class]] || token == nil) {
+            token = @"";
+        }
+        [[NSUserDefaults standardUserDefaults] setObject:user_id forKey:USERIDKEY];
+        [[NSUserDefaults standardUserDefaults] setObject:token forKey:USERTOKENKEY];
+        [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINCHANGE object:nil];
+        
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:USERACCOUNTKEY];
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:USERPASSWORDKEY];
+        
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
 }
 
 - (IBAction)securityButtonClick:(UIButton *)sender

@@ -63,6 +63,7 @@
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERIDKEY];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERPASSWORDKEY];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERDETAILDATAKEY];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINCHANGE object:nil];
 }

@@ -7,6 +7,7 @@
 //
 
 #import "CustomNavigationController.h"
+#import "AppDelegate.h"
 
 @interface CustomNavigationController ()
 
@@ -27,7 +28,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void) pushViewController:(UIViewController *)viewController animated:(BOOL)animated
+- (void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
 {
     if(viewController.hidesBottomBarWhenPushed)
     {
@@ -39,6 +40,11 @@
     {
         [self rootViewController].hidesBottomBarWhenPushed = NO;
     }
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    UIWindow *appWindow = appDelegate.window;
+    UILabel *tipLabel = [appWindow viewWithTag:shortNoticeLabelTag];
+    tipLabel.hidden = YES;
+    
     [super pushViewController:viewController animated:animated];
 }
 
@@ -79,7 +85,18 @@
             [_viewControllersWithHiddenBottomBar removeObject:vc];
         }
     }
-    
+    if ([self.viewControllers count] == 1) {
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        UIWindow *appWindow = appDelegate.window;
+        UILabel *tipLabel = [appWindow viewWithTag:shortNoticeLabelTag];
+        tipLabel.hidden = NO;
+    }
+    else{
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        UIWindow *appWindow = appDelegate.window;
+        UILabel *tipLabel = [appWindow viewWithTag:shortNoticeLabelTag];
+        tipLabel.hidden = YES;
+    }
     return array;
 }
 
@@ -89,6 +106,12 @@
     //由于是根控制器，必须显示tabBar
     [self rootViewController].hidesBottomBarWhenPushed = NO;
     NSArray *array = [super popToRootViewControllerAnimated:YES];
+    
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    UIWindow *appWindow = appDelegate.window;
+    UILabel *tipLabel = [appWindow viewWithTag:shortNoticeLabelTag];
+    tipLabel.hidden = NO;
+    
     return array;
 }
 
@@ -134,6 +157,18 @@
         [_viewControllersWithHiddenBottomBar removeObject:poppedViewController];
     }
     
+    if ([self.viewControllers count] == 1) {
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        UIWindow *appWindow = appDelegate.window;
+        UILabel *tipLabel = [appWindow viewWithTag:shortNoticeLabelTag];
+        tipLabel.hidden = NO;
+    }
+    else{
+        AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        UIWindow *appWindow = appDelegate.window;
+        UILabel *tipLabel = [appWindow viewWithTag:shortNoticeLabelTag];
+        tipLabel.hidden = YES;
+    }
     return poppedViewController;
     
 }

@@ -240,7 +240,7 @@
     CGFloat buttonX = 10;
     
     UIButton *shareButton = [[UIButton alloc] initWithFrame:CGRectMake(buttonX, buttonY, buttonW, buttonH)];
-    [shareButton setTitle:@"確定" forState:UIControlStateNormal];
+    [shareButton setTitle:@"確認" forState:UIControlStateNormal];
     [shareButton addTarget:self action:@selector(alertbuttonClick:) forControlEvents:UIControlEventTouchUpInside];
     shareButton.tag = 1;
     [shareButton.titleLabel setFont:shareFont];

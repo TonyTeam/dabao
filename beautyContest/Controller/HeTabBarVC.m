@@ -12,6 +12,7 @@
 #import "RDVTabBarController.h"
 #import "HeSysbsModel.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "AppDelegate.h"
 
 @interface HeTabBarVC ()
 
@@ -28,19 +29,47 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
     [self initialization];
+    [self updateUserData:nil];
     [self getUserInfo];
-    [self autoLogin];
+//    [self autoLogin];
     [self setupSubviews];
 }
 
 - (void)initialization
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getUserInfo) name:GETUSERDATA_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateUserData:) name:USERDATAUPDATE_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(fbsupdateContent:)
                                                  name:FBSDKProfileDidChangeNotification
                                                object:nil];
     
+}
+
+- (void)updateUserData:(NSNotification *)notification
+{
+    NSDictionary *userDetailDict = [[NSDictionary alloc] initWithDictionary:[HeSysbsModel getSysModel].userDetailDict];
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    UIWindow *appWindow = appDelegate.window;
+    NSString *shortNotice = userDetailDict[@"shortNotice"];
+    UILabel *tipLabel = [appWindow viewWithTag:shortNoticeLabelTag];
+    if (!tipLabel) {
+        tipLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, SCREENWIDTH, 21)];
+        tipLabel.tag = shortNoticeLabelTag;
+        tipLabel.backgroundColor = DEFAULTREDCOLOR;
+        tipLabel.text = shortNotice;
+        tipLabel.textColor = [UIColor whiteColor];
+        tipLabel.font = [UIFont systemFontOfSize:12.0];
+    }
+    
+    if ([shortNotice isMemberOfClass:[NSNull class]] || shortNotice == nil) {
+        shortNotice = @"";
+        tipLabel.hidden = YES;
+        return;
+    }
+    tipLabel.hidden = NO;
+    
+    [appWindow addSubview:tipLabel];
 }
 
 - (void)fbsupdateContent:(NSNotification *)notification

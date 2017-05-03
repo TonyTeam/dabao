@@ -15,8 +15,14 @@
 #import "HeSetUpVC.h"
 #import "HeDCoinStoreVC.h"
 #import "HeDCoinDetailVC.h"
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
+#import <FBSDKCoreKit/FBSDKProfile.h>
+#import "AppDelegate.h"
 
-@interface HeUserVC ()<UITableViewDelegate,UITableViewDelegate>
+#define ALERTTAG 200
+
+@interface HeUserVC ()<UITableViewDelegate,UITableViewDelegate,UITextFieldDelegate>
 @property(strong,nonatomic)IBOutlet UITableView *tableview;
 @property(strong,nonatomic)NSArray *datasource;
 @property(strong,nonatomic)NSArray *icon_datasource;
@@ -29,6 +35,8 @@
 
 @property(strong,nonatomic)IBOutlet UILabel *dcoinLabel;
 @property(strong,nonatomic)IBOutlet UILabel *bankCardNumLabel;
+
+@property(strong,nonatomic)UIView *dismissView;
 
 @end
 
@@ -44,6 +52,7 @@
 @synthesize userDetailDict;
 @synthesize dcoinLabel;
 @synthesize bankCardNumLabel;
+@synthesize dismissView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -121,8 +130,16 @@
     bankCardNumLabel.text = [NSString stringWithFormat:@"%ld張銀行卡記錄",bankCarNum];
     
     NSString *name = userDetailDict[@"name"];
-    if ([name isMemberOfClass:[NSNull class]] || name == nil) {
-        name = @"";
+    if ([name isMemberOfClass:[NSNull class]] || name == nil || [name isEqualToString:@""]) {
+        name = @"您未設置名字，請點擊設置";
+        UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(updateUserName:)];
+        tapGes.numberOfTouchesRequired = 1;
+        tapGes.numberOfTapsRequired = 1;
+        nickLabel.userInteractionEnabled = YES;
+        [nickLabel addGestureRecognizer:tapGes];
+    }
+    else{
+        nickLabel.userInteractionEnabled = NO;
     }
     nickLabel.text = name;
     
@@ -131,8 +148,11 @@
         fb_userinfo = [[NSDictionary alloc] init];
     }
     NSString *fb_name = fb_userinfo[@"name"];
-    if ([fb_name isMemberOfClass:[NSNull class]] || fb_name == nil) {
-        fb_name = @"";
+    if ([fb_name isMemberOfClass:[NSNull class]] || fb_name == nil || [fb_name isEqualToString:@""]) {
+        fb_name = userDetailDict[@"cellphone"];
+        if ([fb_name isMemberOfClass:[NSNull class]]) {
+            fb_name = @"";
+        }
     }
     nameLabel.text = fb_name;
     
@@ -141,11 +161,259 @@
         fb_avatar = @"";
     }
     [userImage sd_setImageWithURL:[NSURL URLWithString:fb_avatar] placeholderImage:[UIImage imageNamed:@"defalut_icon"]];
+    
+    dismissView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREENWIDTH, [UIScreen mainScreen].bounds.size.height)];
+    dismissView.backgroundColor = [UIColor blackColor];
+    dismissView.hidden = YES;
+    dismissView.alpha = 0.7;
+    [self.view addSubview:dismissView];
+    UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissViewGes:)];
+    tapGes.numberOfTapsRequired = 1;
+    tapGes.numberOfTouchesRequired = 1;
+    [dismissView addGestureRecognizer:tapGes];
+    
+    NSString *fb_id = userDetailDict[@"fb_id"];
+    if ([fb_id isMemberOfClass:[NSNull class]]) {
+        fb_id = @"";
+        facebookButton.hidden = NO;
+    }
+    else{
+        facebookButton.hidden = YES;
+    }
+}
+
+//添加用戶名字
+- (void)updateUserName:(UITapGestureRecognizer *)ges
+{
+    [self.view addSubview:dismissView];
+    dismissView.hidden = NO;
+    
+    CGFloat viewX = 10;
+    CGFloat viewY = 80;
+    CGFloat viewW = SCREENWIDTH - 2 * viewX;
+    CGFloat viewH = 200;
+    UIView *shareAlert = [[UIView alloc] init];
+    shareAlert.frame = CGRectMake(viewX, viewY, viewW, viewH);
+    shareAlert.backgroundColor = [UIColor whiteColor];
+    shareAlert.layer.cornerRadius = 5.0;
+    shareAlert.layer.borderWidth = 0;
+    shareAlert.layer.masksToBounds = YES;
+    shareAlert.tag = ALERTTAG;
+    shareAlert.layer.borderColor = [UIColor clearColor].CGColor;
+    shareAlert.userInteractionEnabled = YES;
+    
+    CGFloat labelH = 30;
+    CGFloat labelY = 0;
+    
+    UIFont *shareFont = [UIFont systemFontOfSize:15.0];
+    
+    UILabel *messageTitleLabel = [[UILabel alloc] init];
+    messageTitleLabel.font = shareFont;
+    messageTitleLabel.textColor = [UIColor blackColor];
+    messageTitleLabel.textAlignment = NSTextAlignmentCenter;
+    messageTitleLabel.backgroundColor = [UIColor clearColor];
+    messageTitleLabel.text = @"請輸入名字";
+    messageTitleLabel.frame = CGRectMake(0, 0, viewW, labelH);
+    [shareAlert addSubview:messageTitleLabel];
+    
+    labelY = labelY + labelH;
+    UILabel *contentLabel = [[UILabel alloc] init];
+    contentLabel.font = [UIFont systemFontOfSize:17.0];
+    contentLabel.textColor = [UIColor blackColor];
+    contentLabel.textAlignment = NSTextAlignmentCenter;
+    contentLabel.backgroundColor = [UIColor clearColor];
+    contentLabel.text = @"注意!!!姓名添加后不能修改";
+    contentLabel.frame = CGRectMake(0, labelY, viewW, labelH);
+    [shareAlert addSubview:contentLabel];
+    
+    UIImageView *logoImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"login_logoImage"]];
+    logoImage.frame = CGRectMake(20, 5, 30, 30);
+    [shareAlert addSubview:logoImage];
+    
+    
+    labelY = labelY + labelH + 10;
+    UITextField *textview = [[UITextField alloc] init];
+    textview.tag = 10;
+    textview.backgroundColor = [UIColor whiteColor];
+    textview.tintColor= [UIColor blueColor];
+    textview.placeholder = @"請輸入您的名字";
+    textview.font = shareFont;
+    textview.delegate = self;
+    textview.frame = CGRectMake(10, labelY, shareAlert.frame.size.width - 20, 50);
+    textview.layer.borderWidth = 1.0;
+    textview.layer.cornerRadius = 5.0;
+    textview.layer.masksToBounds = YES;
+    textview.layer.borderColor = [UIColor colorWithWhite:0xcc / 255.0 alpha:1.0].CGColor;
+    [shareAlert addSubview:textview];
+    
+    
+    CGFloat buttonDis = 10;
+    CGFloat buttonW = (viewW - 3 * buttonDis) / 2.0;
+    CGFloat buttonH = 50;
+    CGFloat buttonY = viewH - 50;
+    CGFloat buttonX = 10;
+    
+    UIButton *shareButton = [[UIButton alloc] initWithFrame:CGRectMake(buttonX, buttonY, buttonW, buttonH)];
+    [shareButton setTitle:@"確認" forState:UIControlStateNormal];
+    [shareButton addTarget:self action:@selector(alertbuttonClick:) forControlEvents:UIControlEventTouchUpInside];
+    shareButton.tag = 1;
+    [shareButton.titleLabel setFont:shareFont];
+    [shareButton setTitleColor:APPDEFAULTORANGE forState:UIControlStateNormal];
+    [shareAlert addSubview:shareButton];
+    
+    UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(buttonX + buttonDis + buttonW, buttonY, buttonW, buttonH)];
+    [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+    [cancelButton addTarget:self action:@selector(alertbuttonClick:) forControlEvents:UIControlEventTouchUpInside];
+    cancelButton.tag = 0;
+    [cancelButton.titleLabel setFont:shareFont];
+    [cancelButton setTitleColor:APPDEFAULTORANGE forState:UIControlStateNormal];
+    [shareAlert addSubview:cancelButton];
+    
+    UIView *sepLine = [[UIView alloc] initWithFrame:CGRectMake(0, viewH - 50, viewW, 1)];
+    sepLine.backgroundColor = [UIColor colorWithWhite:230.0 / 255.0 alpha:1.0];
+    [shareAlert addSubview:sepLine];
+    
+    UIView *sepLine1 = [[UIView alloc] initWithFrame:CGRectMake((viewW - 1) / 2.0, viewH - 50, 1, 50)];
+    sepLine1.backgroundColor = [UIColor colorWithWhite:230.0 / 255.0 alpha:1.0];
+    [shareAlert addSubview:sepLine1];
+    
+    CAKeyframeAnimation *popAnimation = [CAKeyframeAnimation animationWithKeyPath:@"transform"];
+    popAnimation.duration = 0.4;
+    popAnimation.values = @[[NSValue valueWithCATransform3D:CATransform3DMakeScale(0.01f, 0.01f, 1.0f)],
+                            [NSValue valueWithCATransform3D:CATransform3DMakeScale(1.1f, 1.1f, 1.0f)],
+                            [NSValue valueWithCATransform3D:CATransform3DMakeScale(0.9f, 0.9f, 1.0f)],
+                            [NSValue valueWithCATransform3D:CATransform3DIdentity]];
+    popAnimation.keyTimes = @[@0.2f, @0.5f, @0.75f, @1.0f];
+    popAnimation.timingFunctions = @[[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+                                     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut],
+                                     [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut]];
+    [shareAlert.layer addAnimation:popAnimation forKey:nil];
+    [self.view addSubview:shareAlert];
+}
+
+- (void)alertbuttonClick:(UIButton *)button
+{
+    UIView *mydismissView = dismissView;
+    mydismissView.hidden = YES;
+    
+    UIView *alertview = [self.view viewWithTag:ALERTTAG];
+    
+    UIView *subview = [alertview viewWithTag:10];
+    if (button.tag == 0) {
+        [alertview removeFromSuperview];
+        return;
+    }
+    UITextField *textview = nil;
+    if ([subview isMemberOfClass:[UITextField class]]) {
+        textview = (UITextField *)subview;
+    }
+    textview.keyboardType = UIKeyboardTypeNumbersAndPunctuation;
+    NSString *password = textview.text;
+    [alertview removeFromSuperview];
+    if (password == nil || [password isEqualToString:@""]) {
+        
+        [self showHint:@"請輸入您的名字"];
+        return;
+    }
+    [self requestUpdateUserNameWithName:password];
+}
+
+- (void)requestUpdateUserNameWithName:(NSString *)name
+{
+    [self showHudInView:tableview hint:@"添加中..."];
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/user/update-name",BASEURL];
+    
+    NSString *myuserName = [NSString stringWithFormat:@"%@",name];
+    NSDictionary *params  = @{@"name":myuserName};
+    
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSDictionary *resultDict = [respondString objectFromJSONString];
+        NSString *error = resultDict[@"error"][@"name"];
+        if (error) {
+            [self showHint:error];
+            return;
+        }
+        nickLabel.text = name;
+        nickLabel.userInteractionEnabled = NO;
+        [[NSNotificationCenter defaultCenter] postNotificationName:GETUSERDATA_NOTIFICATION object:nickLabel];
+        [self showHint:@"添加成功"];
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
 }
 
 - (IBAction)relateFackBook:(id)sender
 {
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    UIWindow *appWindow = appDelegate.window;
+    UILabel *tipLabel = [appWindow viewWithTag:shortNoticeLabelTag];
+    tipLabel.hidden = YES;
+    
+    if ([FBSDKAccessToken currentAccessToken]) {
+        // User is logged in, do work such as go to next view controller.
+    }
+    
+    __weak HeUserVC *weakSelf = self;
+    FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
+    [login
+     logInWithReadPermissions: @[@"public_profile"]
+     fromViewController:self
+     handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+         NSLog(@"facebook login result.grantedPermissions = %@,error = %@",result.grantedPermissions,error);
+         
+         tipLabel.hidden = NO;
+         
+         if (error) {
+             [self showHint:@"FaceBook登錄失敗"];
+             NSLog(@"Process error");
+         } else if (result.isCancelled) {
+             NSLog(@"Cancelled");
+         } else {
+             NSLog(@"Logged in");
+             FBSDKProfile *userProfile = [FBSDKProfile currentProfile];
+             [weakSelf faceBookRelateWithToken:result.token.tokenString];
+             NSLog(@"userProfile = %@",userProfile);
+             
+             
+         }
+     }];
+    
+    
+    
+}
+
+- (void)faceBookRelateWithToken:(NSString *)accessToken
+{
     NSLog(@"relateFackBook");
+    NSString *faceBookAccessToken = [NSString stringWithFormat:@"%@",accessToken];
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/user/connect-facebook",BASEURL];
+    NSDictionary * params  = @{@"fb_access_token": faceBookAccessToken};
+    [self showHudInView:self.tableview hint:@"關聯中..."];
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [self hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
+        
+        id success = respondDict[@"success"];
+        if ([success isEqualToString:@"SUCCESS"]) {
+            [self showHint:@"關聯成功"];
+            facebookButton.hidden = YES;
+            //更新當前用戶的資料
+            [[NSNotificationCenter defaultCenter] postNotificationName:GETUSERDATA_NOTIFICATION object:nil];
+        }
+        else{
+            [self showHint:@"關聯出錯"];
+        }
+        
+        
+    } failure:^(NSError* err){
+        [self hideHud];
+        [self showHint:ERRORREQUESTTIP];
+    }];
 }
 
 - (void)userDataUpdate:(NSNotification *)notification
@@ -164,8 +432,16 @@
     bankCardNumLabel.text = [NSString stringWithFormat:@"%ld張銀行卡記錄",[bankAccounts count]];
     
     NSString *name = userDetailDict[@"name"];
-    if ([name isMemberOfClass:[NSNull class]] || name == nil) {
-        name = @"";
+    if ([name isMemberOfClass:[NSNull class]] || name == nil || [name isEqualToString:@""]) {
+        name = @"您未設置名字，請點擊設置";
+        UITapGestureRecognizer *tapGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(updateUserName:)];
+        tapGes.numberOfTouchesRequired = 1;
+        tapGes.numberOfTapsRequired = 1;
+        nickLabel.userInteractionEnabled = YES;
+        [nickLabel addGestureRecognizer:tapGes];
+    }
+    else{
+        nickLabel.userInteractionEnabled = NO;
     }
     nickLabel.text = name;
     
@@ -174,8 +450,11 @@
         fb_userinfo = [[NSDictionary alloc] init];
     }
     NSString *fb_name = fb_userinfo[@"name"];
-    if ([fb_name isMemberOfClass:[NSNull class]] || fb_name == nil) {
-        fb_name = @"";
+    if ([fb_name isMemberOfClass:[NSNull class]] || fb_name == nil || [fb_name isEqualToString:@""]) {
+        fb_name = userDetailDict[@"cellphone"];
+        if ([fb_name isMemberOfClass:[NSNull class]]) {
+            fb_name = @"";
+        }
     }
     nameLabel.text = fb_name;
     
@@ -184,6 +463,15 @@
         fb_avatar = @"";
     }
     [userImage sd_setImageWithURL:[NSURL URLWithString:fb_avatar] placeholderImage:[UIImage imageNamed:@"defalut_icon"]];
+    
+    NSString *fb_id = userDetailDict[@"fb_id"];
+    if ([fb_id isMemberOfClass:[NSNull class]]) {
+        fb_id = @"";
+        facebookButton.hidden = NO;
+    }
+    else{
+        facebookButton.hidden = YES;
+    }
 }
 
 //D幣儲值
@@ -206,6 +494,15 @@
     HeBankCardVC *bankCardVC = [[HeBankCardVC alloc] init];
     bankCardVC.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:bankCardVC animated:YES];
+}
+
+
+- (void)dismissViewGes:(UITapGestureRecognizer *)ges
+{
+    UIView *mydismissView = ges.view;
+    mydismissView.hidden = YES;
+    UIView *alertview = [self.view viewWithTag:ALERTTAG];
+    [alertview removeFromSuperview];
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
