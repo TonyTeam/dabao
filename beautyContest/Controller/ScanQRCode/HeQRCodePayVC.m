@@ -65,7 +65,6 @@
         appScanWaitingTime = 1;
     }
     __weak HeQRCodePayVC *weakSelf = self;
-    NSInteger repeatTime = 1;
     pollingTime = [NSTimer scheduledTimerWithTimeInterval:5.0 repeats:YES block:^(NSTimer *timer){
        
         weakSelf.repeatTime = weakSelf.repeatTime + 1;

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EA01F0341EBAC13A007188FF /* HeNewReplyVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA01F0321EBAC13A007188FF /* HeNewReplyVC.m */; };
+		EA01F0351EBAC13A007188FF /* HeNewReplyVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA01F0331EBAC13A007188FF /* HeNewReplyVC.xib */; };
+		EA01F0381EBB063B007188FF /* HeServiceFeedBackCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EA01F0371EBB063B007188FF /* HeServiceFeedBackCell.m */; };
 		EA0D90741EB63F6900A746C7 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0D90731EB63F6900A746C7 /* Bolts.framework */; };
 		EA0D90761EB63F7700A746C7 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0D90751EB63F7700A746C7 /* FBSDKCoreKit.framework */; };
 		EA0D90781EB63F7D00A746C7 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EA0D90771EB63F7D00A746C7 /* FBSDKLoginKit.framework */; };
@@ -602,6 +605,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		EA01F0311EBAC13A007188FF /* HeNewReplyVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeNewReplyVC.h; sourceTree = "<group>"; };
+		EA01F0321EBAC13A007188FF /* HeNewReplyVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeNewReplyVC.m; sourceTree = "<group>"; };
+		EA01F0331EBAC13A007188FF /* HeNewReplyVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeNewReplyVC.xib; sourceTree = "<group>"; };
+		EA01F0361EBB063B007188FF /* HeServiceFeedBackCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeServiceFeedBackCell.h; sourceTree = "<group>"; };
+		EA01F0371EBB063B007188FF /* HeServiceFeedBackCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeServiceFeedBackCell.m; sourceTree = "<group>"; };
 		EA0D90731EB63F6900A746C7 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		EA0D90751EB63F7700A746C7 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		EA0D90771EB63F7D00A746C7 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
@@ -1774,6 +1782,8 @@
 			children = (
 				EA20FC851EB2DD4200D52963 /* HeHistoryFeedBackCell.h */,
 				EA20FC861EB2DD4200D52963 /* HeHistoryFeedBackCell.m */,
+				EA01F0361EBB063B007188FF /* HeServiceFeedBackCell.h */,
+				EA01F0371EBB063B007188FF /* HeServiceFeedBackCell.m */,
 			);
 			path = FeedBack;
 			sourceTree = "<group>";
@@ -1853,6 +1863,9 @@
 				EA20FC7F1EB2DC2000D52963 /* HeFeedBackReplyVC.h */,
 				EA20FC801EB2DC2000D52963 /* HeFeedBackReplyVC.m */,
 				EA20FC811EB2DC2000D52963 /* HeFeedBackReplyVC.xib */,
+				EA01F0311EBAC13A007188FF /* HeNewReplyVC.h */,
+				EA01F0321EBAC13A007188FF /* HeNewReplyVC.m */,
+				EA01F0331EBAC13A007188FF /* HeNewReplyVC.xib */,
 			);
 			path = FeedBack;
 			sourceTree = "<group>";
@@ -4108,6 +4121,7 @@
 				EAC2CCD21D4AF5D800E282A8 /* BrowserView.xib in Resources */,
 				EAC2CD601D4AF5D800E282A8 /* arrow_down.png in Resources */,
 				EA3102CA1EA9DA1F00F87B23 /* HeSetUpVC.xib in Resources */,
+				EA01F0351EBAC13A007188FF /* HeNewReplyVC.xib in Resources */,
 				EAB77D161EADEAC600487992 /* HeNoticeDetailVC.xib in Resources */,
 				EA38E9DA1EA1E5CC00971B7A /* NavBarIOS7_white.png in Resources */,
 				EAC2CCFC1D4AF5D800E282A8 /* fail@2x.png in Resources */,
@@ -4151,6 +4165,7 @@
 				EAC2CD731D4AF5D800E282A8 /* RACEXTRuntimeExtensions.m in Sources */,
 				EAC2CD3B1D4AF5D800E282A8 /* MJPhotoView.m in Sources */,
 				EAC2CDA71D4AF5D800E282A8 /* RACScopedDisposable.m in Sources */,
+				EA01F0381EBB063B007188FF /* HeServiceFeedBackCell.m in Sources */,
 				EAC2CD421D4AF5D800E282A8 /* MJRefreshHeader.m in Sources */,
 				EAC2CD9C1D4AF5D800E282A8 /* RACIndexSetSequence.m in Sources */,
 				EAC2CD371D4AF5D800E282A8 /* MJPhotoBrowser.m in Sources */,
@@ -4302,6 +4317,7 @@
 				EAC2CDC81D4AF5D800E282A8 /* UIStepper+RACSignalSupport.m in Sources */,
 				EAC2CCD71D4AF5D800E282A8 /* NSDictionary+JSON.m in Sources */,
 				EAC2C9C61D4AF5CC00E282A8 /* CustomNavigationController.m in Sources */,
+				EA01F0341EBAC13A007188FF /* HeNewReplyVC.m in Sources */,
 				EAC2CDA01D4AF5D800E282A8 /* RACMulticastConnection.m in Sources */,
 				EAC2CD8C1D4AF5D800E282A8 /* RACBlockTrampoline.m in Sources */,
 				EAC2CD211D4AF5D800E282A8 /* IQActionSheetPickerView.m in Sources */,

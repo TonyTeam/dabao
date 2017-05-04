@@ -9,6 +9,7 @@
 #import "HeBaseViewController.h"
 #import "RDVTabBarController.h"
 #import "RDVTabBarItem.h"
+#import "HeNewReplyVC.h"
 
 @interface HeBaseViewController ()
 
@@ -28,6 +29,10 @@
     if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
         self.navigationController.interactivePopGestureRecognizer.delegate = nil;
     }
+    if ([self isKindOfClass:[HeNewReplyVC class]]) {
+        
+        return;
+    }
     if (![[[self.navigationController viewControllers] firstObject] isEqual:self]) {
         [[self rdv_tabBarController] setTabBarHidden:YES animated:YES];
     }
@@ -36,6 +41,10 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    if ([self isKindOfClass:[HeNewReplyVC class]]) {
+        
+        return;
+    }
     if (![[[self.navigationController viewControllers] firstObject] isEqual:self]) {
         [[self rdv_tabBarController] setTabBarHidden:NO animated:YES];
     }

@@ -10,4 +10,7 @@
 
 @interface HeFeedBackVC : HeBaseViewController
 
+
+- (void)haveReplyWithDict:(NSDictionary *)replyDict;
+
 @end

@@ -10,4 +10,6 @@
 
 @interface HeUserVC : HeBaseViewController
 
+- (void)haveUnReadMessage:(NSInteger)unReadNum;
+
 @end

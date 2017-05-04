@@ -173,6 +173,7 @@
     __weak HeNoticeVC *weakSelf = self;
     [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        [[NSNotificationCenter defaultCenter] postNotificationName:GETUSERDATA_NOTIFICATION object:nil];
         [weakSelf updateNotice];
         
     } failure:^(NSError* err){
@@ -240,6 +241,7 @@
     }
     else{
         cell.statusLabel.text = @"未讀";
+        cell.statusLabel.textColor = DEFAULTREDCOLOR;
     }
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
     

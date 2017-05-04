@@ -74,6 +74,10 @@
 #define UPDATEUSER_NOTIFICATION @"updateUserNotification"
 //獲取用戶資料統治者
 #define GETUSERDATA_NOTIFICATION @"getUserDataNotification"
+
+//更新用戶的評價
+#define  UPDATEUSERREPLYNOTIFICATION @"updateUserReplyNotification"
+
 //更新用戶銀行卡通知
 #define UPDATEUSERBANK_NOTIFICATION @"updateUserBankNotification"
 

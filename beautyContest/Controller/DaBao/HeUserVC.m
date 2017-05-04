@@ -19,6 +19,7 @@
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 #import <FBSDKCoreKit/FBSDKProfile.h>
 #import "AppDelegate.h"
+#import "RDVTabBarItem.h"
 
 #define ALERTTAG 200
 
@@ -318,6 +319,11 @@
     [self requestUpdateUserNameWithName:password];
 }
 
+- (void)haveUnReadMessage:(NSInteger)unReadNum
+{
+    self.rdv_tabBarItem.badgeValue = [NSString stringWithFormat:@"%ld",unReadNum];
+}
+
 - (void)requestUpdateUserNameWithName:(NSString *)name
 {
     [self showHudInView:tableview hint:@"添加中..."];
@@ -557,6 +563,28 @@
     cell.selectionStyle = UITableViewCellSelectionStyleGray;
     cell.accessoryView = icon_gray_choose;
     
+    if (section == 0 && row == 0) {
+        id unreadAnncsQtyObj = userDetailDict[@"unreadAnncsQty"];
+        if ([unreadAnncsQtyObj integerValue] > 0) {
+            CGFloat numLabelW = 20;
+            CGFloat numLabelH = 20;
+            CGFloat numLabelX = CGRectGetMinX(icon_gray_choose.frame) - 5 - numLabelW;
+            CGFloat numLabelY = (cellH - numLabelH) / 2.0;
+            
+            UILabel *numLabel = [[UILabel alloc] initWithFrame:CGRectMake(numLabelX, numLabelY, numLabelW, numLabelH)];
+            numLabel.textAlignment = NSTextAlignmentCenter;
+            numLabel.font = [UIFont systemFontOfSize:12.0];
+            numLabel.textColor = [UIColor whiteColor];
+            numLabel.backgroundColor = DEFAULTREDCOLOR;
+            numLabel.layer.masksToBounds = YES;
+            numLabel.text = [NSString stringWithFormat:@"%@",unreadAnncsQtyObj];
+            numLabel.layer.borderWidth = 1.0;
+            numLabel.layer.cornerRadius = numLabelH / 2.0;
+            numLabel.layer.borderColor = [UIColor whiteColor].CGColor;
+            [cell addSubview:numLabel];
+        }
+        
+    }
     
     return cell;
     

@@ -14,6 +14,8 @@
 #import "SAMTextView.h"
 #import "YLButton.h"
 #import "HeHistoryVC.h"
+#import "RDVTabBarItem.h"
+#import "HeNewReplyVC.h"
 
 @interface HeFeedBackVC ()<UITableViewDelegate,UITableViewDataSource,UITextViewDelegate>
 {
@@ -85,6 +87,8 @@
     
     NSString *dataString = [[NSUserDefaults standardUserDefaults] objectForKey:FEEDBACKDATA];
     [self sortDataWithString:dataString];
+    
+    self.rdv_tabBarItem.badgeValue = @"1";
 }
 
 - (void)initView
@@ -188,6 +192,52 @@
     } failure:^(NSError* err){
         [self hideHud];
         [self showHint:ERRORREQUESTTIP];
+    }];
+}
+
+- (void)haveReplyWithDict:(NSDictionary *)replyDict
+{
+    self.rdv_tabBarItem.badgeValue = @"1";
+    
+    HeNewReplyVC *replyVC = [[HeNewReplyVC alloc] init];
+    replyVC.lastestReplyDict = [[NSDictionary alloc] initWithDictionary:replyDict];
+    replyVC.view.frame = self.view.bounds;
+    [self addChildViewController:replyVC];
+    [self.view addSubview:replyVC.view];
+}
+
+- (void)loadRely
+{
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/comment/index",BASEURL];
+    NSDictionary * params  = nil;
+    __weak HeFeedBackVC *weakSelf = self;
+    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [weakSelf hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSArray *replyArray = [respondString objectFromJSONString];
+        if ([replyArray isKindOfClass:[NSArray class]] || [replyArray count] > 0) {
+            NSDictionary *lastestDict = replyArray[0];
+            id hasNewReplyObj = lastestDict[@"hasNewReply"];
+            if ([hasNewReplyObj isMemberOfClass:[NSNull class]] || hasNewReplyObj == nil) {
+                hasNewReplyObj = nil;
+            }
+            BOOL hasNewReply = [hasNewReplyObj boolValue];
+            if (hasNewReply) {
+                //如果有新的回复
+                NSLog(@"有新的回复");
+                
+            }
+            else{
+                NSLog(@"暂未有新回复");
+            }
+        }
+        else{
+            NSLog(@"暂未有新回复");
+        }
+        
+    } failure:^(NSError* err){
+        [weakSelf hideHud];
+        [weakSelf showHint:ERRORREQUESTTIP];
     }];
 }
 

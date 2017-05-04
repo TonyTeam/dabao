@@ -13,6 +13,7 @@
 #import "HeSysbsModel.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "AppDelegate.h"
+#import "RDVTabBarItem.h"
 
 @interface HeTabBarVC ()
 
@@ -33,6 +34,8 @@
     [self getUserInfo];
 //    [self autoLogin];
     [self setupSubviews];
+    //獲取最近10條回復
+    [self loadRely];
 }
 
 - (void)initialization
@@ -43,6 +46,7 @@
                                              selector:@selector(fbsupdateContent:)
                                                  name:FBSDKProfileDidChangeNotification
                                                object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadRely) name:UPDATEUSERREPLYNOTIFICATION object:nil];
     
 }
 
@@ -118,6 +122,43 @@
     }];
 }
 
+- (void)loadRely
+{
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/comment/index",BASEURL];
+    NSDictionary * params  = nil;
+    __weak HeTabBarVC *weakSelf = self;
+    [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [weakSelf hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSArray *replyArray = [respondString objectFromJSONString];
+        if ([replyArray isKindOfClass:[NSArray class]] || [replyArray count] > 0) {
+            NSDictionary *lastestDict = replyArray[0];
+            id hasNewReplyObj = lastestDict[@"hasNewReply"];
+            if ([hasNewReplyObj isMemberOfClass:[NSNull class]] || hasNewReplyObj == nil) {
+                hasNewReplyObj = nil;
+            }
+            BOOL hasNewReply = [hasNewReplyObj boolValue];
+            if (hasNewReply) {
+                //如果有新的回复
+                
+                [feedbackVC haveReplyWithDict:lastestDict];
+            }
+            else{
+                NSLog(@"暂未有新回复");
+                feedbackVC.rdv_tabBarItem.badgeValue = nil;
+            }
+        }
+        else{
+            NSLog(@"暂未有新回复");
+            feedbackVC.rdv_tabBarItem.badgeValue = nil;
+        }
+        
+    } failure:^(NSError* err){
+        [weakSelf hideHud];
+        [weakSelf showHint:ERRORREQUESTTIP];
+    }];
+}
+
 - (void)clearInfo
 {
     
@@ -135,6 +176,12 @@
         [[NSUserDefaults standardUserDefaults] setObject:respondString forKey:USERDETAILDATAKEY];
         [[NSUserDefaults standardUserDefaults] synchronize];
         NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
+        id unreadAnncsQtyObj = respondDict[@"unreadAnncsQty"];
+        NSInteger unreadAnncsQty = [unreadAnncsQtyObj integerValue];
+        if (unreadAnncsQty > 0) {
+            //有未读的消息
+            [userVC haveUnReadMessage:unreadAnncsQty];
+        }
         [HeSysbsModel getSysModel].userDetailDict = [[NSDictionary alloc] initWithDictionary:respondDict];
         [[NSNotificationCenter defaultCenter] postNotificationName:USERDATAUPDATE_NOTIFICATION object:nil];
         
@@ -197,6 +244,10 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:GETUSERDATA_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:USERDATAUPDATE_NOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:FBSDKProfileDidChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATEUSERREPLYNOTIFICATION object:nil];
+    
 }
 
 - (void)didReceiveMemoryWarning {
