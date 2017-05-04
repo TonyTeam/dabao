@@ -87,8 +87,6 @@
     
     NSString *dataString = [[NSUserDefaults standardUserDefaults] objectForKey:FEEDBACKDATA];
     [self sortDataWithString:dataString];
-    
-    self.rdv_tabBarItem.badgeValue = @"1";
 }
 
 - (void)initView

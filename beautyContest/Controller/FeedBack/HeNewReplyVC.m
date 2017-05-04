@@ -31,6 +31,7 @@
 @synthesize textView;
 @synthesize replyArray;
 @synthesize userReplyDict;
+@synthesize lastestReplyDict;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -84,6 +85,7 @@
 {
     [super initializaiton];
     datasource = [[NSMutableArray alloc] initWithCapacity:0];
+    userReplyDict = [[NSDictionary alloc] initWithDictionary:lastestReplyDict];
 }
 
 - (void)initView
@@ -101,10 +103,10 @@
     CGFloat footerviewX = 0;
     CGFloat footerviewY = 0;
     CGFloat footerviewW = SCREENWIDTH;
-    CGFloat footerviewH = 300;
+    CGFloat footerviewH = 180;
     
     UIView *footerview = [[UIView alloc] initWithFrame:CGRectMake(footerviewX, footerviewY, footerviewW, footerviewH)];
-    footerview.backgroundColor = [UIColor whiteColor];
+    footerview.backgroundColor = [UIColor colorWithWhite:247.0 / 255.0 alpha:1.0];
     tableview.tableFooterView = footerview;
     
     CGFloat textViewX = 10;
@@ -166,10 +168,14 @@
     [self showHudInView:self.tableview hint:@"留言中..."];
     [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         [weakSelf hideHud];
-        
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        NSDictionary *resultDict = [respondString objectFromJSONString];
+        NSLog(@"resultDict = %@",resultDict);
         [weakSelf showHint:@"留言成功"];
         button.enabled = NO;
+        [weakSelf.view removeFromSuperview];
         [[NSNotificationCenter defaultCenter] postNotificationName:UPDATEUSERREPLYNOTIFICATION object:nil];
+        
         
     } failure:^(NSError* err){
         [self hideHud];
@@ -179,7 +185,7 @@
 
 - (void)loadReplyContent
 {
-    NSString *comment_id = _lastestReplyDict[@"comment_id"];
+    NSString *comment_id = lastestReplyDict[@"comment_id"];
     if ([comment_id isMemberOfClass:[NSNull class]] || comment_id == nil) {
          comment_id = @"";
     }
@@ -226,7 +232,7 @@
     __weak HeNewReplyVC *weakSelf = self;
     UIAlertAction *confirmAction = [UIAlertAction actionWithTitle:@"確認" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
         NSLog(@"提交評價");
-        NSString *comment_id = _lastestReplyDict[@"comment_id"];
+        NSString *comment_id = lastestReplyDict[@"comment_id"];
         if ([comment_id isMemberOfClass:[NSNull class]] || comment_id == nil) {
             comment_id = @"";
         }
@@ -369,6 +375,7 @@
                     contentLabel.text = comment_content;
                     
                     UILabel *timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(SCREENWIDTH - contentLabelW - 10, contentLabelY, contentLabelW, contentLabelH)];
+                    timeLabel.textAlignment = NSTextAlignmentRight;
                     timeLabel.backgroundColor = [UIColor clearColor];
                     timeLabel.textColor = [UIColor grayColor];
                     timeLabel.font = [UIFont systemFontOfSize:15.0];
@@ -510,7 +517,7 @@
                 comment_content = @"";
             }
             CGFloat contentLabelX = 55;
-            CGFloat contentLabelW = SCREENWIDTH - contentLabelX - 10;
+            CGFloat contentLabelW = (SCREENWIDTH - contentLabelX - 10) / 2.0;
             UIFont *textfont = [UIFont systemFontOfSize:15.0];
             
             CGSize commentsize = [MLLabel getViewSizeByString:comment_content maxWidth:contentLabelW font:textfont lineHeight:1.2f lines:0];
@@ -547,9 +554,9 @@
         return nil;
     }
     else if (section == 1){
-        UIView *headerview = [[UIView alloc] initWithFrame:CGRectMake(10, 0, SCREENWIDTH - 10, 30)];
-        headerview.backgroundColor = [UIColor colorWithWhite:237.0 / 255.0 alpha:1.0];
-        UILabel *contentlabel = [[UILabel alloc] initWithFrame:headerview.bounds];
+        UIView *headerview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREENWIDTH, 30)];
+        headerview.backgroundColor = [UIColor colorWithWhite:247.0 / 255.0 alpha:1.0];
+        UILabel *contentlabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, SCREENWIDTH - 20, 30)];
         contentlabel.backgroundColor = [UIColor clearColor];
         contentlabel.textColor = [UIColor grayColor];
         contentlabel.font = [UIFont systemFontOfSize:11.0];
@@ -559,7 +566,7 @@
         return headerview;
     }
     UIView *headerview = [[UIView alloc] initWithFrame:CGRectMake(0, 0, SCREENWIDTH, 20)];
-    headerview.backgroundColor = [UIColor colorWithWhite:237.0 / 255.0 alpha:1.0];
+    headerview.backgroundColor = [UIColor colorWithWhite:247.0 / 255.0 alpha:1.0];
     
     
     return headerview;

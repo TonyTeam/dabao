@@ -1,20 +1,94 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HeFeedBackReplyVC">
             <connections>
-                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="tableview" destination="2wS-L6-UQR" id="WFW-Cs-gJL"/>
+                <outlet property="titleLabel" destination="U2b-aG-lk9" id="Nc7-v5-vzo"/>
+                <outlet property="view" destination="Ela-Oc-8d2" id="UR0-PQ-xf9"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Ela-Oc-8d2">
             <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YeE-Vm-GBg">
+                    <rect key="frame" x="0.0" y="20" width="375" height="90"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_main_order.png" translatesAutoresizingMaskIntoConstraints="NO" id="5lP-BO-O4K">
+                            <rect key="frame" x="0.0" y="-20" width="375" height="90"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="90" id="FlD-B8-P8v"/>
+                            </constraints>
+                        </imageView>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="意見反饋" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="U2b-aG-lk9">
+                            <rect key="frame" x="20" y="40" width="335" height="40"/>
+                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="40" id="Tqo-Gt-bQ1"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" red="0.1176470588" green="0.1176470588" blue="0.1176470588" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bba-S0-HX7">
+                            <rect key="frame" x="20" y="11" width="12" height="22"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="22" id="E4V-ST-D00"/>
+                                <constraint firstAttribute="width" constant="12" id="QYH-gO-2Sp"/>
+                            </constraints>
+                            <state key="normal" image="navigationBar_back_icon.png"/>
+                            <connections>
+                                <action selector="backButtonClick:" destination="-1" eventType="touchUpInside" id="UbD-bn-a5D"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" red="0.96862745100000003" green="0.96862745100000003" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstItem="bba-S0-HX7" firstAttribute="top" secondItem="YeE-Vm-GBg" secondAttribute="top" constant="11" id="1Ru-W9-O2B"/>
+                        <constraint firstAttribute="trailing" secondItem="5lP-BO-O4K" secondAttribute="trailing" id="Fhm-Vg-AqD"/>
+                        <constraint firstItem="bba-S0-HX7" firstAttribute="leading" secondItem="YeE-Vm-GBg" secondAttribute="leading" constant="20" id="PCu-UI-ybe"/>
+                        <constraint firstAttribute="bottom" secondItem="U2b-aG-lk9" secondAttribute="bottom" constant="10" id="YbP-fe-bpC"/>
+                        <constraint firstAttribute="trailing" secondItem="U2b-aG-lk9" secondAttribute="trailing" constant="20" id="Zuf-fa-SIM"/>
+                        <constraint firstItem="5lP-BO-O4K" firstAttribute="leading" secondItem="YeE-Vm-GBg" secondAttribute="leading" id="oH0-aR-NR1"/>
+                        <constraint firstItem="U2b-aG-lk9" firstAttribute="leading" secondItem="YeE-Vm-GBg" secondAttribute="leading" constant="20" id="rzb-fn-A24"/>
+                        <constraint firstItem="5lP-BO-O4K" firstAttribute="top" secondItem="YeE-Vm-GBg" secondAttribute="top" constant="-20" id="tHC-et-MVT"/>
+                        <constraint firstAttribute="height" constant="90" id="uol-4o-Tap"/>
+                    </constraints>
+                </view>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="2wS-L6-UQR">
+                    <rect key="frame" x="0.0" y="110" width="375" height="557"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="w46-8q-bHy"/>
+                        <outlet property="delegate" destination="-1" id="BVw-Nr-Mvi"/>
+                    </connections>
+                </tableView>
+            </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstItem="YeE-Vm-GBg" firstAttribute="leading" secondItem="Ela-Oc-8d2" secondAttribute="leading" id="6MF-fS-rpM"/>
+                <constraint firstAttribute="trailing" secondItem="2wS-L6-UQR" secondAttribute="trailing" id="7jU-cT-xBg"/>
+                <constraint firstItem="YeE-Vm-GBg" firstAttribute="top" secondItem="Ela-Oc-8d2" secondAttribute="top" constant="20" id="Khp-rK-uuk"/>
+                <constraint firstItem="2wS-L6-UQR" firstAttribute="leading" secondItem="Ela-Oc-8d2" secondAttribute="leading" id="Rb1-d8-xyJ"/>
+                <constraint firstAttribute="bottom" secondItem="2wS-L6-UQR" secondAttribute="bottom" id="io3-EO-QEA"/>
+                <constraint firstAttribute="trailing" secondItem="YeE-Vm-GBg" secondAttribute="trailing" id="pZh-dy-oL4"/>
+                <constraint firstItem="2wS-L6-UQR" firstAttribute="top" secondItem="YeE-Vm-GBg" secondAttribute="bottom" id="sUr-j9-Slk"/>
+            </constraints>
+            <point key="canvasLocation" x="42.5" y="94.5"/>
         </view>
     </objects>
+    <resources>
+        <image name="bg_main_order.png" width="750" height="184"/>
+        <image name="navigationBar_back_icon.png" width="18" height="34"/>
+    </resources>
 </document>

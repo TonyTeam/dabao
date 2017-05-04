@@ -188,7 +188,10 @@
     NSInteger row = indexPath.row;
     NSInteger section = indexPath.section;
     NSLog(@"section = %ld , row = %ld",section,row);
+    NSDictionary *replyDict = datasource[row];
     HeFeedBackReplyVC *feedBackReplyVC = [[HeFeedBackReplyVC alloc] init];
+    feedBackReplyVC.comment_id = [NSString stringWithFormat:@"%@",replyDict[@"comment_id"]];
+    feedBackReplyVC.lastestReplyDict = [[NSDictionary alloc] initWithDictionary:replyDict];
     feedBackReplyVC.hidesBottomBarWhenPushed = YES;
     [self.navigationController pushViewController:feedBackReplyVC animated:YES];
 }

@@ -9,5 +9,6 @@
 #import "HeBaseViewController.h"
 
 @interface HeFeedBackReplyVC : HeBaseViewController
-
+@property(strong,nonatomic)NSString *comment_id;
+@property(strong,nonatomic)NSDictionary *lastestReplyDict;
 @end
