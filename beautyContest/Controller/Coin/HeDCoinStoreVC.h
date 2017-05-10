@@ -9,5 +9,6 @@
 #import "HeBaseViewController.h"
 
 @interface HeDCoinStoreVC : HeBaseViewController
+@property(assign,nonatomic)BOOL isfromecommit;
 
 @end

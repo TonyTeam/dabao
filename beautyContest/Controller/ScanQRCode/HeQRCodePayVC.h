@@ -10,5 +10,6 @@
 
 @interface HeQRCodePayVC : HeBaseViewController
 @property(strong,nonatomic)NSString *qrCode;
+@property(assign,nonatomic)BOOL addPassword;
 
 @end

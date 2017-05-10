@@ -201,7 +201,19 @@
         NSDictionary *respondDict = [respondString objectFromJSONString];
         id error = respondDict[@"error"];
         if (error) {
-            [self showHint:@"驗證碼發送失敗"];
+            NSDictionary *error = respondDict[@"error"];
+            NSArray *allkey = error.allKeys;
+            NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+            for (NSInteger index = 0; index < [allkey count]; index++) {
+                NSString *key = allkey[index];
+                NSString *value = error[key];
+                [errorString appendFormat:@"%@",value];
+            }
+            if ([allkey count] == 0) {
+                errorString = [[NSMutableString alloc] initWithString:@"驗證碼發送失敗"];
+            }
+            [self showHint:errorString];
+            return;
         }
         else{
             [self showHint:@"驗證碼發送成功"];
@@ -398,7 +410,19 @@
         NSDictionary *resultDict = [respondString objectFromJSONString];
         id error = resultDict[@"error"];
         if (error) {
-            [self showHint:@"添加失敗"];
+            NSDictionary *error = resultDict[@"error"];
+            NSArray *allkey = error.allKeys;
+            NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+            for (NSInteger index = 0; index < [allkey count]; index++) {
+                NSString *key = allkey[index];
+                NSString *value = error[key];
+                [errorString appendFormat:@"%@",value];
+            }
+            if ([allkey count] == 0) {
+                errorString = [[NSMutableString alloc] initWithString:@"添加失敗"];
+            }
+            [self showHint:errorString];
+            return;
         }
         else{
             [[NSNotificationCenter defaultCenter] postNotificationName:UPDATEUSERBANKCARD_NOTIFICATION object:nil];

@@ -69,8 +69,19 @@
        
         weakSelf.repeatTime = weakSelf.repeatTime + 1;
         if (weakSelf.repeatTime * 5.0 > appScanWaitingTime) {
-            [self showHint:@"系統繁忙，請稍候再試"];
-            [self.navigationController popToRootViewControllerAnimated:YES];
+            [self hideHud];
+            [self showHint:@"系統繁忙，工程師正在查看！"];
+            [pollingTime invalidate];
+            pollingTime = nil;
+            
+            NSArray *array = self.navigationController.viewControllers;
+            for (UIViewController *vc in array) {
+                if ([vc isKindOfClass:[HomePageVC class]]) {
+                    [self.navigationController popToViewController:vc animated:YES];
+                    return;
+                }
+            }
+            
             return;
         }
         
@@ -97,6 +108,8 @@
     [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         [weakSelf hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        
+        
         id repondDict = [respondString objectFromJSONString];
         id error = repondDict[@"error"];
         if (!error) {
@@ -104,12 +117,24 @@
             [weakSelf pollingQRcodeWithDict:repondDict];
         }
         else{
-            id errorObj = error;
-            NSString *errorTip = errorObj[@"qrcode"];
-            if ([errorTip isMemberOfClass:[NSNull class]] || errorTip == nil) {
-                [weakSelf showHint:errorTip];
-                return ;
+            NSDictionary *resultDict = [respondString objectFromJSONString];
+            if ([resultDict isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *error = resultDict[@"error"];
+                if (error) {
+                    NSArray *allkey = error.allKeys;
+                    NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                    for (NSInteger index = 0; index < [allkey count]; index++) {
+                        NSString *key = allkey[index];
+                        NSString *value = error[key];
+                        [errorString appendFormat:@"%@",value];
+                    }
+                    if ([allkey count] == 0) {
+                        errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                    }
+                    [self showHint:errorString];
+                }
             }
+            [self.navigationController popViewControllerAnimated:YES];
         }
         
         
@@ -167,6 +192,7 @@
                 //如果元宝不足，显示让用户充值元宝的按钮
                 payButton.hidden = NO;
                 [weakSelf showHint:@"如果元宝不足，请及时充值"];
+                [self.navigationController popViewControllerAnimated:YES];
             }
             else{
                 [weakSelf inputPayPassword];
@@ -174,7 +200,24 @@
             
         }
         else{
-            [weakSelf showHint:ERRORREQUESTTIP];
+            NSDictionary *resultDict = [respondString objectFromJSONString];
+            if ([resultDict isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *error = resultDict[@"error"];
+                if (error) {
+                    NSArray *allkey = error.allKeys;
+                    NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                    for (NSInteger index = 0; index < [allkey count]; index++) {
+                        NSString *key = allkey[index];
+                        NSString *value = error[key];
+                        [errorString appendFormat:@"%@",value];
+                    }
+                    if ([allkey count] == 0) {
+                        errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                    }
+                    [self showHint:errorString];
+                }
+            }
+            [self.navigationController popViewControllerAnimated:YES];
         }
         
         
@@ -350,11 +393,22 @@
             });
         }
         else{
-            id errorObj = [error objectFromJSONString];
-            NSString *errorTip = errorObj[@"qrcode"];
-            if ([errorTip isMemberOfClass:[NSNull class]] || errorTip == nil) {
-                [weakSelf showHint:errorTip];
-                return ;
+            NSDictionary *resultDict = [respondString objectFromJSONString];
+            if ([resultDict isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *error = resultDict[@"error"];
+                if (error) {
+                    NSArray *allkey = error.allKeys;
+                    NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                    for (NSInteger index = 0; index < [allkey count]; index++) {
+                        NSString *key = allkey[index];
+                        NSString *value = error[key];
+                        [errorString appendFormat:@"%@",value];
+                    }
+                    if ([allkey count] == 0) {
+                        errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                    }
+                    [weakSelf showHint:errorString];
+                }
             }
         }
         

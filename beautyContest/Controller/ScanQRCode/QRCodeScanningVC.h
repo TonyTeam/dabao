@@ -9,6 +9,13 @@
 #import <UIKit/UIKit.h>
 #import "SGQRCode.h"
 
+@protocol QRCodeProtocol <NSObject>
+
+- (void)scanQRCodeWithString:(NSString *)qrCode;
+
+@end
+
 @interface QRCodeScanningVC : SGQRCodeScanningVC
+@property(assign,nonatomic)id<QRCodeProtocol>qrcodeDelegate;
 
 @end

@@ -81,6 +81,25 @@
     [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         [self hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        
+        NSDictionary *resultDict = [respondString objectFromJSONString];
+        if ([resultDict isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *error = resultDict[@"error"];
+            if (error) {
+                NSArray *allkey = error.allKeys;
+                NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                for (NSInteger index = 0; index < [allkey count]; index++) {
+                    NSString *key = allkey[index];
+                    NSString *value = error[key];
+                    [errorString appendFormat:@"%@",value];
+                }
+                if ([allkey count] == 0) {
+                    errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                }
+                [self showHint:errorString];
+            }
+        }
+        
         id bankCardArray = [respondString objectFromJSONString];
         if ([bankCardArray isMemberOfClass:[NSNull class]]) {
             bankCardArray = [bankCardArray array];
@@ -128,6 +147,25 @@
     [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         [self hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        
+        NSDictionary *resultDict = [respondString objectFromJSONString];
+        if ([resultDict isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *error = resultDict[@"error"];
+            if (error) {
+                NSArray *allkey = error.allKeys;
+                NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                for (NSInteger index = 0; index < [allkey count]; index++) {
+                    NSString *key = allkey[index];
+                    NSString *value = error[key];
+                    [errorString appendFormat:@"%@",value];
+                }
+                if ([allkey count] == 0) {
+                    errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                }
+                [self showHint:errorString];
+            }
+        }
+        
         id bankCardArray = [respondString objectFromJSONString];
         if ([bankCardArray isMemberOfClass:[NSNull class]]) {
             bankCardArray = [bankCardArray array];

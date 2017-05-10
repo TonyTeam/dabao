@@ -10,6 +10,7 @@
 #import "HeBaseTableViewCell.h"
 #import "MLLabel+Size.h"
 #import "MLLabel.h"
+#import "HeOrderVC.h"
 
 @interface HeDCoinStoreVC ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
 @property(strong,nonatomic)IBOutlet UITableView *tableview;
@@ -137,7 +138,7 @@
             break;
     }
     NSDictionary *params  = @{@"biz_rmb":biz_rmb,@"payment_method":payment_method};
-    [self showHudInView:tableview hint:@"創建中..."];
+    [self showHudInView:tableview hint:@"系統正在處理您的訂單，請稍候"];
     [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         [self hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
@@ -180,7 +181,17 @@
             return ;
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:UPDATEORDER_NOTIFICATION object:nil];
-        [self showHint:@"創建成功"];
+        [self showHint:@"創建儲值訂單成功"];
+        if (_isfromecommit) {
+            HeOrderVC *orderVC = [[HeOrderVC alloc] init];
+            orderVC.isfromecommit = YES;
+            orderVC.orderType = 1;
+            orderVC.orderDetailDict = [[NSDictionary alloc] initWithDictionary:respondDict];
+            orderVC.hidesBottomBarWhenPushed = YES;
+            [self.navigationController pushViewController:orderVC animated:YES];
+            
+            return;
+        }
         [self performSelector:@selector(backToLastView) withObject:nil afterDelay:0.2];
     } failure:^(NSError* err){
         [self hideHud];
@@ -564,6 +575,11 @@
     }
     
     return headerview;
+}
+
+- (void)backItemClick:(id)sender
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -188,7 +188,24 @@
             [sender startWithTime:60 title:@"獲取驗證碼" countDownTitle:@"s" mainColor:[UIColor whiteColor] countColor:[UIColor whiteColor]];
         }
         else{
-            [self showHint:@"發送驗證碼出錯"];
+            NSDictionary *resultDict = [respondString objectFromJSONString];
+            if ([resultDict isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *error = resultDict[@"error"];
+                if (error) {
+                    NSArray *allkey = error.allKeys;
+                    NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                    for (NSInteger index = 0; index < [allkey count]; index++) {
+                        NSString *key = allkey[index];
+                        NSString *value = error[key];
+                        [errorString appendFormat:@"%@",value];
+                    }
+                    if ([allkey count] == 0) {
+                        errorString = [[NSMutableString alloc] initWithString:@"發送驗證碼出錯"];
+                    }
+                    [self showHint:errorString];
+                    return;
+                }
+            }
         }
         
         
@@ -282,7 +299,24 @@
             [weakSelf performSelector:@selector(logoutMethod) withObject:nil afterDelay:0.8];
         }
         else{
-            [weakSelf showHint:@"密碼重置出錯"];
+            NSDictionary *resultDict = [respondString objectFromJSONString];
+            if ([resultDict isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *error = resultDict[@"error"];
+                if (error) {
+                    NSArray *allkey = error.allKeys;
+                    NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                    for (NSInteger index = 0; index < [allkey count]; index++) {
+                        NSString *key = allkey[index];
+                        NSString *value = error[key];
+                        [errorString appendFormat:@"%@",value];
+                    }
+                    if ([allkey count] == 0) {
+                        errorString = [[NSMutableString alloc] initWithString:@"重置密碼出錯"];
+                    }
+                    [weakSelf showHint:errorString];
+                    return;
+                }
+            }
         }
         
         
@@ -331,7 +365,24 @@
             [weakSelf performSelector:@selector(logoutMethod) withObject:nil afterDelay:0.8];
         }
         else{
-            [self showHint:@"密碼修改出錯"];
+            NSDictionary *resultDict = [respondString objectFromJSONString];
+            if ([resultDict isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *error = resultDict[@"error"];
+                if (error) {
+                    NSArray *allkey = error.allKeys;
+                    NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                    for (NSInteger index = 0; index < [allkey count]; index++) {
+                        NSString *key = allkey[index];
+                        NSString *value = error[key];
+                        [errorString appendFormat:@"%@",value];
+                    }
+                    if ([allkey count] == 0) {
+                        errorString = [[NSMutableString alloc] initWithString:@"密碼修改出錯"];
+                    }
+                    [self showHint:errorString];
+                    return;
+                }
+            }
         }
         
         

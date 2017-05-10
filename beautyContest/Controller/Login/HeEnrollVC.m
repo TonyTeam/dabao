@@ -113,7 +113,23 @@
             [sender startWithTime:60 title:@"獲取驗證碼" countDownTitle:@"s" mainColor:[UIColor whiteColor] countColor:[UIColor whiteColor]];
         }
         else{
-            [self showHint:@"發送驗證碼出錯"];
+            NSDictionary *resultDict = [respondString objectFromJSONString];
+            if ([resultDict isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *error = resultDict[@"error"];
+                if (error) {
+                    NSArray *allkey = error.allKeys;
+                    NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                    for (NSInteger index = 0; index < [allkey count]; index++) {
+                        NSString *key = allkey[index];
+                        NSString *value = error[key];
+                        [errorString appendFormat:@"%@",value];
+                    }
+                    if ([allkey count] == 0) {
+                        errorString = [[NSMutableString alloc] initWithString:@"發送驗證碼出錯"];
+                    }
+                    [self showHint:errorString];
+                }
+            }
         }
         
         
@@ -174,7 +190,23 @@
         NSDictionary *respondDict = [NSDictionary dictionaryWithDictionary:[respondString objectFromJSONString]];
         NSString *error = respondDict[@"error"][@"cellphone"];
         if (error) {
-            [self showHint:error];
+            NSDictionary *resultDict = [respondString objectFromJSONString];
+            if ([resultDict isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *error = resultDict[@"error"];
+                if (error) {
+                    NSArray *allkey = error.allKeys;
+                    NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                    for (NSInteger index = 0; index < [allkey count]; index++) {
+                        NSString *key = allkey[index];
+                        NSString *value = error[key];
+                        [errorString appendFormat:@"%@",value];
+                    }
+                    if ([allkey count] == 0) {
+                        errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                    }
+                    [self showHint:errorString];
+                }
+            }
             return;
         }
         accountField.text = nil;

@@ -41,9 +41,9 @@
         label.textColor = APPDEFAULTTITLECOLOR;
         label.textAlignment = NSTextAlignmentCenter;
         self.navigationItem.titleView = label;
-        label.text = @"修改支付密碼";
+        label.text = @"創建/修改支付密碼";
         [label sizeToFit];
-        self.title = @"修改支付密碼";
+        self.title = @"創建/修改支付密碼";
         
     }
     return self;
@@ -135,7 +135,23 @@
             [sender startWithTime:60 title:@"獲取驗證碼" countDownTitle:@"s" mainColor:[UIColor whiteColor] countColor:[UIColor whiteColor]];
         }
         else{
-            [self showHint:@"發送驗證碼出錯"];
+            NSDictionary *resultDict = [respondString objectFromJSONString];
+            if ([resultDict isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *error = resultDict[@"error"];
+                if (error) {
+                    NSArray *allkey = error.allKeys;
+                    NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                    for (NSInteger index = 0; index < [allkey count]; index++) {
+                        NSString *key = allkey[index];
+                        NSString *value = error[key];
+                        [errorString appendFormat:@"%@",value];
+                    }
+                    if ([allkey count] == 0) {
+                        errorString = [[NSMutableString alloc] initWithString:@"發送驗證碼出錯"];
+                    }
+                    [self showHint:errorString];
+                }
+            }
         }
         
         
@@ -200,7 +216,23 @@
             [weakSelf performSelector:@selector(backToLastView) withObject:nil afterDelay:0.5];
         }
         else{
-            [weakSelf showHint:@"支付密碼设置出錯"];
+            NSDictionary *resultDict = [respondString objectFromJSONString];
+            if ([resultDict isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *error = resultDict[@"error"];
+                if (error) {
+                    NSArray *allkey = error.allKeys;
+                    NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                    for (NSInteger index = 0; index < [allkey count]; index++) {
+                        NSString *key = allkey[index];
+                        NSString *value = error[key];
+                        [errorString appendFormat:@"%@",value];
+                    }
+                    if ([allkey count] == 0) {
+                        errorString = [[NSMutableString alloc] initWithString:@"支付密碼設置出錯"];
+                    }
+                    [weakSelf showHint:errorString];
+                }
+            }
         }
         
         

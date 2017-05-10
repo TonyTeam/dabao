@@ -64,6 +64,14 @@
         tipLabel.text = shortNotice;
         tipLabel.textColor = [UIColor whiteColor];
         tipLabel.font = [UIFont systemFontOfSize:12.0];
+        
+        UITapGestureRecognizer *ges = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showNotice:)];
+        ges.numberOfTapsRequired = 1;
+        ges.numberOfTouchesRequired = 1;
+        tipLabel.userInteractionEnabled = YES;
+        
+        appWindow.userInteractionEnabled = YES;
+        [tipLabel addGestureRecognizer:ges];
     }
     
     if ([shortNotice isMemberOfClass:[NSNull class]] || shortNotice == nil) {
@@ -80,6 +88,15 @@
     }
     
     [appWindow addSubview:tipLabel];
+}
+
+- (void)showNotice:(UITapGestureRecognizer *)ges
+{
+    NSDictionary *userDetailDict = [[NSDictionary alloc] initWithDictionary:[HeSysbsModel getSysModel].userDetailDict];
+    NSString *shortNotice = userDetailDict[@"shortNotice"];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"緊急通知" message:shortNotice delegate:nil cancelButtonTitle:@"確認" otherButtonTitles:nil, nil];
+    [alert show];
 }
 
 - (void)fbsupdateContent:(NSNotification *)notification
@@ -131,7 +148,7 @@
         [weakSelf hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
         NSArray *replyArray = [respondString objectFromJSONString];
-        if ([replyArray isKindOfClass:[NSArray class]] || [replyArray count] > 0) {
+        if ([replyArray isKindOfClass:[NSArray class]] && [replyArray count] > 0) {
             NSDictionary *lastestDict = replyArray[0];
             id hasNewReplyObj = lastestDict[@"hasNewReply"];
             if ([hasNewReplyObj isMemberOfClass:[NSNull class]] || hasNewReplyObj == nil) {

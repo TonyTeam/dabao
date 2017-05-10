@@ -111,6 +111,26 @@
     [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         [self hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        
+        NSDictionary *resultDict = [respondString objectFromJSONString];
+        if ([resultDict isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *error = resultDict[@"error"];
+            if (error) {
+                NSArray *allkey = error.allKeys;
+                NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                for (NSInteger index = 0; index < [allkey count]; index++) {
+                    NSString *key = allkey[index];
+                    NSString *value = error[key];
+                    [errorString appendFormat:@"%@",value];
+                }
+                if ([allkey count] == 0) {
+                    errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                }
+                [self showHint:errorString];
+            }
+        }
+        
+        
         id orderArray = [respondString objectFromJSONString];
         if ([orderArray isKindOfClass:[NSArray class]]) {
             if (pageIndex == 1) {
@@ -265,6 +285,133 @@
     NSInteger section = indexPath.section;
     NSLog(@"section = %ld , row = %ld",section,row);
     
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+
+{
+    NSInteger row = indexPath.row;
+    NSInteger section = indexPath.section;
+    
+    NSDictionary *dict = nil;
+    @try {
+        dict = datasource[row];
+    } @catch (NSException *exception) {
+        
+    } @finally {
+        
+    }
+    id status = dict[@"status"];
+    if ([status isMemberOfClass:[NSNull class]]) {
+        status = @"";
+    }
+    if ([status isEqualToString:@"closed"]) {
+        return NO;
+    }
+    return TRUE;
+    
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+
+{
+    
+    return UITableViewCellEditingStyleDelete;
+    
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    NSInteger row = indexPath.row;
+    NSInteger section = indexPath.section;
+    
+    if (editingStyle == UITableViewCellEditingStyleDelete) {//如果编辑样式为删除样式
+        
+        if (indexPath.row < [self.datasource count]) {
+            
+            __weak HeDCoinDetailVC *weakSelf = self;
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"溫馨提示" message:@"是否確定關閉該訂單，該操作不可撤銷!" preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *cancelaction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                
+            }];
+            [alertController addAction:cancelaction];
+            
+            UIAlertAction *confirmaction = [UIAlertAction actionWithTitle:@"確認" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action){
+                NSDictionary *dict = nil;
+                @try {
+                    dict = datasource[row];
+                } @catch (NSException *exception) {
+                    
+                } @finally {
+                    
+                }
+                
+                id status = dict[@"status"];
+                if ([status isMemberOfClass:[NSNull class]]) {
+                    status = @"";
+                }
+                if ([status isEqualToString:@"closed"]) {
+                    [weakSelf showHint:@"該交易已關閉，無法刪除"];
+                    return ;
+                }
+                
+                NSString *oid = dict[@"oid"];
+                if ([oid isMemberOfClass:[NSNull class]] || oid == nil) {
+                    oid = @"";
+                }
+                [weakSelf deleteOrderWithOid:oid];
+            }];
+            [alertController addAction:confirmaction];
+            [self presentViewController:alertController animated:YES completion:nil];
+            
+            
+        }
+        
+    }
+    
+}
+
+
+- (void)deleteOrderWithOid:(NSString *)oid
+{
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/order/close",BASEURL];
+    
+    NSDictionary *params  = @{@"oid":oid};
+    
+    __weak HeDCoinDetailVC *weakSelf = self;
+    [self showHudInView:self.tableview hint:@"關閉交易中..."];
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [weakSelf hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        
+        NSDictionary *resultDict = [respondString objectFromJSONString];
+        if ([resultDict isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *error = resultDict[@"error"];
+            if (error) {
+                NSArray *allkey = error.allKeys;
+                NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                for (NSInteger index = 0; index < [allkey count]; index++) {
+                    NSString *key = allkey[index];
+                    NSString *value = error[key];
+                    [errorString appendFormat:@"%@",value];
+                }
+                if ([allkey count] == 0) {
+                    errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                }
+                [weakSelf showHint:errorString];
+            }
+        }
+        [weakSelf loadIngot];
+        
+        
+    } failure:^(NSError* err){
+        
+    }];
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return @"刪除";
 }
 
 - (void)didReceiveMemoryWarning {

@@ -177,7 +177,27 @@
     [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         [weakSelf hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        
         NSDictionary *resultDict = [respondString objectFromJSONString];
+        if ([resultDict isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *error = resultDict[@"error"];
+            if (error) {
+                NSArray *allkey = error.allKeys;
+                NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                for (NSInteger index = 0; index < [allkey count]; index++) {
+                    NSString *key = allkey[index];
+                    NSString *value = error[key];
+                    [errorString appendFormat:@"%@",value];
+                }
+                if ([allkey count] == 0) {
+                    errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                }
+                [self showHint:errorString];
+                return;
+            }
+        }
+        
+        
         NSLog(@"resultDict = %@",resultDict);
         [weakSelf showHint:@"留言成功"];
         button.enabled = NO;
@@ -204,7 +224,25 @@
     [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         [weakSelf hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        
         NSDictionary *resultDict = [respondString objectFromJSONString];
+        if ([resultDict isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *error = resultDict[@"error"];
+            if (error) {
+                NSArray *allkey = error.allKeys;
+                NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                for (NSInteger index = 0; index < [allkey count]; index++) {
+                    NSString *key = allkey[index];
+                    NSString *value = error[key];
+                    [errorString appendFormat:@"%@",value];
+                }
+                if ([allkey count] == 0) {
+                    errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                }
+                [self showHint:errorString];
+            }
+        }
+        
         NSArray *allKey = resultDict.allKeys;
         NSMutableDictionary *tempDict = [[NSMutableDictionary alloc] initWithCapacity:0];
         
@@ -283,6 +321,28 @@
     [self showHint:@"評價中..."];
     [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         [weakSelf hideHud];
+        
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        
+        NSDictionary *resultDict = [respondString objectFromJSONString];
+        if ([resultDict isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *error = resultDict[@"error"];
+            if (error) {
+                NSArray *allkey = error.allKeys;
+                NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                for (NSInteger index = 0; index < [allkey count]; index++) {
+                    NSString *key = allkey[index];
+                    NSString *value = error[key];
+                    [errorString appendFormat:@"%@",value];
+                }
+                if ([allkey count] == 0) {
+                    errorString = [[NSMutableString alloc] initWithString:@"評價失敗"];
+                }
+                [self showHint:errorString];
+                return;
+            }
+        }
+        
         [weakSelf showHint:@"評價成功"];
         [weakSelf.view removeFromSuperview];
         [[NSNotificationCenter defaultCenter] postNotificationName:UPDATEUSERREPLYNOTIFICATION object:nil];

@@ -15,8 +15,9 @@
 #import "Masonry.h"
 #import "QRCodeGenerateVC.h"
 #import "QRCodeScanningVC.h"
+#import "HeOrderCommitVC.h"
 
-@interface HomePageVC ()
+@interface HomePageVC ()<QRCodeProtocol,UITextFieldDelegate>
 {
     BOOL adjustView;
 }
@@ -26,6 +27,12 @@
 @property(strong,nonatomic)IBOutlet UILabel *unitLabel;
 @property(strong,nonatomic)NSDictionary *userDetailDict;
 
+
+@property(strong,nonatomic)NSTimer *pollingTime;
+@property(strong,nonatomic)NSDictionary *qrCodeDict;
+@property(strong,nonatomic)UIView *dismissView;
+@property(assign,nonatomic)NSInteger repeatTime;
+
 @end
 
 @implementation HomePageVC
@@ -34,6 +41,11 @@
 @synthesize coinValueLabel;
 @synthesize unitLabel;
 @synthesize userDetailDict;
+
+@synthesize pollingTime;
+@synthesize qrCodeDict;
+@synthesize dismissView;
+@synthesize repeatTime;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -129,6 +141,27 @@
     adjustView = NO;
     userDetailDict = [[NSDictionary alloc] initWithDictionary:[HeSysbsModel getSysModel].userDetailDict];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDataUpdate:) name:USERDATAUPDATE_NOTIFICATION object:nil];
+    
+    CGFloat appScanWaitingTime = [[[HeSysbsModel getSysModel].userDetailDict objectForKey:@"appScanWaitingTime"] floatValue] / 1000.0;
+    if (appScanWaitingTime < 1) {
+        appScanWaitingTime = 1;
+    }
+    __weak HomePageVC *weakSelf = self;
+    pollingTime = [NSTimer scheduledTimerWithTimeInterval:5.0 repeats:YES block:^(NSTimer *timer){
+        
+        weakSelf.repeatTime = weakSelf.repeatTime + 1;
+        if (weakSelf.repeatTime * 5.0 > appScanWaitingTime) {
+            [weakSelf hideHud];
+            [weakSelf showHint:@"系統繁忙，工程師正在查看！"];
+            [pollingTime invalidate];
+            pollingTime = nil;
+            
+            
+            return;
+        }
+        [weakSelf pollingQRcodeWithDict:qrCodeDict];
+    }];
+    
 }
 
 - (void)initView
@@ -218,6 +251,166 @@
     
 }
 
+- (void)scanQRCodeWithString:(NSString *)qrCode
+{
+    [self showHudInView:self.view hint:@"解析中..."];
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/qrcode/create",BASEURL];
+    
+    NSDictionary *params  = @{@"qrcode":qrCode};
+    
+    __weak HomePageVC *weakSelf = self;
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        [weakSelf hideHud];
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        
+        
+        id repondDict = [respondString objectFromJSONString];
+        id error = repondDict[@"error"];
+        if (!error) {
+            qrCodeDict = [[NSDictionary alloc] initWithDictionary:repondDict];
+            [weakSelf showHudInView:weakSelf.view hint:@"正在識別中..."];
+            [weakSelf pollingQRcodeWithDict:repondDict];
+        }
+        else{
+            NSDictionary *resultDict = [respondString objectFromJSONString];
+            if ([resultDict isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *error = resultDict[@"error"];
+                if (error) {
+                    NSArray *allkey = error.allKeys;
+                    NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                    for (NSInteger index = 0; index < [allkey count]; index++) {
+                        NSString *key = allkey[index];
+                        NSString *value = error[key];
+                        [errorString appendFormat:@"%@",value];
+                    }
+                    if ([allkey count] == 0) {
+                        errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                    }
+                    [self showHint:errorString];
+                }
+            }
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+        
+        
+    } failure:^(NSError* err){
+        [weakSelf hideHud];
+        [weakSelf showHint:ERRORREQUESTTIP];
+    }];
+}
+
+- (void)pollingQRcodeWithDict:(NSDictionary *)dict
+{
+    
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/qrcode/index",BASEURL];
+    NSString *qrcode = dict[@"qrcode"];
+    if ([qrcode isMemberOfClass:[NSNull class]] || qrcode == nil) {
+        qrcode = @"";
+    }
+    NSDictionary *params  = @{@"qrcode":qrcode};
+    
+    __weak HomePageVC *weakSelf = self;
+    [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
+        
+        NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        id repondDict = [respondString objectFromJSONString];
+        id status = repondDict[@"status"];
+        if ([status isMemberOfClass:[NSNull class]] || status == nil || [status isEqualToString:@""]) {
+            //继续轮询
+            if (!pollingTime.isValid) {
+                //启动计时器
+                [pollingTime fire];
+            }
+        }
+        else if ([status isEqualToString:@"invalid"]){
+            //二维码无效或过期
+            [weakSelf hideHud];
+            if (pollingTime.isValid) {
+                [pollingTime invalidate];
+            }
+            pollingTime = nil;
+            if (!qrCodeDict) {
+                return;
+            }
+            [weakSelf showHint:@"二维码无效或过期"];
+        }
+        else if ([status isEqualToString:@"normal"]){
+            //二维码正常，进入支付
+            [weakSelf hideHud];
+            if (pollingTime.isValid) {
+                [pollingTime invalidate];
+                pollingTime = nil;
+            }
+            id ingots = repondDict[@"ingots"];
+            if ([ingots isMemberOfClass:[NSNull class]] || ingots == nil) {
+                ingots = @"";
+            }
+            id twd = repondDict[@"twd"];
+            if ([twd isMemberOfClass:[NSNull class]] || twd == nil) {
+                twd = @"";
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                HeOrderCommitVC *orderDetailVC = [[HeOrderCommitVC alloc] init];
+                orderDetailVC.hidesBottomBarWhenPushed = YES;
+                orderDetailVC.orderDetailDict = [[NSDictionary alloc] initWithDictionary:repondDict];
+                [weakSelf.navigationController pushViewController:orderDetailVC animated:YES];
+            });
+            
+            
+//            if (0) {
+//                //如果元宝不足，显示让用户充值元宝的按钮
+//                [weakSelf showHint:@"元宝不足，请及时充值"];
+//                //                NSArray *array = self.navigationController.viewControllers;
+//                //                for (UIViewController *vc in array) {
+//                //                    if ([vc isKindOfClass:[HomePageVC class]]) {
+//                //                        [self.navigationController popToViewController:vc animated:YES];
+//                //                        return;
+//                //                    }
+//                //                }
+//            }
+//            else{
+//                [weakSelf inputPayPassword];
+//            }
+            
+        }
+        else{
+            NSDictionary *resultDict = [respondString objectFromJSONString];
+            if ([resultDict isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *error = resultDict[@"error"];
+                if (error) {
+                    NSArray *allkey = error.allKeys;
+                    NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                    for (NSInteger index = 0; index < [allkey count]; index++) {
+                        NSString *key = allkey[index];
+                        NSString *value = error[key];
+                        [errorString appendFormat:@"%@",value];
+                    }
+                    if ([allkey count] == 0) {
+                        errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                    }
+                    [self showHint:errorString];
+                }
+            }
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+        
+        
+    } failure:^(NSError* err){
+        [weakSelf hideHud];
+        [weakSelf showHint:ERRORREQUESTTIP];
+    }];
+}
+
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if ([textField isFirstResponder]) {
+        [textField resignFirstResponder];
+    }
+    return YES;
+}
+
 - (void)userDataUpdate:(NSNotification *)notification
 {
     CGFloat maxWidth = SCREENWIDTH / 2.0;
@@ -268,6 +461,7 @@
             }];
         } else if (status == AVAuthorizationStatusAuthorized) { // 用户允许当前应用访问相机
             QRCodeScanningVC *vc = [[QRCodeScanningVC alloc] init];
+            vc.qrcodeDelegate = self;
             [self.navigationController pushViewController:vc animated:YES];
         } else if (status == AVAuthorizationStatusDenied) { // 用户拒绝当前应用访问相机
             UIAlertController *alertC = [UIAlertController alertControllerWithTitle:@"⚠️ 警告" message:@"請去-> [設置 - 隱私 - 相機 - 大寶] 打開訪問開關" preferredStyle:(UIAlertControllerStyleAlert)];
@@ -308,6 +502,10 @@
 
 - (void)dealloc
 {
+    if (pollingTime.isValid) {
+        [pollingTime invalidate];
+        pollingTime = nil;
+    }
     [[NSNotificationCenter defaultCenter] removeObserver:self name:USERDATAUPDATE_NOTIFICATION object:nil];
 }
 

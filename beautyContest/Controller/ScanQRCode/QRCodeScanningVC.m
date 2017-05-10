@@ -15,6 +15,7 @@
 @end
 
 @implementation QRCodeScanningVC
+@synthesize qrcodeDelegate;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -59,10 +60,12 @@
     if ([string hasPrefix:@"http"]) {
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            HeQRCodePayVC *qrCodePayVC = [[HeQRCodePayVC alloc] init];
-            qrCodePayVC.qrCode = [[NSString alloc] initWithString:string];
-            qrCodePayVC.hidesBottomBarWhenPushed = YES;
-            [self.navigationController pushViewController:qrCodePayVC animated:YES];
+            
+//            HeQRCodePayVC *qrCodePayVC = [[HeQRCodePayVC alloc] init];
+//            qrCodePayVC.qrCode = [[NSString alloc] initWithString:string];
+//            qrCodePayVC.hidesBottomBarWhenPushed = YES;
+            [self.navigationController popViewControllerAnimated:YES];
+            [qrcodeDelegate scanQRCodeWithString:string];
         });
 //        [self qrCodeCreateWithQRCode:string];
 //        ScanSuccessJumpVC *jumpVC = [[ScanSuccessJumpVC alloc] init];

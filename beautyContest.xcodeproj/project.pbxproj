@@ -64,6 +64,8 @@
 		EA3102CA1EA9DA1F00F87B23 /* HeSetUpVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA3102C81EA9DA1F00F87B23 /* HeSetUpVC.xib */; };
 		EA3102D31EA9E36E00F87B23 /* HeOrderRecordVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA3102D11EA9E36E00F87B23 /* HeOrderRecordVC.m */; };
 		EA3102D41EA9E36E00F87B23 /* HeOrderRecordVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA3102D21EA9E36E00F87B23 /* HeOrderRecordVC.xib */; };
+		EA383FF51EC36B9700D2D090 /* HeOrderCommitVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA383FF31EC36B9700D2D090 /* HeOrderCommitVC.m */; };
+		EA383FF61EC36B9700D2D090 /* HeOrderCommitVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA383FF41EC36B9700D2D090 /* HeOrderCommitVC.xib */; };
 		EA38E9B31EA1DF1C00971B7A /* HeLoginVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA38E9B11EA1DF1C00971B7A /* HeLoginVC.m */; };
 		EA38E9B41EA1DF1C00971B7A /* HeLoginVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = EA38E9B21EA1DF1C00971B7A /* HeLoginVC.xib */; };
 		EA38E9BC1EA1DFD300971B7A /* HomePageVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EA38E9BA1EA1DFD300971B7A /* HomePageVC.m */; };
@@ -679,6 +681,9 @@
 		EA3102D01EA9E36E00F87B23 /* HeOrderRecordVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeOrderRecordVC.h; sourceTree = "<group>"; };
 		EA3102D11EA9E36E00F87B23 /* HeOrderRecordVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeOrderRecordVC.m; sourceTree = "<group>"; };
 		EA3102D21EA9E36E00F87B23 /* HeOrderRecordVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeOrderRecordVC.xib; sourceTree = "<group>"; };
+		EA383FF21EC36B9700D2D090 /* HeOrderCommitVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeOrderCommitVC.h; sourceTree = "<group>"; };
+		EA383FF31EC36B9700D2D090 /* HeOrderCommitVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeOrderCommitVC.m; sourceTree = "<group>"; };
+		EA383FF41EC36B9700D2D090 /* HeOrderCommitVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeOrderCommitVC.xib; sourceTree = "<group>"; };
 		EA38E9B01EA1DF1C00971B7A /* HeLoginVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeLoginVC.h; sourceTree = "<group>"; };
 		EA38E9B11EA1DF1C00971B7A /* HeLoginVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeLoginVC.m; sourceTree = "<group>"; };
 		EA38E9B21EA1DF1C00971B7A /* HeLoginVC.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HeLoginVC.xib; sourceTree = "<group>"; };
@@ -1913,6 +1918,9 @@
 				EA3102D01EA9E36E00F87B23 /* HeOrderRecordVC.h */,
 				EA3102D11EA9E36E00F87B23 /* HeOrderRecordVC.m */,
 				EA3102D21EA9E36E00F87B23 /* HeOrderRecordVC.xib */,
+				EA383FF21EC36B9700D2D090 /* HeOrderCommitVC.h */,
+				EA383FF31EC36B9700D2D090 /* HeOrderCommitVC.m */,
+				EA383FF41EC36B9700D2D090 /* HeOrderCommitVC.xib */,
 			);
 			path = Order;
 			sourceTree = "<group>";
@@ -4018,6 +4026,7 @@
 				EA38E9DB1EA1E5CC00971B7A /* NavBarIOS7.png in Resources */,
 				EAC2CDF91D4AF5D800E282A8 /* TZImagePickerController.bundle in Resources */,
 				EA3102901EA9A96E00F87B23 /* icon_setup.png in Resources */,
+				EA383FF61EC36B9700D2D090 /* HeOrderCommitVC.xib in Resources */,
 				EAC2CD221D4AF5D800E282A8 /* IQActionSheetPickerView.xib in Resources */,
 				EAC2CD111D4AF5D800E282A8 /* blueArrow.png in Resources */,
 				EAC2CDF21D4AF5D800E282A8 /* ProvincesAndCities.plist in Resources */,
@@ -4434,6 +4443,7 @@
 				EA3102BA1EA9D9EE00F87B23 /* HeNoticeVC.m in Sources */,
 				EAC2CD021D4AF5D800E282A8 /* DFBaseStorageService.m in Sources */,
 				EAC2CDCA1D4AF5D800E282A8 /* UITableViewCell+RACSignalSupport.m in Sources */,
+				EA383FF51EC36B9700D2D090 /* HeOrderCommitVC.m in Sources */,
 				EAC2CD641D4AF5D800E282A8 /* SICellSelection.m in Sources */,
 				EAC2CED01D4AF71900E282A8 /* NSString+Valid.m in Sources */,
 				EAC2CD141D4AF5D800E282A8 /* EGORefreshTableHeaderView.m in Sources */,
@@ -4717,8 +4727,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = tw.paybao.dabao;
 				PRODUCT_NAME = "大寶";
-				PROVISIONING_PROFILE = "81ba2391-ce4f-4fcf-a8cf-0cb0b3474095";
-				PROVISIONING_PROFILE_SPECIFIER = 2017043002_dabao_Development;
+				PROVISIONING_PROFILE = "77ebb0eb-68a6-46f5-90fe-da050ac90dac";
+				PROVISIONING_PROFILE_SPECIFIER = 20170505_dabao_Development;
 			};
 			name = Debug;
 		};
@@ -4756,8 +4766,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = tw.paybao.dabao;
 				PRODUCT_NAME = "大寶";
-				PROVISIONING_PROFILE = "9f329886-d458-4a8b-9869-65411927900b";
-				PROVISIONING_PROFILE_SPECIFIER = 2017043002_dabao_Release;
+				PROVISIONING_PROFILE = "d60b5ae3-1d92-470c-a16f-19382ff284b4";
+				PROVISIONING_PROFILE_SPECIFIER = 20170505_dabao_Release;
 			};
 			name = Release;
 		};
@@ -4879,8 +4889,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = tw.paybao.dabao;
 				PRODUCT_NAME = "大寶";
-				PROVISIONING_PROFILE = "944434dc-3bef-4e80-b04e-586a758b9a27";
-				PROVISIONING_PROFILE_SPECIFIER = 2017043002_dabao_Distribution;
+				PROVISIONING_PROFILE = "ae13abec-2063-4c89-a558-6bdd11f5a659";
+				PROVISIONING_PROFILE_SPECIFIER = 20170505_dabao_Distribution;
 			};
 			name = Distribution;
 		};

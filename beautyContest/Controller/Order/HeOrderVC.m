@@ -173,7 +173,7 @@
     CGFloat backButtonX = 20;
     CGFloat backButtonY = CGRectGetMaxY(tipLabel.frame) + 10;
     CGFloat backButtonW = SCREENWIDTH - 2 * backButtonX;
-    CGFloat backButtonH = 50;
+    CGFloat backButtonH = 40;
     
     UIButton *backButton = [[UIButton alloc] initWithFrame:CGRectMake(backButtonX, backButtonY, backButtonW, backButtonH)];
     backButton.layer.masksToBounds = YES;
@@ -199,6 +199,25 @@
     [AFHttpTool requestWihtMethod:RequestMethodTypeGet url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         [self hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
+        
+        NSDictionary *resultDict = [respondString objectFromJSONString];
+        if ([resultDict isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *error = resultDict[@"error"];
+            if (error) {
+                NSArray *allkey = error.allKeys;
+                NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                for (NSInteger index = 0; index < [allkey count]; index++) {
+                    NSString *key = allkey[index];
+                    NSString *value = error[key];
+                    [errorString appendFormat:@"%@",value];
+                }
+                if ([allkey count] == 0) {
+                    errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                }
+                [self showHint:errorString];
+            }
+        }
+        
         id orderdict = [respondString objectFromJSONString];
         if (orderdict) {
             orderDetailDict = [[NSDictionary alloc] initWithDictionary:orderdict];
@@ -230,6 +249,17 @@
 
 - (void)backButtonClick:(UIButton *)sender
 {
+    if (_isfromecommit) {
+        NSArray *array = self.navigationController.viewControllers;
+        for (UIViewController *vc in array) {
+            if ([vc isKindOfClass:[HomePageVC class]]) {
+                [self.navigationController popToViewController:vc animated:YES];
+                return;
+            }
+        }
+        
+    }
+    
     if (self.popToRoot) {
         [self.navigationController popToRootViewControllerAnimated:YES];
         return;
@@ -432,6 +462,21 @@
     NSInteger section = indexPath.section;
     NSLog(@"section = %ld , row = %ld",section,row);
     
+}
+
+- (void)backItemClick:(id)sender
+{
+    if (_isfromecommit) {
+        NSArray *array = self.navigationController.viewControllers;
+        for (UIViewController *vc in array) {
+            if ([vc isKindOfClass:[HomePageVC class]]) {
+                [self.navigationController popToViewController:vc animated:YES];
+                return;
+            }
+        }
+        
+    }
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)didReceiveMemoryWarning {
