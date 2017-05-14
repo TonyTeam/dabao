@@ -13,6 +13,7 @@
 #import "LoginAndRegisterController.h"
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "LZLPushMessage.h"
+#import "HeInstructionView.h"
 
 #ifdef NSFoundationVersionNumber_iOS_9_x_Max
 #import <UserNotifications/UserNotifications.h>
@@ -69,11 +70,66 @@ static NSString *const fbsAppID = @"302339483514249";
     [queue addOperation:operation];
     [queue setMaxConcurrentOperationCount:1];
     //配置根控制器
-    [self loginStateChange:nil];
+    
+    if ([self isShowIntroduce]) {
+        /****  进入使用介绍界面  ****/
+        HeInstructionView *howEnjoyLifeView = [[HeInstructionView alloc] init];
+        self.window.rootViewController = howEnjoyLifeView;
+        [self.window makeKeyAndVisible];
+    }
+    else{
+        [self loginStateChange:nil];
+    }
+    
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
     
     return YES;
+}
+
+-(BOOL)isShowIntroduce
+{
+    NSDictionary* dic =[[NSBundle mainBundle] infoDictionary];
+    /****  读取当前应用的版本号  ****/
+    NSString *versionInfo = [dic objectForKey:@"CFBundleShortVersionString"];
+    NSString *libraryfolderPath = [NSHomeDirectory() stringByAppendingString:@"/Library"];
+    NSString *myPath = [libraryfolderPath stringByAppendingPathComponent:@"HuoBaoDocument"];
+    
+    NSFileManager *fm = [NSFileManager defaultManager];
+    if (![fm fileExistsAtPath:myPath]) {
+        [fm createDirectoryAtPath:myPath withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    NSString *documentString = [myPath stringByAppendingPathComponent:@"UserData"];
+    
+    if(![fm fileExistsAtPath:documentString])
+    {
+        [fm createDirectoryAtPath:documentString withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+    
+    
+    NSString *filename = [documentString stringByAppendingPathComponent:@"launch.plist"];
+    
+    NSDictionary *launchDic = [[NSDictionary alloc] initWithContentsOfFile:filename];
+    
+    if (launchDic == nil) {
+        NSString *versionInfo = [dic objectForKey:@"CFBundleShortVersionString"];
+        launchDic = [[NSDictionary alloc] initWithObjectsAndKeys:versionInfo,@"lastVersion" ,nil];
+        [launchDic writeToFile:filename atomically:YES];
+        
+        return YES;
+    }
+    else{
+        NSString *lastVersion = [launchDic objectForKey:@"lastVersion"];
+        BOOL showInstruction = [[dic objectForKey:@"ShowInstruction"] boolValue];
+        if ((![lastVersion isEqualToString:versionInfo]) && showInstruction) {
+            
+            NSString *versionInfo = [dic objectForKey:@"CFBundleShortVersionString"];
+            launchDic = [[NSDictionary alloc] initWithObjectsAndKeys:versionInfo,@"lastVersion" ,nil];
+            [launchDic writeToFile:filename atomically:YES];
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (void)clearImg:(id)sender

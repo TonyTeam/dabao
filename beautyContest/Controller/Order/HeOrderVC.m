@@ -253,6 +253,7 @@
         NSArray *array = self.navigationController.viewControllers;
         for (UIViewController *vc in array) {
             if ([vc isKindOfClass:[HomePageVC class]]) {
+                [[self rdv_tabBarController] setTabBarHidden:NO animated:YES];
                 [self.navigationController popToViewController:vc animated:YES];
                 return;
             }

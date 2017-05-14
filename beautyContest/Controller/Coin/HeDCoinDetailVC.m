@@ -285,6 +285,21 @@
     NSInteger section = indexPath.section;
     NSLog(@"section = %ld , row = %ld",section,row);
     
+    NSDictionary *dict = nil;
+    @try {
+        dict = datasource[row];
+    } @catch (NSException *exception) {
+        
+    } @finally {
+        
+    }
+    
+    HeOrderVC *orderDetailVC = [[HeOrderVC alloc] init];
+    orderDetailVC.orderType = 1;
+    orderDetailVC.hidesBottomBarWhenPushed = YES;
+    orderDetailVC.orderDetailDict = [[NSDictionary alloc] initWithDictionary:dict];
+    [self.navigationController pushViewController:orderDetailVC animated:YES];
+    
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath

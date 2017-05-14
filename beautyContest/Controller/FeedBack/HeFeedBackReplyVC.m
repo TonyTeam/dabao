@@ -199,10 +199,12 @@
         
         
         NSLog(@"resultDict = %@",resultDict);
-        [weakSelf showHint:@"留言成功"];
+        textView.text = nil;
+//        [weakSelf showHint:@"留言成功"];
         button.enabled = NO;
-        [weakSelf.view removeFromSuperview];
-        [[NSNotificationCenter defaultCenter] postNotificationName:UPDATEUSERREPLYNOTIFICATION object:nil];
+        [weakSelf loadReplyContent];
+//        [weakSelf.view removeFromSuperview];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:UPDATEUSERREPLYNOTIFICATION object:nil];
         
         
     } failure:^(NSError* err){
@@ -309,16 +311,16 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (void)commentReplyWithCommentId:(NSString *)comment_id rate:(NSInteger)rate
+- (void)commentReplyWithCommentId:(NSString *)mycomment_id rate:(NSInteger)rate
 {
-    if ([comment_id isMemberOfClass:[NSNull class]] || comment_id == nil) {
-        comment_id = @"";
+    if ([mycomment_id isMemberOfClass:[NSNull class]] || mycomment_id == nil) {
+        mycomment_id = @"";
     }
     NSString *rateStr = [NSString stringWithFormat:@"%ld",rate];
-    NSString *requestUrl = [NSString stringWithFormat:@"%@/comment/update-rate ",BASEURL];
-    NSDictionary * params  = @{@"id":comment_id  ,@"rate":rateStr};
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/comment/update-rate",BASEURL];
+    NSDictionary * params  = @{@"id":mycomment_id ,@"rate":rateStr};
     __weak HeFeedBackReplyVC *weakSelf = self;
-    [self showHint:@"評價中..."];
+    [self showHudInView:self.tableview hint:@"評價中..."];
     [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
         [weakSelf hideHud];
         
@@ -344,8 +346,9 @@
         }
         
         [weakSelf showHint:@"評價成功"];
-        [weakSelf.view removeFromSuperview];
-        [[NSNotificationCenter defaultCenter] postNotificationName:UPDATEUSERREPLYNOTIFICATION object:nil];
+        [weakSelf loadReplyContent];
+//        [weakSelf.view removeFromSuperview];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:UPDATEUSERREPLYNOTIFICATION object:nil];
         
         
         

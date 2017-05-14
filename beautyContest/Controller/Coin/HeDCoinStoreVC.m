@@ -144,41 +144,28 @@
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
         NSDictionary *respondDict = [respondString objectFromJSONString];
         
-        NSMutableString *error = [[NSMutableString alloc] initWithCapacity:0];
-        id biz_rmbObj = respondDict[@"error"][@"biz_rmb"];
-        if ([biz_rmbObj isMemberOfClass:[NSNull class]] || biz_rmbObj == nil) {
-            biz_rmbObj = @"";
-        }
-        else{
-            [error appendFormat:@"%@",biz_rmbObj];
-        }
-        id amountObj = respondDict[@"error"][@"amount"];
-        if ([amountObj isMemberOfClass:[NSNull class]] || amountObj == nil) {
-            amountObj = @"";
-        }
-        else{
-            if (error.length > 0) {
-                [error appendFormat:@",%@",amountObj];
+        if ([respondDict isKindOfClass:[NSDictionary class]]) {
+            id error = respondDict[@"error"];
+            if (error) {
+                if ([error isKindOfClass:[NSDictionary class]]) {
+                    NSArray *allkey = ((NSDictionary *)error).allKeys;
+                    NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                    for (NSInteger index = 0; index < [allkey count]; index++) {
+                        NSString *key = allkey[index];
+                        NSString *value = error[key];
+                        [errorString appendFormat:@"%@",value];
+                    }
+                    if ([allkey count] == 0) {
+                        errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                    }
+                    [self showHint:errorString];
+                }
+                else{
+                    [self showHint:[NSString stringWithFormat:@"%@",error]];
+                }
+                return ;
             }
-            else{
-                [error appendFormat:@"%@",amountObj];
-            }
-        }
-        id payment_method = respondDict[@"error"][@"payment_method"];
-        if ([payment_method isMemberOfClass:[NSNull class]] || payment_method == nil) {
-            payment_method = @"";
-        }
-        else{
-            if (error.length > 0) {
-                [error appendFormat:@",%@",payment_method];
-            }
-            else{
-                [error appendFormat:@"%@",payment_method];
-            }
-        }
-        if (error.length > 0) {
-            [self showHint:error];
-            return ;
+            
         }
         [[NSNotificationCenter defaultCenter] postNotificationName:UPDATEORDER_NOTIFICATION object:nil];
         [self showHint:@"創建儲值訂單成功"];

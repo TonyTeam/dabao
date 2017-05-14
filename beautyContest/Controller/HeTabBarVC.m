@@ -14,6 +14,7 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import "AppDelegate.h"
 #import "RDVTabBarItem.h"
+#import <CloudPushSDK/CloudPushSDK.h>
 
 @interface HeTabBarVC ()
 
@@ -36,6 +37,9 @@
     [self setupSubviews];
     //獲取最近10條回復
     [self loadRely];
+    [CloudPushSDK bindAccount:@"16120001" withCallback:^(CloudPushCallbackResult *res){
+        NSLog(@"res = %@",res);
+    }];
 }
 
 - (void)initialization

@@ -130,6 +130,10 @@
 		EA6C2E841EA8A647005C015B /* icon_confirm.png in Resources */ = {isa = PBXBuildFile; fileRef = EA6C2E811EA8A647005C015B /* icon_confirm.png */; };
 		EA6C2E851EA8A647005C015B /* icon_container.png in Resources */ = {isa = PBXBuildFile; fileRef = EA6C2E821EA8A647005C015B /* icon_container.png */; };
 		EA6C2E871EA8B0A2005C015B /* icon_unconfirm.png in Resources */ = {isa = PBXBuildFile; fileRef = EA6C2E861EA8B0A2005C015B /* icon_unconfirm.png */; };
+		EA800FE81EC5E9CF00CD9F5B /* HeInstructionView.m in Sources */ = {isa = PBXBuildFile; fileRef = EA800FE71EC5E9CF00CD9F5B /* HeInstructionView.m */; };
+		EA800FEB1EC5EA4500CD9F5B /* ios_guide_step_1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EA800FE91EC5EA4500CD9F5B /* ios_guide_step_1.jpg */; };
+		EA800FEC1EC5EA4500CD9F5B /* ios_guide_step_2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = EA800FEA1EC5EA4500CD9F5B /* ios_guide_step_2.jpg */; };
+		EA800FEE1EC5F6CE00CD9F5B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EA800FED1EC5F6CE00CD9F5B /* Images.xcassets */; };
 		EAB77D051EADAB0C00487992 /* HeBankCardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB77D041EADAB0C00487992 /* HeBankCardCell.m */; };
 		EAB77D091EADC6F800487992 /* HeAddBandCardVC.m in Sources */ = {isa = PBXBuildFile; fileRef = EAB77D071EADC6F700487992 /* HeAddBandCardVC.m */; };
 		EAB77D0A1EADC6F800487992 /* HeAddBandCardVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = EAB77D081EADC6F700487992 /* HeAddBandCardVC.xib */; };
@@ -788,6 +792,11 @@
 		EA6C2E811EA8A647005C015B /* icon_confirm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_confirm.png; sourceTree = "<group>"; };
 		EA6C2E821EA8A647005C015B /* icon_container.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_container.png; sourceTree = "<group>"; };
 		EA6C2E861EA8B0A2005C015B /* icon_unconfirm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_unconfirm.png; sourceTree = "<group>"; };
+		EA800FE61EC5E9CE00CD9F5B /* HeInstructionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeInstructionView.h; sourceTree = "<group>"; };
+		EA800FE71EC5E9CF00CD9F5B /* HeInstructionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeInstructionView.m; sourceTree = "<group>"; };
+		EA800FE91EC5EA4500CD9F5B /* ios_guide_step_1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ios_guide_step_1.jpg; sourceTree = "<group>"; };
+		EA800FEA1EC5EA4500CD9F5B /* ios_guide_step_2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = ios_guide_step_2.jpg; sourceTree = "<group>"; };
+		EA800FED1EC5F6CE00CD9F5B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		EAB77D031EADAB0C00487992 /* HeBankCardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeBankCardCell.h; sourceTree = "<group>"; };
 		EAB77D041EADAB0C00487992 /* HeBankCardCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HeBankCardCell.m; sourceTree = "<group>"; };
 		EAB77D061EADC6F700487992 /* HeAddBandCardVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HeAddBandCardVC.h; sourceTree = "<group>"; };
@@ -1938,6 +1947,8 @@
 		EA38E9CD1EA1E23F00971B7A /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				EA800FE91EC5EA4500CD9F5B /* ios_guide_step_1.jpg */,
+				EA800FEA1EC5EA4500CD9F5B /* ios_guide_step_2.jpg */,
 				EA3102AB1EA9AAEB00F87B23 /* Comment */,
 				EA31028C1EA9A91E00F87B23 /* UserCenter */,
 				EA38E9D31EA1E38500971B7A /* Tabbar */,
@@ -2217,6 +2228,7 @@
 				EAC2C90F1D4AF0E600E282A8 /* Assets.xcassets */,
 				EAC2C9111D4AF0E600E282A8 /* LaunchScreen.storyboard */,
 				EAC2C9141D4AF0E600E282A8 /* Info.plist */,
+				EA800FED1EC5F6CE00CD9F5B /* Images.xcassets */,
 				EAC2C9031D4AF0E600E282A8 /* Supporting Files */,
 			);
 			path = beautyContest;
@@ -2312,6 +2324,8 @@
 		EAC2C9B61D4AF5CC00E282A8 /* Base */ = {
 			isa = PBXGroup;
 			children = (
+				EA800FE61EC5E9CE00CD9F5B /* HeInstructionView.h */,
+				EA800FE71EC5E9CF00CD9F5B /* HeInstructionView.m */,
 				EAC2C9B71D4AF5CC00E282A8 /* CustomNavigationController.h */,
 				EAC2C9B81D4AF5CC00E282A8 /* CustomNavigationController.m */,
 				EAC2C9B91D4AF5CC00E282A8 /* HeBaseViewController.h */,
@@ -4080,6 +4094,8 @@
 				EA0D90901EB6490200A746C7 /* FontAwesome.ttf in Resources */,
 				EA3102C51EA9DA1100F87B23 /* HeAboutUsVC.xib in Resources */,
 				EAC2CD161D4AF5D800E282A8 /* grayArrow@2x.png in Resources */,
+				EA800FEC1EC5EA4500CD9F5B /* ios_guide_step_2.jpg in Resources */,
+				EA800FEE1EC5F6CE00CD9F5B /* Images.xcassets in Resources */,
 				EAC2CDF11D4AF5D800E282A8 /* btn_021@2x.png in Resources */,
 				EA38E9D21EA1E27B00971B7A /* tabbar_normal_background@2x.png in Resources */,
 				EAB77D0A1EADC6F800487992 /* HeAddBandCardVC.xib in Resources */,
@@ -4121,6 +4137,7 @@
 				EA3102D41EA9E36E00F87B23 /* HeOrderRecordVC.xib in Resources */,
 				EA3102941EA9A97F00F87B23 /* icon_security.png in Resources */,
 				EAC2CCFF1D4AF5D800E282A8 /* refresh@3x.png in Resources */,
+				EA800FEB1EC5EA4500CD9F5B /* ios_guide_step_1.jpg in Resources */,
 				EA3102981EA9A9C700F87B23 /* bg_bank_card.png in Resources */,
 				EAC2CD4C1D4AF5D800E282A8 /* MJRefresh.bundle in Resources */,
 				EAC2CCFE1D4AF5D800E282A8 /* refresh@2x.png in Resources */,
@@ -4511,6 +4528,7 @@
 				EAC2CCCB1D4AF5D800E282A8 /* ASIDownloadCache.m in Sources */,
 				EA3E8EE31EAAE8EC007DDD64 /* SGWebView.m in Sources */,
 				EAC2CDB51D4AF5D800E282A8 /* RACTestScheduler.m in Sources */,
+				EA800FE81EC5E9CF00CD9F5B /* HeInstructionView.m in Sources */,
 				EAC2CCCA1D4AF5D800E282A8 /* ASIDataDecompressor.m in Sources */,
 				EAC2CCDF1D4AF5D800E282A8 /* DFBaseTableViewController.m in Sources */,
 				EAC2CD441D4AF5D800E282A8 /* MJRefreshAutoNormalFooter.m in Sources */,
@@ -4698,6 +4716,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = "beautyContest/大寶.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEVELOPMENT_TEAM = DC6PX32954;
@@ -4736,6 +4755,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = "beautyContest/大寶.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
@@ -4859,6 +4879,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = "beautyContest/大寶.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";

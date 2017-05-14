@@ -201,27 +201,50 @@
     NSDictionary *params  = @{@"id":deleteCardNum};
     
     __weak HeBankCardVC *weakSelf = self;
+    [self showHudInView:self.tableview hint:@"正在為您刪除，請稍候"];
     [AFHttpTool requestWihtMethod:RequestMethodTypePost url:requestUrl params:params success:^(AFHTTPRequestOperation* operation,id response){
-//        [self hideHud];
+        [self hideHud];
         NSString *respondString = [[NSString alloc] initWithData:operation.responseData encoding:NSUTF8StringEncoding];
         
         NSDictionary *resultDict = [respondString objectFromJSONString];
         if ([resultDict isKindOfClass:[NSDictionary class]]) {
-            NSDictionary *error = resultDict[@"error"];
+            id error = resultDict[@"error"];
             if (error) {
-                NSArray *allkey = error.allKeys;
-                NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
-                for (NSInteger index = 0; index < [allkey count]; index++) {
-                    NSString *key = allkey[index];
-                    NSString *value = error[key];
-                    [errorString appendFormat:@"%@",value];
+                if ([error isKindOfClass:[NSDictionary class]]) {
+                    NSArray *allkey = ((NSDictionary *)error).allKeys;
+                    NSMutableString *errorString = [[NSMutableString alloc] initWithCapacity:0];
+                    for (NSInteger index = 0; index < [allkey count]; index++) {
+                        NSString *key = allkey[index];
+                        NSString *value = error[key];
+                        [errorString appendFormat:@"%@",value];
+                    }
+                    if ([allkey count] == 0) {
+                        errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                    }
+                    [weakSelf showHint:errorString];
                 }
-                if ([allkey count] == 0) {
-                    errorString = [[NSMutableString alloc] initWithString:ERRORREQUESTTIP];
+                else{
+                    [weakSelf showHint:[NSString stringWithFormat:@"%@",error]];
                 }
-                [self showHint:errorString];
+                return;
             }
         }
+        NSMutableArray *array = [[NSMutableArray alloc] initWithArray:datasource];
+        for (NSDictionary *dict in array) {
+            NSString *acct_id = dict[@"acct_id"];
+            if ([acct_id isMemberOfClass:[NSNull class]] || acct_id == nil) {
+                acct_id = @"";
+            }
+            if ([acct_id isEqualToString:deleteCardNum]) {
+                [array removeObject:dict];
+                break;
+            }
+        }
+        datasource = [[NSMutableArray alloc] initWithArray:array];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [tableview reloadData];
+        });
+        [weakSelf showHint:@"刪除成功"];
         //进行懒加载
         [weakSelf reloadBankCard];
         //更新用户的信息，包括银行卡账号信息
@@ -229,7 +252,8 @@
         
         
     } failure:^(NSError* err){
-
+        [weakSelf hideHud];
+        [weakSelf showHint:ERRORREQUESTTIP];
     }];
 }
 
@@ -422,10 +446,10 @@
             if ([acct_id isMemberOfClass:[NSNull class]] || acct_id == nil) {
                 acct_id = @"";
             }
-            [datasource removeObjectAtIndex:row];
+//            [datasource removeObjectAtIndex:row];
             bankCarNumLabel.text = [NSString stringWithFormat:@"%ld",[datasource count]];
             [self deleteCardWithNum:acct_id];
-            [tableView reloadData];
+//            [tableView reloadData];
         }
         
     }

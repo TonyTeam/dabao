@@ -48,7 +48,7 @@
 - (void)initializaiton
 {
     [super initializaiton];
-    datasource = @[@"版本信息號",@"客服電話"];
+    datasource = @[@"版本信息號"];
 }
 
 - (void)initView

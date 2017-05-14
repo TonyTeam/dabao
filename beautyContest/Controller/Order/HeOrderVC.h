@@ -13,6 +13,7 @@
 @property(assign,nonatomic)NSInteger orderType;  //0:扫码 1:D币
 @property(assign,nonatomic)BOOL popToRoot;
 
+
 @property(assign,nonatomic)BOOL isfromecommit;
 
 @end

@@ -264,17 +264,17 @@
     CGFloat buttonX = 10;
     
     UIButton *shareButton = [[UIButton alloc] initWithFrame:CGRectMake(buttonX, buttonY, buttonW, buttonH)];
-    [shareButton setTitle:@"確認" forState:UIControlStateNormal];
+    [shareButton setTitle:@"取消" forState:UIControlStateNormal];
     [shareButton addTarget:self action:@selector(alertbuttonClick:) forControlEvents:UIControlEventTouchUpInside];
-    shareButton.tag = 1;
+    shareButton.tag = 0;
     [shareButton.titleLabel setFont:shareFont];
     [shareButton setTitleColor:APPDEFAULTORANGE forState:UIControlStateNormal];
     [shareAlert addSubview:shareButton];
     
     UIButton *cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(buttonX + buttonDis + buttonW, buttonY, buttonW, buttonH)];
-    [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+    [cancelButton setTitle:@"確認" forState:UIControlStateNormal];
     [cancelButton addTarget:self action:@selector(alertbuttonClick:) forControlEvents:UIControlEventTouchUpInside];
-    cancelButton.tag = 0;
+    cancelButton.tag = 1;
     [cancelButton.titleLabel setFont:shareFont];
     [cancelButton setTitleColor:APPDEFAULTORANGE forState:UIControlStateNormal];
     [shareAlert addSubview:cancelButton];
@@ -317,7 +317,7 @@
         [self showHint:@"請輸入支付密碼"];
         return;
     }
-    [self showHudInView:self.view hint:@"支付中..."];
+    [self showHudInView:self.view hint:@"正在支付，請稍候..."];
     [self performSelector:@selector(createOrderWithPassword:) withObject:password afterDelay:0.3];
 }
 
@@ -332,7 +332,7 @@
 
 - (void)createOrderWithPassword:(NSString *)password
 {
-    NSString *requestUrl = [NSString stringWithFormat:@"%@/order-pay/create",BASEURL];
+    NSString *requestUrl = [NSString stringWithFormat:@"%@/order-qrpay/create",BASEURL];
     NSString *myqrCode = orderDetailDict[@"qrcode"];
     if (myqrCode == nil) {
         myqrCode = @"";
@@ -350,15 +350,25 @@
         id repondDict = [respondString objectFromJSONString];
         id error = repondDict[@"error"];
         if (!error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                HeOrderVC *orderDetailVC = [[HeOrderVC alloc] init];
-                //返回跳根目录
-                orderDetailVC.popToRoot = YES;
-                orderDetailVC.orderType = 0;
-                orderDetailVC.hidesBottomBarWhenPushed = YES;
-                orderDetailVC.orderDetailDict = [[NSDictionary alloc] initWithDictionary:repondDict];
-                [self.navigationController pushViewController:orderDetailVC animated:YES];
-            });
+            [self showHint:@"訂單創建成功"];
+            [[NSNotificationCenter defaultCenter] postNotificationName:GETUSERDATA_NOTIFICATION object:nil];
+            NSArray *array = self.navigationController.viewControllers;
+            for (UIViewController *vc in array) {
+                if ([vc isKindOfClass:[HomePageVC class]]) {
+                    [[self rdv_tabBarController] setTabBarHidden:NO animated:YES];
+                    [self.navigationController popToViewController:vc animated:YES];
+                    return;
+                }
+            }
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                HeOrderVC *orderDetailVC = [[HeOrderVC alloc] init];
+//                //返回跳根目录
+//                orderDetailVC.isfromecommit = YES;
+//                orderDetailVC.orderType = 0;
+//                orderDetailVC.hidesBottomBarWhenPushed = YES;
+//                orderDetailVC.orderDetailDict = [[NSDictionary alloc] initWithDictionary:repondDict];
+//                [self.navigationController pushViewController:orderDetailVC animated:YES];
+//            });
         }
         else{
             NSDictionary *resultDict = [respondString objectFromJSONString];
@@ -518,6 +528,7 @@
     NSArray *array = self.navigationController.viewControllers;
     for (UIViewController *vc in array) {
         if ([vc isKindOfClass:[HomePageVC class]]) {
+            [[self rdv_tabBarController] setTabBarHidden:NO animated:YES];
             [self.navigationController popToViewController:vc animated:YES];
             return;
         }

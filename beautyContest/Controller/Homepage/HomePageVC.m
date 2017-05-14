@@ -71,12 +71,7 @@
     // Do any additional setup after loading the view from its nib.
     [self initializaiton];
     [self initView];
-    if (SCREENHEIGH < 600) {
-        adjustView = NO;
-    }
-    else{
-//        [self initView];
-    }
+    [self performSelector:@selector(userDataUpdate:) withObject:nil afterDelay:5.0];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -85,55 +80,20 @@
     self.navigationController.navigationBarHidden = YES;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:YES];
+    [self userDataUpdate:nil];
+    adjustView = YES;
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:YES];
     self.navigationController.navigationBarHidden = NO;
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:YES];
-    adjustView = YES;
-    
-    CGFloat maxWidth = SCREENWIDTH / 2.0;
-    id ingots = userDetailDict[@"ingots"];
-    if ([ingots isMemberOfClass:[NSNull class]] || ingots == nil) {
-        ingots = @"";
-    }
-    NSString *coinValue = [NSString stringWithFormat:@"%@",ingots];
-    CGSize coinsize = [MLLabel getViewSizeByString:coinValue maxWidth:maxWidth font:[UIFont systemFontOfSize:15.0] lineHeight:1.2 lines:0];
-    
-    coinValueLabel.text = coinValue;
-    CGRect coinFrame = coinValueLabel.frame;
-    coinFrame.size.width = coinsize.width;
-    coinValueLabel.frame = coinFrame;
-    
-    coinFrame = unitLabel.frame;
-    coinFrame.origin.x = CGRectGetMaxX(coinValueLabel.frame) + 2;
-    unitLabel.frame = coinFrame;
-}
 
-- (void)viewWillLayoutSubviews
-{
-    NSLog(@"viewWillLayoutSubviews");
-    
-    
-}
-
-- (void)viewDidLayoutSubviews
-{
-//    NSLog(@"viewDidLayoutSubviews");
-//    if (SCREENHEIGH < 600 && !adjustView) {
-//        CGRect buttonFrame = scanButton.frame;
-//        buttonFrame.size.width = 200;
-//        buttonFrame.size.height = 191;
-//        buttonFrame.origin.x = (SCREENWIDTH - buttonFrame.size.width) / 2.0;
-//        scanButton.frame = buttonFrame;
-//        [self initView];
-//    }
-    
-}
 
 - (void)initializaiton
 {
@@ -142,25 +102,7 @@
     userDetailDict = [[NSDictionary alloc] initWithDictionary:[HeSysbsModel getSysModel].userDetailDict];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDataUpdate:) name:USERDATAUPDATE_NOTIFICATION object:nil];
     
-    CGFloat appScanWaitingTime = [[[HeSysbsModel getSysModel].userDetailDict objectForKey:@"appScanWaitingTime"] floatValue] / 1000.0;
-    if (appScanWaitingTime < 1) {
-        appScanWaitingTime = 1;
-    }
-    __weak HomePageVC *weakSelf = self;
-    pollingTime = [NSTimer scheduledTimerWithTimeInterval:5.0 repeats:YES block:^(NSTimer *timer){
-        
-        weakSelf.repeatTime = weakSelf.repeatTime + 1;
-        if (weakSelf.repeatTime * 5.0 > appScanWaitingTime) {
-            [weakSelf hideHud];
-            [weakSelf showHint:@"系統繁忙，工程師正在查看！"];
-            [pollingTime invalidate];
-            pollingTime = nil;
-            
-            
-            return;
-        }
-        [weakSelf pollingQRcodeWithDict:qrCodeDict];
-    }];
+    
     
 }
 
@@ -239,14 +181,35 @@
     NSString *coinValue = [NSString stringWithFormat:@"%@",ingots];
     CGSize coinsize = [MLLabel getViewSizeByString:coinValue maxWidth:maxWidth font:[UIFont systemFontOfSize:15.0] lineHeight:1.2 lines:0];
     
-    coinValueLabel.text = coinValue;
-    CGRect coinFrame = coinValueLabel.frame;
-    coinFrame.size.width = coinsize.width;
-    coinValueLabel.frame = coinFrame;
+    CGFloat coinValueLabelX = CGRectGetMaxX(coinTitleLabel.frame) + 5;
+    CGFloat coinValueLabelY = CGRectGetMinY(coinTitleLabel.frame);
+    CGFloat coinValueLabelW = coinsize.width;
+    CGFloat coinValueLabelH = CGRectGetHeight(coinTitleLabel.frame);
     
-    coinFrame = unitLabel.frame;
-    coinFrame.origin.x = CGRectGetMaxX(coinValueLabel.frame) + 2;
-    unitLabel.frame = coinFrame;
+    coinValueLabel = [[UILabel alloc] initWithFrame:CGRectMake(coinValueLabelX, coinValueLabelY, coinValueLabelW, coinValueLabelH)];
+    coinValueLabel.backgroundColor = [UIColor clearColor];
+    coinValueLabel.font = [UIFont systemFontOfSize:15.0];
+    coinValueLabel.textColor = DEFAULTREDCOLOR;
+    [self.view addSubview:coinValueLabel];
+    
+    coinValueLabel.text = coinValue;
+//    CGRect coinFrame = coinValueLabel.frame;
+//    coinFrame.size.width = coinsize.width;
+//    coinValueLabel.frame = coinFrame;
+    
+    coinValueLabelX = CGRectGetMaxX(coinValueLabel.frame) + 5;
+    
+    unitLabel = [[UILabel alloc] initWithFrame:CGRectMake(coinValueLabelX, coinValueLabelY, 30, coinValueLabelH)];
+    unitLabel.textAlignment = NSTextAlignmentLeft;
+    unitLabel.backgroundColor = [UIColor clearColor];
+    unitLabel.font = coinTitleLabel.font;
+    unitLabel.textColor = APPDEFAULTORANGE;
+    [self.view addSubview:unitLabel];
+    unitLabel.text = @"D幣";
+    
+//    coinFrame = unitLabel.frame;
+//    coinFrame.origin.x = CGRectGetMaxX(coinValueLabel.frame) + 2;
+//    unitLabel.frame = coinFrame;
     
     
 }
@@ -269,7 +232,31 @@
         if (!error) {
             qrCodeDict = [[NSDictionary alloc] initWithDictionary:repondDict];
             [weakSelf showHudInView:weakSelf.view hint:@"正在識別中..."];
-            [weakSelf pollingQRcodeWithDict:repondDict];
+            
+            if (pollingTime == nil) {
+                CGFloat appScanWaitingTime = [[[HeSysbsModel getSysModel].userDetailDict objectForKey:@"appScanWaitingTime"] floatValue] / 1000.0;
+                if (appScanWaitingTime < 1) {
+                    appScanWaitingTime = 1;
+                }
+                __weak HomePageVC *weakSelf = self;
+                pollingTime = [NSTimer scheduledTimerWithTimeInterval:5.0 repeats:YES block:^(NSTimer *timer){
+                    
+                    weakSelf.repeatTime = weakSelf.repeatTime + 1;
+                    if (weakSelf.repeatTime * 5.0 > appScanWaitingTime) {
+                        [weakSelf hideHud];
+                        [weakSelf showHint:@"系統繁忙，工程師正在查看！"];
+                        [pollingTime invalidate];
+                        pollingTime = nil;
+                        
+                        
+                        return;
+                    }
+                    [weakSelf pollingQRcodeWithDict:qrCodeDict];
+                }];
+            }
+            else{
+                [weakSelf pollingQRcodeWithDict:repondDict];
+            }
         }
         else{
             NSDictionary *resultDict = [respondString objectFromJSONString];
@@ -424,14 +411,18 @@
     NSString *coinValue = [NSString stringWithFormat:@"%@",ingots];
     CGSize coinsize = [MLLabel getViewSizeByString:coinValue maxWidth:maxWidth font:[UIFont systemFontOfSize:15.0] lineHeight:1.2 lines:0];
     
-    coinValueLabel.text = coinValue;
-    CGRect coinFrame = coinValueLabel.frame;
-    coinFrame.size.width = coinsize.width;
-    coinValueLabel.frame = coinFrame;
     
-    coinFrame = unitLabel.frame;
-    coinFrame.origin.x = CGRectGetMaxX(coinValueLabel.frame) + 2;
-    unitLabel.frame = coinFrame;
+    CGFloat coinValueLabelX = CGRectGetMaxX(coinTitleLabel.frame) + 5;
+    CGFloat coinValueLabelY = CGRectGetMinY(coinTitleLabel.frame);
+    CGFloat coinValueLabelW = coinsize.width;
+    CGFloat coinValueLabelH = CGRectGetHeight(coinTitleLabel.frame);
+    
+    coinValueLabel.frame = CGRectMake(coinValueLabelX, coinValueLabelY, coinValueLabelW, coinValueLabelH);
+    
+    coinValueLabel.text = coinValue;
+
+    coinValueLabelX = CGRectGetMaxX(coinValueLabel.frame) + 5;
+    unitLabel.frame = CGRectMake(coinValueLabelX, coinValueLabelY, 30, coinValueLabelH);
 }
 
 - (IBAction)scanButtonClick:(id)sender
