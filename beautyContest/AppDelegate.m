@@ -377,6 +377,12 @@ static NSString *const fbsAppID = @"302339483514249";
     [_notificationCenter setNotificationCategories:[NSSet setWithObjects:category, nil]];
 }
 
+- (void)handlePushWithDict:(NSDictionary *)dict
+{
+    NSNotification *notification = [NSNotification notificationWithName:DABAO_PUSHNOTIFICATION object:dict];
+    [[NSNotificationCenter defaultCenter] postNotification:notification];
+}
+
 /**
  *  处理iOS 10通知(iOS 10+)
  */
@@ -384,6 +390,7 @@ static NSString *const fbsAppID = @"302339483514249";
     UNNotificationRequest *request = notification.request;
     UNNotificationContent *content = request.content;
     NSDictionary *userInfo = content.userInfo;
+    
     // 通知时间
     NSDate *noticeDate = notification.date;
     // 标题
@@ -399,6 +406,7 @@ static NSString *const fbsAppID = @"302339483514249";
     // 通知打开回执上报
     [CloudPushSDK sendNotificationAck:userInfo];
     NSLog(@"Notification, date: %@, title: %@, subtitle: %@, body: %@, badge: %d, extras: %@.", noticeDate, title, subtitle, body, badge, extras);
+    [self handlePushWithDict:userInfo];
 }
 
 /**

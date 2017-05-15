@@ -15,6 +15,8 @@
 #import "AppDelegate.h"
 #import "RDVTabBarItem.h"
 #import <CloudPushSDK/CloudPushSDK.h>
+#import "HeOrderVC.h"
+#import "HeNoticeDetailVC.h"
 
 @interface HeTabBarVC ()
 
@@ -51,6 +53,50 @@
                                                  name:FBSDKProfileDidChangeNotification
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loadRely) name:UPDATEUSERREPLYNOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleNotification:) name:DABAO_PUSHNOTIFICATION object:nil];
+    
+}
+
+//处理推送通知的跳转
+- (void)handleNotification:(NSNotification *)notification
+{
+    NSDictionary *dict = notification.userInfo;
+    NSInteger selectIndex = [dict[@"selectIndex"] integerValue];
+    if (selectIndex > 0 && selectIndex < 5) {
+        self.selectedIndex = selectIndex - 1;
+        CustomNavigationController *nav = (CustomNavigationController *)self.selectedViewController;
+        [nav popToRootViewControllerAnimated:YES];
+        return;
+    }
+    NSDictionary *Extras = dict[@"Extras"];
+    NSString *pushvc = Extras[@"pushvc"];
+    if ([pushvc isEqualToString:@"HeOrderVC"]) {
+        NSInteger orderType = [Extras[@"orderType"] integerValue];
+        NSString *oid = [NSString stringWithFormat:@"%@",Extras[@"oid"]];
+        HeOrderVC *myorderVC = [[HeOrderVC alloc] init];
+        myorderVC.orderType = orderType;
+        myorderVC.orderDetailDict = @{@"oid":oid};
+        CustomNavigationController *nav = (CustomNavigationController *)self.selectedViewController;
+        [nav pushViewController:myorderVC animated:YES];
+    }
+    else if ([pushvc isEqualToString:@"HeNoticeDetailVC"]){
+        NSString *post_id = [NSString stringWithFormat:@"%@",Extras[@"post_id"]];
+        HeNoticeDetailVC *noticeVC = [[HeNoticeDetailVC alloc] init];
+        noticeVC.noticeDict = @{@"post_id":post_id};
+        CustomNavigationController *nav = (CustomNavigationController *)self.selectedViewController;
+        [nav pushViewController:noticeVC animated:YES];
+    }
+    else{
+        id myObj = [[NSClassFromString(pushvc) alloc] init];
+        
+        UIViewController *myVC = nil;
+        if ([myObj isKindOfClass:[UIViewController class]]) {
+            myVC = (UIViewController *)myObj;
+        }
+        myVC.hidesBottomBarWhenPushed = YES;
+        CustomNavigationController *nav = (CustomNavigationController *)self.selectedViewController;
+        [nav pushViewController:myVC animated:YES];
+    }
     
 }
 
@@ -268,6 +314,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:USERDATAUPDATE_NOTIFICATION object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:FBSDKProfileDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UPDATEUSERREPLYNOTIFICATION object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:DABAO_PUSHNOTIFICATION object:nil];
     
 }
 

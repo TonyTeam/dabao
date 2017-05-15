@@ -75,6 +75,9 @@
 //獲取用戶資料統治者
 #define GETUSERDATA_NOTIFICATION @"getUserDataNotification"
 
+//推送通知
+#define DABAO_PUSHNOTIFICATION @"dabaoPushNotification"
+
 //更新用戶的評價
 #define  UPDATEUSERREPLYNOTIFICATION @"updateUserReplyNotification"
 
