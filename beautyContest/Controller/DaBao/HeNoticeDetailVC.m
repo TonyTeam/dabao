@@ -58,6 +58,12 @@
 {
     [super initView];
     
+    [self updateView];
+    
+}
+
+- (void)updateView
+{
     NSString *post_title = noticeDict[@"post_title"];
     if ([post_title isMemberOfClass:[NSNull class]] || post_title == nil) {
         post_title = @"";
@@ -91,8 +97,6 @@
     
     NSString *time = [Tool convertTimespToString:[zoneCreatetime longLongValue] dateFormate:@"yyyy-MM-dd hh:mm:ss"];
     timeLabel.text = time;
-
-    
 }
 
 - (void)loadNoticeDetail
@@ -117,6 +121,7 @@
         if ([post_content isMemberOfClass:[NSNull class]] || post_content == nil) {
             post_content = @"";
         }
+        [self updateView];
         [contentWebView loadHTMLString:post_content baseURL:nil];
         
     } failure:^(NSError* err){

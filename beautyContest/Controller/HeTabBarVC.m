@@ -39,7 +39,11 @@
     [self setupSubviews];
     //獲取最近10條回復
     [self loadRely];
-    [CloudPushSDK bindAccount:@"16120001" withCallback:^(CloudPushCallbackResult *res){
+    NSString *bindId = [[HeSysbsModel getSysModel].userDetailDict objectForKey:@"id"];
+    if ([bindId isMemberOfClass:[NSNull class]] || bindId == nil) {
+        bindId = @"";
+    }
+    [CloudPushSDK bindAccount:bindId withCallback:^(CloudPushCallbackResult *res){
         NSLog(@"res = %@",res);
     }];
 }
@@ -60,15 +64,24 @@
 //处理推送通知的跳转
 - (void)handleNotification:(NSNotification *)notification
 {
-    NSDictionary *dict = notification.userInfo;
-    NSInteger selectIndex = [dict[@"selectIndex"] integerValue];
-    if (selectIndex > 0 && selectIndex < 5) {
-        self.selectedIndex = selectIndex - 1;
-        CustomNavigationController *nav = (CustomNavigationController *)self.selectedViewController;
-        [nav popToRootViewControllerAnimated:YES];
+    NSString *json = notification.object[@"Extras"];
+    
+    NSDictionary *dict = [json objectFromJSONString];
+    id selectObj = dict[@"selectIndex"];
+    if (selectObj) {
+        NSInteger selectIndex = [dict[@"selectIndex"] integerValue];
+        if (selectIndex >= 0 && selectIndex < 4) {
+            self.selectedIndex = selectIndex;
+            CustomNavigationController *nav = (CustomNavigationController *)self.selectedViewController;
+            [nav popToRootViewControllerAnimated:YES];
+            return;
+        }
+    }
+    
+    id Extras = [[NSDictionary alloc] initWithDictionary:dict];
+    if (!Extras) {
         return;
     }
-    NSDictionary *Extras = dict[@"Extras"];
     NSString *pushvc = Extras[@"pushvc"];
     if ([pushvc isEqualToString:@"HeOrderVC"]) {
         NSInteger orderType = [Extras[@"orderType"] integerValue];

@@ -7,6 +7,7 @@
 //
 
 #import "HeSetUpVC.h"
+#import <CloudPushSDK/CloudPushSDK.h>
 
 @interface HeSetUpVC ()
 @property(strong,nonatomic)IBOutlet UIButton *logoutButton;
@@ -58,6 +59,8 @@
 - (IBAction)logoutButtonClick:(id)sender
 {
     NSLog(@"logoutButton");
+    //取消绑定账号
+    [CloudPushSDK unbindAccount:nil];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERACCOUNTKEY];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERTOKENKEY];
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERIDKEY];
