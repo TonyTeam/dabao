@@ -17,6 +17,7 @@
 #import <CloudPushSDK/CloudPushSDK.h>
 #import "HeOrderVC.h"
 #import "HeNoticeDetailVC.h"
+#import "HeFeedBackReplyVC.h"
 
 @interface HeTabBarVC ()
 
@@ -64,7 +65,7 @@
 //处理推送通知的跳转
 - (void)handleNotification:(NSNotification *)notification
 {
-    NSString *json = notification.object[@"Extras"];
+    NSString *json = notification.object[@"json"];
     
     NSDictionary *dict = [json objectFromJSONString];
     id selectObj = dict[@"selectIndex"];
@@ -84,7 +85,20 @@
     }
     NSString *pushvc = Extras[@"pushvc"];
     if ([pushvc isEqualToString:@"HeOrderVC"]) {
-        NSInteger orderType = [Extras[@"orderType"] integerValue];
+        NSString *biz = Extras[@"biz"];
+        if ([biz isMemberOfClass:[NSNull class]]) {
+            biz = @"";
+        }
+        //ingot 元宝储值
+        //qrpay 扫码支付
+        NSInteger orderType = 0;
+        if ([biz isEqualToString:@"qrpay"]) {
+            orderType = 0;
+        }
+        else{
+            orderType = 1;
+        }
+        
         NSString *oid = [NSString stringWithFormat:@"%@",Extras[@"oid"]];
         HeOrderVC *myorderVC = [[HeOrderVC alloc] init];
         myorderVC.orderType = orderType;
@@ -93,15 +107,23 @@
         [nav pushViewController:myorderVC animated:YES];
     }
     else if ([pushvc isEqualToString:@"HeNoticeDetailVC"]){
-        NSString *post_id = [NSString stringWithFormat:@"%@",Extras[@"post_id"]];
+        NSString *post_id = [NSString stringWithFormat:@"%@",Extras[@"comment_id"]];
         HeNoticeDetailVC *noticeVC = [[HeNoticeDetailVC alloc] init];
         noticeVC.noticeDict = @{@"post_id":post_id};
         CustomNavigationController *nav = (CustomNavigationController *)self.selectedViewController;
         [nav pushViewController:noticeVC animated:YES];
     }
+    else if ([pushvc isEqualToString:@"HeFeedBackReplyVC"]){
+        HeFeedBackReplyVC *noticeVC = [[HeFeedBackReplyVC alloc] init];
+        noticeVC.comment_id = [NSString stringWithFormat:@"%@",Extras[@"comment_id"]];
+        CustomNavigationController *nav = (CustomNavigationController *)self.selectedViewController;
+        [nav pushViewController:noticeVC animated:YES];
+    }
     else{
         id myObj = [[NSClassFromString(pushvc) alloc] init];
-        
+        if (!myObj) {
+            return;
+        }
         UIViewController *myVC = nil;
         if ([myObj isKindOfClass:[UIViewController class]]) {
             myVC = (UIViewController *)myObj;

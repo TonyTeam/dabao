@@ -406,7 +406,7 @@ static NSString *const fbsAppID = @"302339483514249";
     // 通知打开回执上报
     [CloudPushSDK sendNotificationAck:userInfo];
     NSLog(@"Notification, date: %@, title: %@, subtitle: %@, body: %@, badge: %d, extras: %@.", noticeDate, title, subtitle, body, badge, extras);
-    [self handlePushWithDict:userInfo];
+    [self performSelector:@selector(handlePushWithDict:) withObject:userInfo afterDelay:1.0];
 }
 
 /**
