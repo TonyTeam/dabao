@@ -290,6 +290,9 @@
     } failure:^(NSError* err){
         [weakSelf hideHud];
         [weakSelf showHint:ERRORREQUESTTIP];
+        //如果用到这种情况，token过期，注销登录，让用户自己重新登录
+        [Tool clearUserData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:KNOTIFICATION_LOGINCHANGE object:nil];
     }];
 }
 

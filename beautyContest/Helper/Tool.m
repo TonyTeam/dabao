@@ -9,6 +9,7 @@
 #import "Tool.h"
 #include <sys/xattr.h>
 #import "HeSysbsModel.h"
+#import <CloudPushSDK/CloudPushSDK.h>
 
 @implementation Tool
 
@@ -1073,6 +1074,17 @@
     
     return  result;
     
+}
+
++ (void)clearUserData
+{
+    [CloudPushSDK unbindAccount:nil];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERACCOUNTKEY];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERTOKENKEY];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERIDKEY];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERPASSWORDKEY];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:USERDETAILDATAKEY];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @end

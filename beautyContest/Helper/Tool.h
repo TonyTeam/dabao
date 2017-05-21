@@ -79,4 +79,5 @@
 + (NSData *)deleteErrorStringInData:(NSData *)inputData;
 + (NSString *)replaceUnicode:(NSString *)unicodeStr;
 
++ (void)clearUserData;
 @end
