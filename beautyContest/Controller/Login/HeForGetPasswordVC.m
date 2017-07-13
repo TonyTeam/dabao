@@ -140,7 +140,7 @@
     confirmPasswordField.secureTextEntry = YES;
     confirmPasswordField.delegate = self;
     confirmPasswordField.font = [UIFont systemFontOfSize:15.0];
-    confirmPasswordField.placeholder = @"請輸入再次密碼";
+    confirmPasswordField.placeholder = @"請再次輸入密碼";
     
     getCodeButon = [[UIButton alloc] init];
     getCodeButon.layer.masksToBounds = YES;
